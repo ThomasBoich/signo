@@ -1,0 +1,313 @@
+{% extends 'index.html' %}
+
+{%block content%}
+
+            <div class="row row-deck row-cards">
+              {%if request.user.is_superuser == True%}
+              <div class="col-lg-6">
+                <div class="row row-cards">
+                   <div class="col-sm-4">
+                    <div class="card">
+                      <div class="card-body p-2 text-center">
+                        <div class="text-end text-green">
+                          <span class="text-green d-inline-flex align-items-center lh-1">
+                            6% <!-- Download SVG icon from http://tabler-icons.io/i/trending-up -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon ms-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><polyline points="3 17 9 11 13 15 21 7"></polyline><polyline points="14 7 21 7 21 14"></polyline></svg>
+                          </span>
+                        </div>
+                        <div class="h1 m-0">{{all_users}}</div>
+                        <div class="text-muted mb-3">Пользователи</div>
+                      </div>
+                    </div>
+                  </div>
+              <div class="col-sm-4">
+                    <div class="card">
+                      <div class="card-body p-2 text-center">
+                        <div class="text-end text-red">
+                          <span class="text-red d-inline-flex align-items-center lh-1">
+                            -2% <!-- Download SVG icon from http://tabler-icons.io/i/trending-down -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon ms-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><polyline points="3 7 9 13 13 9 21 17"></polyline><polyline points="21 10 21 17 14 17"></polyline></svg>
+                          </span>
+                        </div>
+                        <div class="h1 m-0">{{all_doctors}}</div>
+                        <div class="text-muted mb-3">Врачи</div>
+                      </div>
+                    </div>
+                  </div>
+              <div class="col-sm-4">
+                    <div class="card">
+                      <div class="card-body p-2 text-center">
+                        <div class="text-end text-green">
+                          <span class="text-green d-inline-flex align-items-center lh-1">
+                            9% <!-- Download SVG icon from http://tabler-icons.io/i/trending-up -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon ms-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><polyline points="3 17 9 11 13 15 21 7"></polyline><polyline points="14 7 21 7 21 14"></polyline></svg>
+                          </span>
+                        </div>
+                        <div class="h1 m-0">{{all_clients}}</div>
+                        <div class="text-muted mb-3">Клиенты</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-6 col-lg-3">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="d-flex align-items-center">
+                      <div class="subheader">Всего документов</div>
+                      <div class="ms-auto lh-1">
+                        <div class="dropdown">
+                          <a class="dropdown-toggle text-muted" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Last 7 days</a>
+                          <div class="dropdown-menu dropdown-menu-end">
+                            <a class="dropdown-item active" href="#">Last 7 days</a>
+                            <a class="dropdown-item" href="#">Last 30 days</a>
+                            <a class="dropdown-item" href="#">Last 3 months</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="d-flex align-items-baseline">
+                      <div class="h1 mb-3 me-2">{{all_documents}}</div>
+                      <div class="me-auto">
+                        <span class="text-yellow d-inline-flex align-items-center lh-1">
+                          0% <!-- Download SVG icon from http://tabler-icons.io/i/minus -->
+                          <svg xmlns="http://www.w3.org/2000/svg" class="icon ms-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                        </span>
+                      </div>
+                    </div>
+                    <div id="chart-new-clients" class="chart-sm"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-lg-3">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="d-flex align-items-center">
+                      <div class="subheader">Подписанных документов</div>
+                      <div class="ms-auto lh-1">
+                        <div class="dropdown">
+                          <a class="dropdown-toggle text-muted" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Last 7 days</a>
+                          <div class="dropdown-menu dropdown-menu-end">
+                            <a class="dropdown-item active" href="#">Last 7 days</a>
+                            <a class="dropdown-item" href="#">Last 30 days</a>
+                            <a class="dropdown-item" href="#">Last 3 months</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="d-flex align-items-baseline">
+                      <div class="h1 mb-3 me-2">{{finish}}</div>
+                      <div class="me-auto">
+                        <span class="text-green d-inline-flex align-items-center lh-1">
+                          4% <!-- Download SVG icon from http://tabler-icons.io/i/trending-up -->
+                          <svg xmlns="http://www.w3.org/2000/svg" class="icon ms-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="3 17 9 11 13 15 21 7" /><polyline points="14 7 21 7 21 14" /></svg>
+                        </span>
+                      </div>
+                    </div>
+                    <div id="chart-active-users" class="chart-sm"></div>
+                  </div>
+                </div>
+              </div>
+              {%elif request.user.profile.role.title == 'Врач'%}
+              {%else%}
+              {%endif%}
+              <div class="col-md-12 col-lg-12">
+                <div class="card">
+                  <div class="card-header">
+                    <h3 class="card-title">Аналитика документов в системе - {{all_documents_type}}</h3>
+                  </div>
+                  <table class="table card-table table-vcenter">
+                    <thead>
+                      <tr>
+                        <th>Название документов</th>
+                        <th>Всего документов</th>
+                        <th>Подписано клиентами</th>
+                        <th>Подписано врачами</th>
+<!--                        <th></th>-->
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Договор</td>
+                        <td>{{contract}}</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td class="w-50">
+                          <div class="progress progress-xs">
+                            <div class="progress-bar bg-primary" style="width: 71.0%"></div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>ИДС</td>
+                        <td>{{ids}}</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td class="w-50">
+                          <div class="progress progress-xs">
+                            <div class="progress-bar bg-primary" style="width: 35.96%"></div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Мед карт</td>
+                        <td>{{medcard}}</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td class="w-50">
+                          <div class="progress progress-xs">
+                            <div class="progress-bar bg-primary" style="width: 24.9%"></div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Адм.карт</td>
+                        <td>{{admcard}}</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td class="w-50">
+                          <div class="progress progress-xs">
+                            <div class="progress-bar bg-primary" style="width: 19.72%"></div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Справка в налоговую</td>
+                        <td>{{rent}}</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td class="w-50">
+                          <div class="progress progress-xs">
+                            <div class="progress-bar bg-primary" style="width: 17.08%"></div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>План лечения</td>
+                        <td>{{plan}}</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td class="w-50">
+                          <div class="progress progress-xs">
+                            <div class="progress-bar bg-primary" style="width: 13.0%"></div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+<!--                        <td>Pinterest</td>-->
+<!--                        <td>420</td>-->
+<!--                        <td>420</td>-->
+<!--                        <td>420</td>-->
+<!--                        <td class="w-50">-->
+<!--                          <div class="progress progress-xs">-->
+<!--                            <div class="progress-bar bg-primary" style="width: 8.4%"></div>-->
+<!--                          </div>-->
+<!--                        </td>-->
+<!--                      </tr>-->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-header">
+                    <h2 style="margin-bottom: inherit;">Активные документы</h2>
+                  </div>
+                  <div class="card-body border-bottom py-3">
+                    <div class="d-flex">
+                    </div>
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table card-table table-vcenter text-nowrap datatable">
+                      <thead>
+                        <tr>
+                          <th class="w-1">No. <!-- Download SVG icon from http://tabler-icons.io/i/chevron-up -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-sm text-dark icon-thick" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><polyline points="6 15 12 9 18 15"></polyline></svg>
+                          </th>
+                          <th>Тип документа</th>
+                          <th>Врач</th>
+                          <th>Клиент</th>
+                          <th>Дата</th>
+                          <th>Статус клиента</th>
+                          <th>Статус врача</th>
+                          <th></th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      {%for document in all_active_documents%}
+                        <tr>
+                          <td><span class="text-muted">{{document.id}}</span></td>
+                          <td><span class="text-muted">{{document.type}}</span></td>
+                          <td><a href="{%url 'user' document.sender.pk %}" class="text-reset" tabindex="-1">{{document.sender.first_name}} {{document.sender.last_name}}</a></td>
+                          <td>
+                            <a href="{% url 'user' document.recipient.pk %}">{{document.recipient.first_name}} {{document.recipient.last_name}}</a>
+                          </td>
+                          <td>
+                            {{document.send_date}}
+
+                          </td>
+                          <td>
+                            {%if document.recipient_status%}
+                            <span class="badge bg-success me-1"></span>
+                            Подписан
+<!--                            - Клиентом-->
+                            {%else%}
+                            <span class="badge bg-danger me-1"></span>
+                            Не подписан
+<!--                            - Клинетом-->
+                            {%endif%}
+
+                          </td>
+                          <td>
+                            {%if document.sender_status%}
+                            <span class="badge bg-success me-1"></span>
+                            Подписан
+<!--                            - Врачом-->
+                            {%else%}
+                            <span class="badge bg-danger me-1"></span>
+                            Не Подписан
+<!--                            - Врачом-->
+                            {%endif%}
+
+                          </td>
+                          <td class="text-end">
+                            {%if document.sender_status == False and document.sender == request.user or document.recipient_status == False and document.recipient == request.user%}
+                             <span class="dropdown">
+                              <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">
+                                Действия
+                              </button>
+                              <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" href="{% url 'sign_document' document.pk %}#">
+                                  Подписать
+                                </a>
+                                <a class="dropdown-item" href="{{document.document.url}}#" download>
+<!--                                  Anotheraction-->
+                                  Скачать документ
+                                </a>
+                                <a class="dropdown-item" href="{{document.document.url}}#">
+<!--                                  Anotheraction-->
+                                  Просмотеть документ
+                                </a>
+                              </div>
+                            </span>
+                            {%else%}
+                             <span class="dropdown" style="height: 2.4rem;width: 2.4rem;display: flex;justify-content: center;width: 100%;align-items: center;color: #0ea36d;">
+                               <!-- Download SVG icon from http://tabler-icons.io/i/checkbox -->
+                               <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="9 11 12 14 20 6" /><path d="M20 12v6a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h9" /></svg>
+                             </span>
+                            {%endif%}
+                          </td>
+                        </tr>
+                      {%endfor%}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+{%endblock%}

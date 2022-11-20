@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+</body>
+</html>
+{%extends 'index.html'%}{%load static%}
+              {%block Page_title-actions%}
+              <div class="col-auto ms-auto d-print-none">
+                <div class="btn-list">
+                  <a href="#" class="btn btn-primary d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#modal-report">
+                    <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                   Новый документ
+                  </a>
+                  <a href="#" class="btn btn-primary d-sm-none btn-icon" data-bs-toggle="modal" data-bs-target="#modal-report" aria-label="Create new report">
+                    <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                  </a>
+                </div>
+              </div>
+              {%endblock%}
+{%block content%}
+<div class="col-12">
+                <div class="card">
+                  <div class="card-header">
+                    <a href="{%url 'documents'%}"><h3 class="card-title">Все</h3></a>
+                    <a href="{%url 'finish'%}"><h3 class="card-title">Подписанные</h3></a>
+                    <a href="{%url 'sign'%}"><h3 class="card-title">Не подписанные</h3></a>
+                  </div>
+                  <div class="card-body border-bottom py-3">
+                    <div class="d-flex">
+                    </div>
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table card-table table-vcenter text-nowrap datatable">
+                      <thead>
+                        <tr>
+                          <th class="w-1">No. <!-- Download SVG icon from http://tabler-icons.io/i/chevron-up -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-sm text-dark icon-thick" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><polyline points="6 15 12 9 18 15"></polyline></svg>
+                          </th>
+                          <th>Тип документа</th>
+                          <th>Врач</th>
+                          <th>Клиент</th>
+                          <th>Дата</th>
+                          <th>Статус клиента</th>
+                          <th>Статус врача</th>
+                          <th></th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      {%for document in all_documents%}
+                        <tr>
+                          <td><span class="text-muted">{{document.id}}</span></td>
+                          <td><span class="text-muted">{{document.filename}}</span></td>
+                          <td><a href="invoice.html" class="text-reset" tabindex="-1">{{document.sender.first_name}} {{document.sender.last_name}}</a></td>
+                          <td>
+                            {{document.recipient.first_name}} {{document.recipient.last_name}}
+                          </td>
+                          <td>
+                            {{document.send_date}}
+
+                          </td>
+                          <td>
+                            {%if document.recipient_status%}
+                            <span class="badge bg-success me-1"></span>
+                            Подписан
+<!--                            - Клиентом-->
+                            {%else%}
+                            <span class="badge bg-danger me-1"></span>
+                            Не подписан
+<!--                            - Клинетом-->
+                            {%endif%}
+
+                          </td>
+                          <td>
+                            {%if document.sender_status%}
+                            <span class="badge bg-success me-1"></span>
+                            Подписан
+<!--                            - Врачом-->
+                            {%else%}
+                            <span class="badge bg-danger me-1"></span>
+                            Не Подписан
+<!--                            - Врачом-->
+                            {%endif%}
+
+                          </td>
+                          <td class="text-end">
+                            {%if document.sender_status == False and document.sender == request.user or document.recipient_status == False and document.recipient == request.user%}
+                             <span class="dropdown">
+                              <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">
+                                Действия
+                              </button>
+                              <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" href="{% url 'sign_document' document.pk %}#">
+                                  Подписать
+                                </a>
+                                <a class="dropdown-item" href="{{document.document.url}}#" download>
+<!--                                  Anotheraction-->
+                                  Скачать документ
+                                </a>
+                                <a class="dropdown-item" href="{{document.document.url}}#">
+<!--                                  Anotheraction-->
+                                  Просмотеть документ
+                                </a>
+                              </div>
+                            </span>
+                            {%else%}
+                             <span class="dropdown" style="height: 2.4rem;width: 2.4rem;display: flex;justify-content: center;width: 100%;align-items: center;color: #0ea36d;">
+                               <!-- Download SVG icon from http://tabler-icons.io/i/checkbox -->
+                               <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="9 11 12 14 20 6" /><path d="M20 12v6a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h9" /></svg>
+                             </span>
+                            {%endif%}
+                          </td>
+                        </tr>
+                      {%endfor%}
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="card-footer d-flex align-items-center">
+<!--                    <p class="m-0 text-muted">Showing <span>1</span> to <span>8</span> of <span>16</span> entries</p>-->
+                    <ul class="pagination m-0 ms-auto">
+                      <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                          <!-- Download SVG icon from http://tabler-icons.io/i/chevron-left -->
+                          <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><polyline points="15 6 9 12 15 18"></polyline></svg>
+                          prev
+                        </a>
+                      </li>
+                      <li class="page-item"><a class="page-link" href="#">1</a></li>
+                      <li class="page-item active"><a class="page-link" href="#">2</a></li>
+                      <li class="page-item"><a class="page-link" href="#">3</a></li>
+                      <li class="page-item"><a class="page-link" href="#">4</a></li>
+                      <li class="page-item"><a class="page-link" href="#">5</a></li>
+                      <li class="page-item">
+                        <a class="page-link" href="#">
+                          next <!-- Download SVG icon from http://tabler-icons.io/i/chevron-right -->
+                          <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><polyline points="9 6 15 12 9 18"></polyline></svg>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+
+
+{%endblock%}

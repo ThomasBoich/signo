@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+</body>
+</html>
+{%extends 'index.html'%}{%load static%}
+{%block content%}
+<style>
+    label {
+    display: inline-block;
+    width: 100%;
+}.form-control{margin: 0px 0px 20px 0;}
+h1{margin: 0px 0px 40px 0px;}
+.card-lg>.card-body {
+    padding: 1.7rem;
+}
+</style>
+<div class="row row-cards">
+              <div class="col-lg-8">
+                <div class="card card-lg">
+                                      <div class="card-header">
+                    <a href="{%url 'profile'%}"><h3 class="card-title"  style="    padding: 0px 0px 9px 0px;
+    color: #191919;">Основная информация</h3></a>
+                    <a href="{%url 'mymedcard'%}"><h3 class="card-title"  style="    border-bottom: 2px solid;
+    padding: 0px 0px 9px 0px;">Медицинская карта</h3></a>
+                    <a href="{%url 'sign'%}"><h3 class="card-title"></h3></a>
+                  </div>
+                  <div class="card-body">
+                    <div class="markdown">
+
+<form action="" method="post" enctype="multipart/form-data">
+    <h1>{{request.user.first_name}} {{request.user.last_name}} {{request.user.patronymic}}</h1>
+    {%csrf_token%}
+    {{u_form}}
+    <button type="submit" class="btn btn-primary">Изменить</button>
+</form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+<!--                      <div class="me-3">-->
+<!--                        &lt;!&ndash; Download SVG icon from http://tabler-icons.io/i/scale &ndash;&gt;-->
+<!--                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-md" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><line x1="7" y1="20" x2="17" y2="20"></line><path d="M6 6l6 -1l6 1"></path><line x1="12" y1="3" x2="12" y2="20"></line><path d="M9 12l-3 -6l-3 6a3 3 0 0 0 6 0"></path><path d="M21 12l-3 -6l-3 6a3 3 0 0 0 6 0"></path></svg>-->
+<!--                      </div>-->
+                      <div>
+<!--                        <small class="text-muted">tabler/tabler is licensed under the</small>-->
+                        <h3 class="lh-1">
+<!--                            MIT License-->
+                        Карта профиля
+                        </h3>
+                      </div>
+                    </div>
+<!--                    <div class="text-muted mb-3">-->
+<!--                      A short and simple permissive license with conditions only requiring preservation of copyright and-->
+<!--                      license notices. Licensed works, modifications, and larger works may be distributed under different terms-->
+<!--                      and without source code.-->
+<!--                    </div>-->
+                    <h4>Общая информация</h4>
+                    <ul class="list-unstyled space-y-1">
+                      <li><!-- Download SVG icon from http://tabler-icons.io/i/check -->
+                          {%if request.user.first_name%}
+                          <svg xmlns="http://www.w3.org/2000/svg" class="icon text-green" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 12l5 5l10 -10"></path></svg>
+                          {%else%}
+                          <svg xmlns="http://www.w3.org/2000/svg" class="icon text-red" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                          {%endif%}
+
+                        Имя: {{request.user.first_name}}
+                      </li>
+                      <li><!-- Download SVG icon from http://tabler-icons.io/i/check -->
+                          {%if request.user.last_name%}
+                          <svg xmlns="http://www.w3.org/2000/svg" class="icon text-green" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 12l5 5l10 -10"></path></svg>
+                          {%else%}
+                          <svg xmlns="http://www.w3.org/2000/svg" class="icon text-red" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                          {%endif%}
+
+                        Фамилия {{request.user.last_name}}
+                      </li>
+                      <li><!-- Download SVG icon from http://tabler-icons.io/i/check -->
+                          {%if request.user.email%}
+                          <svg xmlns="http://www.w3.org/2000/svg" class="icon text-green" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 12l5 5l10 -10"></path></svg>
+                          {%else%}
+                          <svg xmlns="http://www.w3.org/2000/svg" class="icon text-red" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                          {%endif%}
+                          Электронная почта: {{request.user.email}}
+                      </li>
+                      <li><!-- Download SVG icon from http://tabler-icons.io/i/check -->
+                          {%if request.user.username%}
+                          <svg xmlns="http://www.w3.org/2000/svg" class="icon text-green" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 12l5 5l10 -10"></path></svg>
+                          {%else%}
+                          <svg xmlns="http://www.w3.org/2000/svg" class="icon text-red" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                          {%endif%}
+                        Логин {{request.user.username}}
+                      </li>
+                    </ul>
+                    <h4>Дополнительная информация</h4>
+                    <ul class="list-unstyled space-y-1">
+                      <li><!-- Download SVG icon from http://tabler-icons.io/i/x -->
+                          {%if request.user.pasport_series%}
+                          <svg xmlns="http://www.w3.org/2000/svg" class="icon text-green" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 12l5 5l10 -10"></path></svg>
+                          {%else%}
+                          <svg xmlns="http://www.w3.org/2000/svg" class="icon text-red" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                          {%endif%}
+                        Серия паспорта: {{request.user.pasport_series}}
+                      </li>
+                      <li><!-- Download SVG icon from http://tabler-icons.io/i/x -->
+                          {%if request.user.pasport_number%}
+                          <svg xmlns="http://www.w3.org/2000/svg" class="icon text-green" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 12l5 5l10 -10"></path></svg>
+                          {%else%}
+                          <svg xmlns="http://www.w3.org/2000/svg" class="icon text-red" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                          {%endif%}
+                        Номер паспорта: {{request.user.pasport_number}}
+                      </li>
+                        <li><!-- Download SVG icon from http://tabler-icons.io/i/x -->
+                          {%if request.user.phone%}
+                          <svg xmlns="http://www.w3.org/2000/svg" class="icon text-green" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 12l5 5l10 -10"></path></svg>
+                          {%else%}
+                          <svg xmlns="http://www.w3.org/2000/svg" class="icon text-red" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                            {%endif%}
+                        Телефон: {{request.user.phone}}
+                      </li>
+                        <li><!-- Download SVG icon from http://tabler-icons.io/i/x -->
+                          {%if request.user.addres%}
+                          <svg xmlns="http://www.w3.org/2000/svg" class="icon text-green" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 12l5 5l10 -10"></path></svg>
+                          {%else%}
+                          <svg xmlns="http://www.w3.org/2000/svg" class="icon text-red" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                          {%endif%}
+                        Адрес: {{request.user.addres}}
+                      </li>
+                    </ul>
+<!--                    <h4>Conditions</h4>-->
+<!--                    <ul class="list-unstyled space-y-1">-->
+<!--                      <li>&lt;!&ndash; Download SVG icon from http://tabler-icons.io/i/info-circle &ndash;&gt;-->
+<!--                        <svg xmlns="http://www.w3.org/2000/svg" class="icon text-blue" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><circle cx="12" cy="12" r="9"></circle><line x1="12" y1="8" x2="12.01" y2="8"></line><polyline points="11 12 12 12 12 16 13 16"></polyline></svg>-->
+<!--                        License and copyright notice</li>-->
+<!--                    </ul>-->
+                  </div>
+                  <div class="card-footer">
+                    Согласие пользователя на обработку персональных данных
+                    <a href="#" target="_blank">Лицензионное соглашение</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+{%endblock%}
