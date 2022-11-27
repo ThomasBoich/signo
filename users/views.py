@@ -84,6 +84,7 @@ def show_profile(request):
 
     return render(request, 'index/profile.html', context)
 
+
 @login_required
 def show_mymedcard(request):
     if request.method == 'POST':
@@ -151,6 +152,7 @@ def user(request, pk):
         'user': user,
     }
     return render(request, 'users/user.html', context)
+
 
 def usermedcard(request, pk):
     user = MedCard.objects.get(pk=pk)

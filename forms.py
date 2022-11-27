@@ -12,6 +12,6 @@ class SendDocumentForm(forms.ModelForm):
 
     class Meta:
         model = Document
-        # fields = '__all__'
-        fields = ['document', 'recipient', 'type']
-        exclude = ['sender', 'sender_status', 'recipient_status']
+        # fields = '__all__''sender',
+        fields = ['document', 'recipient', 'type', 'sender', 'founder']
+        exclude = ['sender_status', 'recipient_status']

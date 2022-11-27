@@ -10,30 +10,53 @@ from users.models import CustomUser
 
 @login_required
 def show_documents(request):
+    if request.user.type == 'CL':
+        return redirect('index')
+    else:
+        form = SendDocumentForm(request.POST or None, request.FILES)
+        if request.method == 'POST':
+            if form.is_valid():
+                new_doc = form.save(commit=False)
+                # new_doc.sender = request.user
+                new_doc.save()
+                return redirect('documents')
+        else:
+            form = SendDocumentForm()
+
+        context = {
+            'title': 'Все Документы',
+            'form': form,
+            'doc_title': 'Отправить на подпись',
+            'all_users': CustomUser.objects.all().count(),
+            'all_doctors': CustomUser.objects.filter(type='DO').count(),
+            'all_clients': CustomUser.objects.filter(type='CL').count(),
+            'all_active_documents': Document.objects.filter(
+            Q(sender=request.user) | Q(recipient=request.user)).filter(
+            Q(sender_status=False) | Q(recipient_status=False)),
+            'all_documents': Document.objects.all(),
+        'all_finish': Document.objects.filter(Q(sender_status=True))}
+        return render(request, 'documents/documents.html', context=context)
+
+
+@login_required
+def show_category(request, pk):
     form = SendDocumentForm(request.POST or None, request.FILES)
     if request.method == 'POST':
         if form.is_valid():
             new_doc = form.save(commit=False)
-            new_doc.sender = request.user
+            # new_doc.sender = request.user
             new_doc.save()
             return redirect('documents')
     else:
         form = SendDocumentForm()
 
     context = {
-        'title': 'Все Документы',
+        'title': '',
         'form': form,
-        'doc_title': 'Отправить на подпись',
-        'all_users': CustomUser.objects.all().count(),
-        'all_doctors': CustomUser.objects.filter(type='DO').count(),
-        'all_clients': CustomUser.objects.filter(type='CL').count(),
-        'all_active_documents': Document.objects.filter(
-        Q(sender=request.user) | Q(recipient=request.user)).filter(
-        Q(sender_status=False) | Q(recipient_status=False)),
-        'all_documents': Document.objects.all(),
-    'all_finish': Document.objects.filter(Q(sender_status=True))}
-    return render(request, 'documents/documents.html', context=context)
+        'documents': '',
 
+    }
+    return render(request, 'documents/category.html', context=context)
 
 @login_required
 def mydocuments(request):
@@ -41,7 +64,7 @@ def mydocuments(request):
     if request.method == 'POST':
         if form.is_valid():
             new_doc = form.save(commit=False)
-            new_doc.sender = request.user
+            # new_doc.sender = request.user
             new_doc.save()
             return redirect('documents')
     else:
@@ -63,6 +86,7 @@ def mydocuments(request):
         return render(request, 'documents/clmydocuments.html', context=context)
     else:
         return render(request, 'documents/mydocuments.html', context=context)
+
 
 @login_required
 def show_my_sign_documents(request):
@@ -98,7 +122,6 @@ def show_my_finish_documents(request):
         return render(request, 'documents/myfinish.html', context)
 
 
-
 @login_required
 def show_sign_documents(request):
     context = {
@@ -124,6 +147,7 @@ def show_finish_documents(request):
             Q(sender=request.user) | Q(recipient=request.user)).filter(Q(sender_status=True, sender=request.user) | Q(recipient_status=True, recipient=request.user))
     }
     return render(request, 'documents/finish.html', context)
+
 
 def sign_document(request, pk):
     document = Document.objects.get(pk=pk)

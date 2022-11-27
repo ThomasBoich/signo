@@ -36,11 +36,13 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     ADMINISTRATOR = 'AD'
     DOCTOR = 'DO'
     CLIENT = 'CL'
+    DIRECTOR = 'DI'
 
     TYPE_ROLE = [
         (ADMINISTRATOR, 'Администратор'),
         (DOCTOR, 'Доктор'),
-        (CLIENT, 'Клиент')
+        (CLIENT, 'Клиент'),
+        (DIRECTOR, 'Руководитель')
     ]
 
     type = models.CharField(max_length=6, choices=TYPE_ROLE, default=CLIENT, verbose_name='Тип пользователя')

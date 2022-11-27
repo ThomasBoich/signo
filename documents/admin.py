@@ -10,10 +10,10 @@ class DocumentAdmin(admin.ModelAdmin):
     search_fields = ('sender', 'recipient', 'send_date', 'sender_status', 'recipient_status')
     list_editable = ('sender_status', 'recipient_status')
 
-    def save_model(self, request, obj, form, change):
-        if not obj.pk:
-            obj.sender = request.user
-        super().save_model(request, obj, form, change)
+    # def save_model(self, request, obj, form, change):
+    #     if not obj.pk:
+    #         obj.sender = request.user
+    #     super().save_model(request, obj, form, change)
 
 
 admin.site.register(Document, DocumentAdmin)
