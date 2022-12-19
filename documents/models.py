@@ -1,15 +1,13 @@
 import os
-
 from django.db import models
-
 # Create your models here.
 from django.urls import reverse
-
 from users.models import CustomUser
 
-
+# Документ
 class Document(models.Model):
     # title = models.CharField(max_length=240, )
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True, related_name='documenter')
     sender = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, related_name='sender', verbose_name='Отправитель')
     recipient = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, related_name='recipient', verbose_name='Получатель')
     founder = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, related_name='founder', verbose_name='Создатель документа')
@@ -30,6 +28,7 @@ class Document(models.Model):
     )
 
     type_document = models.CharField(choices=TYPE_DOC, max_length=240, blank=True, null=True)
+    # creation_date = models.DateTimeField(blank=True, null=True, auto_now_add=True)
 
     class Meta:
         verbose_name = 'Документ'

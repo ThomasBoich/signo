@@ -33,6 +33,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     groups = models.ManyToManyField(Group, blank=True, null=True, verbose_name='Группы', related_name='groups')
     user_permissions = models.ManyToManyField(Permission, blank=True, null=True, verbose_name='Разрешения', related_name='user_permissions')
     outside = models.DateTimeField(verbose_name='дата увольнения', blank=True, null=True)
+    
     ADMINISTRATOR = 'AD'
     DOCTOR = 'DO'
     CLIENT = 'CL'
@@ -58,6 +59,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     settings = models.BooleanField(default='True', blank=True, verbose_name='Доступ к вкладке настройка пользователей')
     all_info = models.BooleanField(default='True', blank=True, verbose_name='Доступ к информации о всех пациентах')
     my_info = models.BooleanField(default='True', blank=True, verbose_name='Доступ к информации о своих пациентах')
+   
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
@@ -153,3 +155,5 @@ class CustomPermissions(models.Model):
     settings = models.BooleanField(default='True', verbose_name='Доступ к вкладке настройка пользователей')
     all_info = models.BooleanField(default='True', verbose_name='Доступ к информации о всех пациентах')
     my_info = models.BooleanField(default='True', verbose_name='Доступ к информации о своих пациентах')
+
+from documents.models import *
