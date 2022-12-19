@@ -12,10 +12,8 @@ from users.models import CustomUser, MedCard
 def login(request):
     pass
 
-
 def registration(request):
     pass
-
 
 def logout(request):
     pass
@@ -54,10 +52,6 @@ def administrators(request):
     context = {'title': 'Администраторы', 'users': CustomUser.objects.filter(type='AD')}
     return render(request, 'index/administrators.html', context=context)
 
-# class ShowProfileView(DetailView):
-#     model = Profile
-#     template_name = 'index/profile.html'
-#     pk_url_kwarg = 'pk'
 
 @login_required
 def show_profile(request):
@@ -111,41 +105,13 @@ def show_mymedcard(request):
     return render(request, 'index/mymedcard.html', context)
 
 
-# def AppRegistration(request):
-#     if request.method == 'POST':
-#         form = RegistrationForm(request.POST)
-#         if form.is_valid():
-#             user = form.save()
-#             messages.success(request, f'Your account has been sent for approval!')
-#             return redirect('index')
-#     else:
-#         form = RegistrationForm()
-#
-#     context = {
-#         'form': form,
-#     }
-#     return render(request, 'users/registration.html', context)
-
 
 class AppRegistration(CreateView):
     form_class = CustomUserCreationForm
     template_name = 'users/registration.html'
     success_url = reverse_lazy('index')
 
-# def AppRegistration(request):
-#     if request.method == 'POST':
-#         user_form = CustomUserCreationForm(request.POST)
-#         if user_form.is_valid():
-#             # Create a new user object but avoid saving it yet
-#             new_user = user_form.save(commit=False)
-#             # Set the chosen password
-#             new_user.set_password(user_form.cleaned_data['password'])
-#             # Save the User object
-#             new_user.save()
-#             return redirect('index')
-#     else:
-#         user_form = CustomUserCreationForm()
-#     return render(request, 'users/registration.html', {'user_form': user_form})
+
 def user(request, pk):
     user = CustomUser.objects.get(pk=pk)
     context = {

@@ -1,7 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render, redirect
-
 # Create your views here.
 from documents.models import Document, DocumentType
 from users.models import CustomUser
@@ -24,17 +23,18 @@ def index(request):
             'all_clients': CustomUser.objects.filter(type='CL').count(), # кол-во клиентов
             'all_active_documents': Document.objects.filter(
                 Q(sender=request.user) | Q(recipient=request.user)).filter(
-                    Q(sender_status=False) | Q(recipient_status=False)), # Необработанные документы
-            'type': all_types, # все типы документов
-            'all_documents': DocumentType.objects.all(), # все типы документов
-            'finish': Document.objects.all().filter(
-            Q(sender_status=True) & Q(recipient_status=True)).count(), # кол-во подписанных документов
-            'contract': DocumentType.objects.filter(document__type__pk=1).count(), # кол-во договоров
-            'ids': Document.objects.filter(pk=2).count(), # кол-во ИДС
-            'medcard': Document.objects.filter(pk=3).count(), # кол-во медкард
-            'admcard': Document.objects.filter(pk=4).count(), # кол-во адмкард
-            'rent': Document.objects.filter(pk=5).count(), # кол-во справок в налоговую
-            'plan': Document.objects.filter(pk=6).count(), # кол-во планов лечения
+                    Q(sender_status=False) | Q(recipient_status=False)), # необработанные документы
+            'type': DocumentType.objects.all(), # все типы документов
+            'all_documents': Document.objects.all().count(), # кол-во документов
+            'finish': Document.objects.all().filter(Q(sender_status=True) & Q(recipient_status=True)).count(), # кол-во подписанных документов
+            'contract': Document.objects.filter(type__type_document='DOGOVOR').count(), # кол-во договоров
+            'ids': Document.objects.filter(type__type_document='IDS').count(), # кол-во ИДС
+            'medcard': Document.objects.filter(type__type_document='MEDCARD').count(), # кол-во медкард
+            'admcard': Document.objects.filter(type__type_document='ADMCARD').count(), # кол-во адмкард
+            'rent': Document.objects.filter(type__type_document='RENT').count(), # кол-во справок в налоговую
+            'plan': Document.objects.filter(type__type_document='PLAN').count(), # кол-во планов лечения
+            'medcarddne': Document.objects.filter(type__type_document='DNEVNIK').count(),
+            'u': u,
         }
         return render(request, 'index/cabinet/ad.html', context)
     
@@ -45,22 +45,25 @@ def index(request):
         
         context = {
             'title': 'Главная страница',
-            'all_users': CustomUser.objects.all().count(),
-            'all_doctors': CustomUser.objects.filter(type='DO').count(),
-            'all_clients': CustomUser.objects.filter(type='CL').count(),
-            'all_active_documents': Document.objects.filter(Q(sender=request.user) | Q(recipient=request.user)).filter(Q(sender_status=False) | Q(recipient_status=False)),
-            'type': DocumentType.objects.all(),
-            'all_documents': Document.objects.all().count(),
-            'finish': Document.objects.all().filter(Q(sender_status=True) & Q(recipient_status=True)).count(),
-            'contract': Document.objects.filter(type__type_document='DOGOVOR').count(),
-            'ids': Document.objects.filter(type__type_document='IDS').count(),
-            'medcard': Document.objects.filter(type__type_document='MEDCARD').count(),
-            'admcard': Document.objects.filter(type__type_document='ADMCARD').count(),
-            'rent': Document.objects.filter(type__type_document='RENT').count(),
-            'plan': Document.objects.filter(type__type_document='PLAN').count(),
+            'all_users': CustomUser.objects.all().count(), # кол-во пользователей
+            'all_doctors': CustomUser.objects.filter(type='DO').count(), # кол-во врачей
+            'all_clients': CustomUser.objects.filter(type='CL').count(), # кол-во клиентов
+            'all_active_documents': Document.objects.filter(
+                Q(sender=request.user) | Q(recipient=request.user)).filter(
+                    Q(sender_status=False) | Q(recipient_status=False)), # необработанные документы
+            'type': DocumentType.objects.all(), # все типы документов
+            'all_documents': Document.objects.all().count(), # кол-во документов
+            'finish': Document.objects.all().filter(Q(sender_status=True) & Q(recipient_status=True)).count(), # кол-во подписанных документов
+            'contract': Document.objects.filter(type__type_document='DOGOVOR').count(), # кол-во договоров
+            'ids': Document.objects.filter(type__type_document='IDS').count(), # кол-во ИДС
+            'medcard': Document.objects.filter(type__type_document='MEDCARD').count(), # кол-во медкард
+            'admcard': Document.objects.filter(type__type_document='ADMCARD').count(), # кол-во адмкард
+            'rent': Document.objects.filter(type__type_document='RENT').count(), # кол-во справок в налоговую
+            'plan': Document.objects.filter(type__type_document='PLAN').count(), # кол-во планов лечения
             'medcarddne': Document.objects.filter(type__type_document='DNEVNIK').count(),
-            'u': u,
+            # 'u': u,
         }
+        
         return render(request, 'index/cabinet/di.html', context)
     
     # СТРАНИЦА ВРАЧА
