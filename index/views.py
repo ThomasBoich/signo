@@ -1,9 +1,11 @@
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
 from django.shortcuts import render, redirect
-# Create your views here.
+from django.db.models import Q, Count, Case, When, OuterRef, Subquery
+from django.db import models
+
 from documents.models import Document, DocumentType
 from users.models import CustomUser
+
 
 
 @login_required
@@ -42,7 +44,22 @@ def index(request):
     if request.user.is_authenticated and request.user.type == 'DI':
         g = Document.objects.filter(sender_status=False)
         u = CustomUser.objects.all()
-        
+      
+        # types = DocumentType.objects.all().annotate(signed_by_patient=signed_by_patient)
+        types = DocumentType.objects.all() \
+            .annotate(
+                signed_by_patient=Count(Case(
+                    When(document__sender_status=True, then=1),
+                    output_field=models.IntegerField(), 
+                    distinct=True
+            ))) \
+            .annotate(
+                signed_by_doctor=Count(Case(
+                    When(document__recipient_status=True, then=1),
+                    output_field=models.IntegerField(),
+                    distinct=True
+            )))
+
         context = {
             'title': 'Главная страница',
             'all_users': CustomUser.objects.all().count(), # кол-во пользователей
@@ -54,13 +71,8 @@ def index(request):
             'type': DocumentType.objects.all(), # все типы документов
             'all_documents': Document.objects.all().count(), # кол-во документов
             'finish': Document.objects.all().filter(Q(sender_status=True) & Q(recipient_status=True)).count(), # кол-во подписанных документов
-            'contract': Document.objects.filter(type__type_document='DOGOVOR').count(), # кол-во договоров
-            'ids': Document.objects.filter(type__type_document='IDS').count(), # кол-во ИДС
-            'medcard': Document.objects.filter(type__type_document='MEDCARD').count(), # кол-во медкард
-            'admcard': Document.objects.filter(type__type_document='ADMCARD').count(), # кол-во адмкард
-            'rent': Document.objects.filter(type__type_document='RENT').count(), # кол-во справок в налоговую
-            'plan': Document.objects.filter(type__type_document='PLAN').count(), # кол-во планов лечения
-            'medcarddne': Document.objects.filter(type__type_document='DNEVNIK').count(),
+         
+            'types' : types,
             # 'u': u,
         }
         

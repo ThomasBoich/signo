@@ -199,6 +199,7 @@ celerybeat-schedule
 .venv
 venv/
 ENV/
+virt-signo/
 
 # Spyder project settings
 .spyderproject
