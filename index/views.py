@@ -16,46 +16,24 @@ def index(request):
     # else:
         # all_documents_type = DocumentType.objects.all().count()
         
-    # СТРАНИЦА АДМИНИСТРАТОРА
-    if request.user.is_authenticated and request.user.type == 'AD':
-        context = {
-            'title': 'Главная страница',
-            'all_users': CustomUser.objects.all().count(), # кол-во пользователей
-            'all_doctors': CustomUser.objects.filter(type='DO').count(), # кол-во врачей
-            'all_clients': CustomUser.objects.filter(type='CL').count(), # кол-во клиентов
-            'all_active_documents': Document.objects.filter(
-                Q(sender=request.user) | Q(recipient=request.user)).filter(
-                    Q(sender_status=False) | Q(recipient_status=False)), # необработанные документы
-            'type': DocumentType.objects.all(), # все типы документов
-            'all_documents': Document.objects.all().count(), # кол-во документов
-            'finish': Document.objects.all().filter(Q(sender_status=True) & Q(recipient_status=True)).count(), # кол-во подписанных документов
-            'contract': Document.objects.filter(type__type_document='DOGOVOR').count(), # кол-во договоров
-            'ids': Document.objects.filter(type__type_document='IDS').count(), # кол-во ИДС
-            'medcard': Document.objects.filter(type__type_document='MEDCARD').count(), # кол-во медкард
-            'admcard': Document.objects.filter(type__type_document='ADMCARD').count(), # кол-во адмкард
-            'rent': Document.objects.filter(type__type_document='RENT').count(), # кол-во справок в налоговую
-            'plan': Document.objects.filter(type__type_document='PLAN').count(), # кол-во планов лечения
-            'medcarddne': Document.objects.filter(type__type_document='DNEVNIK').count(),
-            'u': u,
-        }
-        return render(request, 'index/cabinet/ad.html', context)
+ 
     
-    # СТРАНИЦА СУПЕРАДМИНИСТРАТОРА
-    if request.user.is_authenticated and request.user.type == 'DI':
+    # СТРАНИЦА СУПЕРАДМИНИСТРАТОРА И АДМИНИСТРАТОРА
+    if request.user.is_authenticated and (request.user.type == 'AD' or request.user.type == 'DI'):
         g = Document.objects.filter(sender_status=False)
-        u = CustomUser.objects.all()
+        # u = CustomUser.objects.all()
       
-        # types = DocumentType.objects.all().annotate(signed_by_patient=signed_by_patient)
+        # добавляем поля "подписано доктором" и "подписано пациентом"
         types = DocumentType.objects.all() \
             .annotate(
                 signed_by_patient=Count(Case(
-                    When(document__sender_status=True, then=1),
+                    When(document__recipient_status=True, then=1),
                     output_field=models.IntegerField(), 
                     distinct=True
             ))) \
             .annotate(
                 signed_by_doctor=Count(Case(
-                    When(document__recipient_status=True, then=1),
+                    When(document__sender_status=True, then=1),
                     output_field=models.IntegerField(),
                     distinct=True
             )))
@@ -68,14 +46,11 @@ def index(request):
             'all_active_documents': Document.objects.filter(
                 Q(sender=request.user) | Q(recipient=request.user)).filter(
                     Q(sender_status=False) | Q(recipient_status=False)), # необработанные документы
-            'type': DocumentType.objects.all(), # все типы документов
             'all_documents': Document.objects.all().count(), # кол-во документов
             'finish': Document.objects.all().filter(Q(sender_status=True) & Q(recipient_status=True)).count(), # кол-во подписанных документов
-         
             'types' : types,
-            # 'u': u,
         }
-        
+
         return render(request, 'index/cabinet/di.html', context)
     
     # СТРАНИЦА ВРАЧА
