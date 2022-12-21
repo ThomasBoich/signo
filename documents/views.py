@@ -12,7 +12,18 @@ from users.models import CustomUser
 def show_documents(request):
     if request.user.type == 'CL':
         return redirect('index')
-    else:
+    else:    
+        search_name = request.GET.get('search')
+        if search_name:
+            all_documents = Document.objects.filter(
+                Q(sender__first_name__icontains=search_name)|
+                Q(sender__last_name__icontains=search_name)|
+                Q(recipient__first_name__icontains=search_name)|
+                Q(recipient__last_name__icontains=search_name)
+                )
+        else:
+            all_documents = Document.objects.all()
+     
         form = SendDocumentForm(request.POST or None, request.FILES)
         if request.method == 'POST':
             if form.is_valid():
@@ -31,10 +42,11 @@ def show_documents(request):
             'all_doctors': CustomUser.objects.filter(type='DO').count(),
             'all_clients': CustomUser.objects.filter(type='CL').count(),
             'all_active_documents': Document.objects.filter(
-            Q(sender=request.user) | Q(recipient=request.user)).filter(
-            Q(sender_status=False) | Q(recipient_status=False)),
-            'all_documents': Document.objects.all(),
-        'all_finish': Document.objects.filter(Q(sender_status=True))}
+                Q(sender=request.user) | Q(recipient=request.user)).filter(
+                Q(sender_status=False) | Q(recipient_status=False)),
+            'all_documents': all_documents,
+            'finish': Document.objects.filter(Q(sender_status=True))
+            }
         return render(request, 'documents/documents.html', context=context)
 
 
