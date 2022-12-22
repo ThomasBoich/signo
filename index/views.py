@@ -7,7 +7,6 @@ from documents.models import Document, DocumentType
 from users.models import CustomUser
 
 
-
 @login_required
 def index(request):
     ''' ГЛАВНАЯ СТРАНИЦА С ИНФОГРАФИКОЙ '''
@@ -86,3 +85,12 @@ def index(request):
             #'all_documents_type': all_documents_type,
         }
         return render(request, 'index/cabinet/cl.html', context)
+
+
+# СТРАНИЦА МОИ КЛИЕНТЫ
+def myclients(request):
+    context = {
+        'title': 'Мои Пациенты',
+        'users': CustomUser.objects.filter(), # - здесь вывести всемх клиентов врача и администратора, для sender и founder
+    }
+    return render(request, 'index/myclients.html', context=context)
