@@ -22,10 +22,22 @@
   <div class="col-12">
                 <div class="card">
                   <div class="card-header">
-                    <a href="{%url 'documents'%}"><h3 class="card-title">Все</h3></a>
+                    <!-- <a href="{%url 'documents'%}"><h3 class="card-title">Все</h3></a>
                     <a href="{%url 'finish'%}"><h3 class="card-title">Подписанные</h3></a>
-                    <a href="{%url 'sign'%}"><h3 class="card-title">Не подписанные</h3></a>
+                    <a href="{%url 'sign'%}"><h3 class="card-title">Не подписанные</h3></a> -->
+                    
+                    <select id='search-date-select' onchange='filter_documents(this.value)' class="form-select me-5" style="width:300px">
+                      <option value="all">за все время</option>
+                      <option value="7">за 7 дней</option>
+                      <option value="30">за этот месяц</option>
+                      <option value="60">за прошлый месяц</option>
+                    </select>
+
+                    <input id='documents-search-start-date' type="date" class="form-control me-3">
+                    <input id='documents-search-end-date' type="date" class="form-control">
+
                     <input id='documents-search-field' type="text" class='form-control' style="width:500px; margin-left:100px" placeholder="Введите имя пользователя...">
+                    
                     <button id='documents-search-button' onclick='filter_documents()' class="btn btn-outline-primary ms-5">Найти</button>
                   </div>
                   <div class="card-body border-bottom py-3">
@@ -152,4 +164,6 @@
 
 
   <script type="text/javascript" src="{% static '/js/document_filters.js' %}"></script>
+
+  
 {%endblock%}

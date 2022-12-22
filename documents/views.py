@@ -1,3 +1,4 @@
+
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render, redirect
@@ -6,6 +7,7 @@ from django.shortcuts import render, redirect
 from documents.models import Document
 from forms import SendDocumentForm
 from users.models import CustomUser
+from .services import *
 
 
 @login_required
@@ -14,16 +16,14 @@ def show_documents(request):
         return redirect('index')
     else:    
         search_name = request.GET.get('search')
-        if search_name:
-            all_documents = Document.objects.filter(
-                Q(sender__first_name__icontains=search_name)|
-                Q(sender__last_name__icontains=search_name)|
-                Q(recipient__first_name__icontains=search_name)|
-                Q(recipient__last_name__icontains=search_name)
-                )
-        else:
-            all_documents = Document.objects.all()
-     
+        period = request.GET.get('period')
+        
+        all_documents = filter_by_name(search_name)
+        
+        if period:
+            start_date, end_date = get_dates(period, all_documents) 
+            all_documents = all_documents.filter(send_date__range=[start_date, end_date])
+
         form = SendDocumentForm(request.POST or None, request.FILES)
         if request.method == 'POST':
             if form.is_valid():
