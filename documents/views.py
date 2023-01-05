@@ -18,10 +18,26 @@ def show_documents(request):
         search_name = request.GET.get('search')
         period = request.GET.get('period')
         
+        # getting signed status
+        try:
+            signed = request.GET.get('signed').split('-')
+        except:
+            signed = ['']
+
         all_documents = filter_by_name(search_name)
         if period:
             start_date, end_date = get_dates(period, all_documents) 
             all_documents = all_documents.filter(send_date__range=[start_date, end_date])
+
+        if signed != ['']:
+            
+            signer = signed[0].upper()
+            signed_status = signed[1].title()
+            if signer in ['AD', 'DO']:
+                all_documents = all_documents.filter(sender__type=signer, sender_status=signed_status)
+            else:
+                all_documents = all_documents.filter(recipient__type=signer, recipient_status=signed_status)
+
 
         form = SendDocumentForm(request.POST or None, request.FILES)
         if request.method == 'POST':

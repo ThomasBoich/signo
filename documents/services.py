@@ -19,7 +19,7 @@ def get_dates(period, all_documents):
         this_start = today.replace(day=1)
         end_date = this_start - timedelta(days=1)
         start_date = end_date.replace(day=1)
-    elif period == 'all':
+    elif period == '':
         start_date = all_documents.last().send_date
         end_date = today
     elif '+' in period:

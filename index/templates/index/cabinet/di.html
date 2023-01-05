@@ -33,10 +33,26 @@
           <div class="top-info-line"><span class="text-muted">Количество документов, <br>подписанных врачами</span><span class='top-info-line-value'>{{docs_signed_by_doctors}}</span></div>
           <div class="top-info-line"><span class="text-muted">Количество документов, <br>не подписанных врачами</span><span class='top-info-line-value'>{{docs_not_signed_by_doctors}}</span></div>
         </div>
+        
         <div class="col-sm-4" style="display:flex; flex-direction:column; gap: 10px">
-          <div class="top-info-line"><span class="text-muted">Клиентов в системе: </span><span class='top-info-line-value'>{{all_clients}}</span></div>
-          <div class="top-info-line"><span class="text-muted">Количество документов, <br>подписанных клиентами</span><span class='top-info-line-value'>{{docs_signed_by_clients}}</span></div>
-          <div class="top-info-line"><span class="text-muted">Количество документов, <br>не подписанных клиентами</span><span class='top-info-line-value'>{{docs_not_signed_by_clients}}</span></div>
+          <div class="top-info-line">
+            <span class="text-muted">
+              <a href="{% url 'users' %}">Клиентов в системе:</a>
+            </span>
+            <span class='top-info-line-value'>{{all_clients}}</span>
+          </div>
+          <div class="top-info-line">
+            <span class="text-muted">
+              <a href='#'>Количество документов, <br>подписанных клиентами</a>
+            </span>
+            <span class='top-info-line-value'>{{docs_signed_by_clients}}</span>
+          </div>
+          <div class="top-info-line">
+            <span class="text-muted">
+              <a href='#'>Количество документов, <br>не подписанных клиентами</a>
+            </span>
+            <span class='top-info-line-value'>{{docs_not_signed_by_clients}}</span>
+          </div>
         </div>
       </div>
   

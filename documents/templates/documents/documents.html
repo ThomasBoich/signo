@@ -19,27 +19,61 @@
   </div>
   {%endblock%}
 
-  <div class="col-12">
-                <div class="card">
-                  <div class="card-header">
+  <!-- <div class="col-12"> -->
                     <!-- <a href="{%url 'documents'%}"><h3 class="card-title">Все</h3></a>
                     <a href="{%url 'finish'%}"><h3 class="card-title">Подписанные</h3></a>
                     <a href="{%url 'sign'%}"><h3 class="card-title">Не подписанные</h3></a> -->
-                    
-                    <select id='search-date-select' onchange='filter_documents(this.value)' class="form-select me-5" style="width:300px">
-                      <option value="all">за все время</option>
-                      <option value="7">за 7 дней</option>
-                      <option value="30">за этот месяц</option>
-                      <option value="60">за прошлый месяц</option>
-                    </select>
+                    <div class='info-box' style="padding:20px">
+                      
+                      <div class="row mb-3">
+                      <!-- <div style="display:flex; gap:20px"> -->
+                        <div class="col-sm-4">
+                          <select id='search-date-select' onchange='filter_documents()' class="form-select">
+                            <option value="">за все время</option>
+                            <option value="7">за 7 дней</option>
+                            <option value="30">за этот месяц</option>
+                            <option value="60">за прошлый месяц</option>
+                          </select>
+                        </div>
 
-                    <input id='documents-search-start-date' type="date" class="form-control me-3">
-                    <input id='documents-search-end-date' type="date" class="form-control">
+                        <div class="col-sm-4">
+                          <input id='documents-search-start-date' type="date" class="form-control">
+                        </div>
+                        <div class="col-sm-4">
+                          <input id='documents-search-end-date' type="date" class="form-control">
+                        </div>
+                      </div>
 
-                    <input id='documents-search-field' type="text" class='form-control' style="width:500px; margin-left:100px" placeholder="Введите имя пользователя...">
-                    
-                    <button id='documents-search-button' onclick='filter_documents()' class="btn btn-outline-primary ms-5">Найти</button>
-                  </div>
+                      <div class="row">
+                      <!-- <div style="display:flex; gap:20px;"> -->
+                      
+                        <div class="col-sm-4">
+                          <select id='search-signed-status-select' onchange='filter_documents()' class="form-select">
+                            <option value="">Показать все</option>
+                            <option value="ad-true">Подписанные админами</option>
+                            <option value="do-true">Подписанные врачами</option>
+                            <option value="cl-true">Подписанные клиентами</option>
+                            <option value="ad-false">Не подписанные админами</option>
+                            <option value="do-false">Не подписанные врачами</option>
+                            <option value="cl-false">Не подписанные клиентами</option>
+                          </select>
+                        </div>
+                      
+                        <div class="col-sm-4">
+                          <input id='documents-search-field' type="text" class='form-control col-sm-4' placeholder="Введите имя пользователя...">
+                        </div>
+                        
+                        <div class="col-sm-4">
+                          <button id='documents-search-button' onclick='filter_documents()' class="btn btn-outline-primary" style="width:100%">Найти</button>
+                        </div>
+                      
+                      </div>
+
+
+                    </div>
+                
+
+
                   <div class="card-body border-bottom py-3">
                     <div class="d-flex">
                     </div>
@@ -159,11 +193,11 @@
                       </li>
                     </ul>
                   </div>
-                </div>
+                <!-- </div> -->
               </div>
 
 
   <script type="text/javascript" src="{% static '/js/document_filters.js' %}"></script>
 
-  
+
 {%endblock%}
