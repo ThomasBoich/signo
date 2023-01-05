@@ -19,7 +19,6 @@ def show_documents(request):
         period = request.GET.get('period')
         
         all_documents = filter_by_name(search_name)
-        
         if period:
             start_date, end_date = get_dates(period, all_documents) 
             all_documents = all_documents.filter(send_date__range=[start_date, end_date])
@@ -28,7 +27,6 @@ def show_documents(request):
         if request.method == 'POST':
             if form.is_valid():
                 new_doc = form.save(commit=False)
-                # new_doc.sender = request.user
                 new_doc.save()
                 return redirect('documents')
         else:

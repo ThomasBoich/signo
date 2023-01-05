@@ -6,5 +6,5 @@ from index.views import index, myclients
 urlpatterns = [
     path('', index, name='index'),
     path('sign/<int:pk>', sign_document, name='sign_document'),
-    path('mycliencts/', myclients, name='myclients'),
+    path('myclients/', myclients, name='myclients'),
 ]

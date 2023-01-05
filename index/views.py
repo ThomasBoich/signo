@@ -20,10 +20,11 @@ def index(request):
     # СТРАНИЦА СУПЕРАДМИНИСТРАТОРА И АДМИНИСТРАТОРА
     if request.user.is_authenticated and (request.user.type == 'AD' or request.user.type == 'DI'):
         g = Document.objects.filter(sender_status=False)
-        # u = CustomUser.objects.all()
-      
+
+
         # добавляем поля "подписано доктором" и "подписано пациентом"
         types = DocumentType.objects.all() \
+            .exclude(type_document='OTKAZ') \
             .annotate(
                 signed_by_patient=Count(Case(
                     When(document__recipient_status=True, then=1),
@@ -36,16 +37,46 @@ def index(request):
                     output_field=models.IntegerField(),
                     distinct=True
             )))
-
+        docs_signed_by_admins = Document.objects.filter(
+                                    sender__type='AD', 
+                                    sender_status=True
+                                    ).count()
+        docs_not_signed_by_admins = Document.objects.filter(
+                                    sender__type='AD', 
+                                    sender_status=False
+                                    ).count()
+        docs_signed_by_doctors = Document.objects.filter(
+                                    sender__type='DO', 
+                                    sender_status=True
+                                    ).count()
+        docs_not_signed_by_doctors = Document.objects.filter(
+                                    sender__type='DO', 
+                                    sender_status=False
+                                    ).count()
+        docs_signed_by_clients = Document.objects.filter(
+                                    recipient__type='CL', 
+                                    recipient_status=True
+                                    ).count()
+        docs_not_signed_by_clients = Document.objects.filter(
+                                        recipient__type='CL', 
+                                        recipient_status=True
+                                        ).count()
         context = {
             'title': 'Главная страница',
             'all_users': CustomUser.objects.all().count(), # кол-во пользователей
+            'all_admins': CustomUser.objects.filter(type='AD').count(), # кол-во врачей
             'all_doctors': CustomUser.objects.filter(type='DO').count(), # кол-во врачей
             'all_clients': CustomUser.objects.filter(type='CL').count(), # кол-во клиентов
             'all_active_documents': Document.objects.filter(
                 Q(sender=request.user) | Q(recipient=request.user)).filter(
                     Q(sender_status=False) | Q(recipient_status=False)), # необработанные документы
             'all_documents': Document.objects.all().count(), # кол-во документов
+            'docs_signed_by_admins': docs_signed_by_admins,
+            'docs_not_signed_by_admins': docs_not_signed_by_admins,
+            'docs_signed_by_doctors': docs_signed_by_doctors,
+            'docs_not_signed_by_doctors': docs_not_signed_by_doctors,
+            'docs_signed_by_clients': docs_signed_by_clients,
+            'docs_not_signed_by_clients': docs_not_signed_by_clients,
             'finish': Document.objects.all().filter(Q(sender_status=True) & Q(recipient_status=True)).count(), # кол-во подписанных документов
             'types' : types,
         }
