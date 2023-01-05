@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.shortcuts import render, redirect
 
 # Create your views here.
-from documents.models import Document
+from documents.models import Document, DocumentType
 from forms import SendDocumentForm
 from users.models import CustomUser
 from .services import *
@@ -17,7 +17,8 @@ def show_documents(request):
     else:    
         search_name = request.GET.get('search')
         period = request.GET.get('period')
-        
+        doc_type = request.GET.get('doc_type').upper()
+
         # getting signed status
         try:
             signed = request.GET.get('signed').split('-')
@@ -30,13 +31,20 @@ def show_documents(request):
             all_documents = all_documents.filter(send_date__range=[start_date, end_date])
 
         if signed != ['']:
-            
             signer = signed[0].upper()
             signed_status = signed[1].title()
             if signer in ['AD', 'DO']:
                 all_documents = all_documents.filter(sender__type=signer, sender_status=signed_status)
-            else:
+            elif signer == 'CL':
                 all_documents = all_documents.filter(recipient__type=signer, recipient_status=signed_status)
+            elif signer == "BOTH":
+                all_documents = all_documents.filter(recipient__type='CL', 
+                                                    recipient_status=signed_status,
+                                                    sender__type__in=['AD', 'DO'],
+                                                    sender_status=signed_status)
+
+        if doc_type:
+            all_documents = all_documents.filter(type__type_document=doc_type)
 
 
         form = SendDocumentForm(request.POST or None, request.FILES)
@@ -48,6 +56,8 @@ def show_documents(request):
         else:
             form = SendDocumentForm()
 
+
+        types = DocumentType.objects.all().exclude(type_document='OTKAZ')
         context = {
             'title': 'Все Документы',
             'form': form,
@@ -59,7 +69,8 @@ def show_documents(request):
                 Q(sender=request.user) | Q(recipient=request.user)).filter(
                 Q(sender_status=False) | Q(recipient_status=False)),
             'all_documents': all_documents,
-            'finish': Document.objects.filter(Q(sender_status=True))
+            'finish': Document.objects.filter(Q(sender_status=True)),
+            'types': types,
             }
         return render(request, 'documents/documents.html', context=context)
 

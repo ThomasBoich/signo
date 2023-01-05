@@ -2,6 +2,7 @@
 function filter_documents(){
     const search_value = document.getElementById('documents-search-field').value
     const signed = document.getElementById('search-signed-status-select').value
+    const doc_type = document.getElementById('search-document-type-select').value
     const urlParams = new URLSearchParams('')
     start_date = document.getElementById('documents-search-start-date').value
     end_date = document.getElementById('documents-search-end-date').value
@@ -12,6 +13,7 @@ function filter_documents(){
       date = document.getElementById('search-date-select').value
     }
     
+    urlParams.set('doc_type', doc_type)
     urlParams.set('signed', signed)
     urlParams.set('search', search_value)
     urlParams.set('period', date)
@@ -40,6 +42,10 @@ function fill_search_fields(){
   
   if(getParameterByName('search') != null){
     document.getElementById('documents-search-field').value = getParameterByName('search')
+  }
+
+  if(getParameterByName('doc_type') != null){
+    document.getElementById('search-document-type-select').value = getParameterByName('doc_type')
   }
 
   if(getParameterByName('period') != null){

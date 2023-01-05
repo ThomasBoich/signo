@@ -49,26 +49,33 @@
                       
                         <div class="col-sm-4">
                           <select id='search-signed-status-select' onchange='filter_documents()' class="form-select">
-                            <option value="">Показать все</option>
+                            <option value="">Показать все (подписанные и неподписанные)</option>
                             <option value="ad-true">Подписанные админами</option>
                             <option value="do-true">Подписанные врачами</option>
                             <option value="cl-true">Подписанные клиентами</option>
+                            <option value="both-true">Подписанные с обеих сторон</option>
                             <option value="ad-false">Не подписанные админами</option>
                             <option value="do-false">Не подписанные врачами</option>
                             <option value="cl-false">Не подписанные клиентами</option>
                           </select>
                         </div>
                       
+                                               
+                        <div class="col-sm-4">
+                          <select id='search-document-type-select' onchange='filter_documents()' class="form-select">
+                            <option value="">Показать все типы</option>
+                            {% for type in types %}
+                            <option value={{type.type_document.lower}}>{{type}}</option>
+                            {% endfor %}
+                           </select>
+                        </div>
+                      
                         <div class="col-sm-4">
                           <input id='documents-search-field' type="text" class='form-control col-sm-4' placeholder="Введите имя пользователя...">
                         </div>
-                        
-                        <div class="col-sm-4">
-                          <button id='documents-search-button' onclick='filter_documents()' class="btn btn-outline-primary" style="width:100%">Найти</button>
-                        </div>
-                      
-                      </div>
 
+                      </div>
+                      <button id='documents-search-button' onclick='filter_documents()' class="btn btn-outline-primary mt-3" style="width:100%">Найти</button>
 
                     </div>
                 
