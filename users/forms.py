@@ -12,7 +12,6 @@ class CustomUserCreationForm(UserCreationForm):
         fields = ('email', 'pasport_series', 'pasport_number', 'phone', 'first_name', 'last_name', 'patronymic')
 
     def clean(self):
-        print('! here')
         phone = self.cleaned_data['phone']
         phone = '+' + ''.join([char for char in phone if char.isdigit()])
 

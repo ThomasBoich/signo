@@ -77,7 +77,6 @@ def show_category(request, pk):
 def mydocuments(request):
     
     all_documents = Document.objects.filter(Q(recipient=request.user) | Q(sender=request.user))
-    print('!', all_documents)
     all_documents = filter_all_documents(request, all_documents)
 
 

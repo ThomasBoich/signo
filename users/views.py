@@ -52,6 +52,7 @@ def users(request):
             .values_list('recipient', flat=True))
     
     users = CustomUser.objects.filter(id__in=list_of_clients)
+
     context = {
         'title': 'Клиенты',
         'users': users, 
