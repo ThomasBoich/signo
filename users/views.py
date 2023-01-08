@@ -4,8 +4,9 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
+from django.db.models import Q
 
-
+from documents.models import Document
 from users.forms import LoginForm, ProfileUpdateForm, UserUpdateForm, CustomUserCreationForm, MedCardUpdateForm
 from users.models import CustomUser, MedCard
 
@@ -44,7 +45,19 @@ def doctors(request):
 
 @login_required
 def users(request):
-    context = {'title': 'Клиенты', 'users': CustomUser.objects.filter(type='CL')}
+    
+    list_of_clients = list(Document.objects.filter(
+            Q(sender=request.user) | Q(founder=request.user)
+            ).distinct()
+            .values_list('recipient', flat=True))
+    
+    users = CustomUser.objects.filter(id__in=list_of_clients)
+    context = {
+        'title': 'Клиенты',
+        'users': users, 
+    }
+    # context = {'title': 'Клиенты', 'users': CustomUser.objects.filter(type='CL')}
+    print(context['users'])
     return render (request, 'index/users.html', context=context)
 
 
