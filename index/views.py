@@ -21,7 +21,7 @@ def index(request):
     if request.user.is_authenticated and (request.user.type == 'AD' or request.user.type == 'DI'):
         g = Document.objects.filter(sender_status=False)
 
-
+        documents = Document.objects.all()
         # добавляем поля "подписано доктором" и "подписано пациентом"
         types = DocumentType.objects.all() \
             .exclude(type_document='OTKAZ') \
@@ -37,29 +37,29 @@ def index(request):
                     output_field=models.IntegerField(),
                     distinct=True
             )))
-        docs_signed_by_admins = Document.objects.filter(
+        docs_signed_by_admins = documents.filter(
                                     sender__type='AD', 
                                     sender_status=True
                                     ).count()
-        docs_not_signed_by_admins = Document.objects.filter(
+        docs_not_signed_by_admins = documents.filter(
                                     sender__type='AD', 
                                     sender_status=False
                                     ).count()
-        docs_signed_by_doctors = Document.objects.filter(
+        docs_signed_by_doctors = documents.filter(
                                     sender__type='DO', 
                                     sender_status=True
                                     ).count()
-        docs_not_signed_by_doctors = Document.objects.filter(
+        docs_not_signed_by_doctors = documents.filter(
                                     sender__type='DO', 
                                     sender_status=False
                                     ).count()
-        docs_signed_by_clients = Document.objects.filter(
+        docs_signed_by_clients = documents.filter(
                                     recipient__type='CL', 
                                     recipient_status=True
                                     ).count()
-        docs_not_signed_by_clients = Document.objects.filter(
+        docs_not_signed_by_clients = documents.filter(
                                         recipient__type='CL', 
-                                        recipient_status=True
+                                        recipient_status=False
                                         ).count()
         context = {
             'title': 'Главная страница',

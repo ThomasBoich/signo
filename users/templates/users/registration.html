@@ -213,5 +213,15 @@
     <!-- Tabler Core -->
     <script src="{%static './dist/js/tabler.min.js'%}"></script>
     <script src="{%static './dist/js/demo.min.js'%}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+    <script src="{% static '/js/jquery.maskedinput.min.js' %}"></script>
+
+
+    <script>
+      $(document).on('DOMContentLoaded', function(){
+        console.log('hey')
+        $('#id_phone').mask('+7 999 999-99-99')
+      })
+    </script>
 </body>
 </html>

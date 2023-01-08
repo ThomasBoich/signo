@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-    <title>SIGNO  - CRM</title>
+    <title>SIGNO - CRM</title>
     <!-- CSS files -->
     <link href="{% static 'dist/css/tabler.min.css' %}" rel="stylesheet"/>
     <link href="{% static 'dist/css/tabler-flags.min.css' %}" rel="stylesheet"/>
@@ -13,6 +13,9 @@
     <link href="{% static 'dist/css/demo.min.css'%}" rel="stylesheet"/>
     <link href="{% static 'css/style.css'%}" rel="stylesheet"/>
     <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+    <script src="{% static '/js/jquery.maskedinput.min.js' %}"></script>
+
+ 
 
     
     <style>
@@ -171,3 +174,6 @@
         </div>
         <div class="page-body">
           <div class="container-xl">
+
+
+            {% include 'modals/__sms_code_modal.html' %}

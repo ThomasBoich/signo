@@ -5,11 +5,18 @@ from .models import CustomUser, Profile, MedCard
 
 
 class CustomUserCreationForm(UserCreationForm):
+    phone = forms.CharField(label='Телефон', required=True, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '+7 999 123-45-67'}))
+
     class Meta(UserCreationForm):
         model = CustomUser
         fields = ('email', 'pasport_series', 'pasport_number', 'phone', 'first_name', 'last_name', 'patronymic')
 
+    def clean(self):
+        print('! here')
+        phone = self.cleaned_data['phone']
+        phone = '+' + ''.join([char for char in phone if char.isdigit()])
 
+        
 class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser

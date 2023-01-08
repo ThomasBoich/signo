@@ -19,7 +19,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     pasport_number = models.CharField(max_length=12, blank=True, verbose_name='Номер паспорта')
     addres = models.CharField(max_length=240, blank=True, verbose_name='Адрес пользователя')
     user_profile_id = models.IntegerField(blank=True, verbose_name='ID пользователя', null=True)
-    phone = models.CharField(max_length=12, blank=True, null=True, verbose_name='Телефон')
+    phone = models.CharField(max_length=24, blank=True, null=True, verbose_name='Телефон')
     uniq_id = models.CharField(max_length=12, blank=True, null=True, verbose_name='Уникальный ID')
     photo = models.ImageField(upload_to='midia/users/%Y/%m/%d/', blank=True, default='media/users/use.png', verbose_name='Аватар')
     # role = models.ForeignKey('Role', on_delete=models.CASCADE, blank=True, null=True, default=3)

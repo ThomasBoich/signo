@@ -23,61 +23,7 @@
                     <!-- <a href="{%url 'documents'%}"><h3 class="card-title">Все</h3></a>
                     <a href="{%url 'finish'%}"><h3 class="card-title">Подписанные</h3></a>
                     <a href="{%url 'sign'%}"><h3 class="card-title">Не подписанные</h3></a> -->
-                    <div class='info-box' style="padding:20px">
-                      
-                      <div class="row mb-3">
-                      <!-- <div style="display:flex; gap:20px"> -->
-                        <div class="col-sm-4">
-                          <select id='search-date-select' onchange='filter_documents()' class="form-select">
-                            <option value="">за все время</option>
-                            <option value="7">за 7 дней</option>
-                            <option value="30">за этот месяц</option>
-                            <option value="60">за прошлый месяц</option>
-                          </select>
-                        </div>
-
-                        <div class="col-sm-4">
-                          <input id='documents-search-start-date' type="date" class="form-control">
-                        </div>
-                        <div class="col-sm-4">
-                          <input id='documents-search-end-date' type="date" class="form-control">
-                        </div>
-                      </div>
-
-                      <div class="row">
-                      <!-- <div style="display:flex; gap:20px;"> -->
-                      
-                        <div class="col-sm-4">
-                          <select id='search-signed-status-select' onchange='filter_documents()' class="form-select">
-                            <option value="">Показать все (подписанные и неподписанные)</option>
-                            <option value="ad-true">Подписанные админами</option>
-                            <option value="do-true">Подписанные врачами</option>
-                            <option value="cl-true">Подписанные клиентами</option>
-                            <option value="both-true">Подписанные с обеих сторон</option>
-                            <option value="ad-false">Не подписанные админами</option>
-                            <option value="do-false">Не подписанные врачами</option>
-                            <option value="cl-false">Не подписанные клиентами</option>
-                          </select>
-                        </div>
-                      
-                                               
-                        <div class="col-sm-4">
-                          <select id='search-document-type-select' onchange='filter_documents()' class="form-select">
-                            <option value="">Показать все типы</option>
-                            {% for type in types %}
-                            <option value={{type.type_document.lower}}>{{type}}</option>
-                            {% endfor %}
-                           </select>
-                        </div>
-                      
-                        <div class="col-sm-4">
-                          <input id='documents-search-field' type="text" class='form-control col-sm-4' placeholder="Введите имя пользователя...">
-                        </div>
-
-                      </div>
-                      <button id='documents-search-button' onclick='filter_documents()' class="btn btn-outline-primary mt-3" style="width:100%">Найти</button>
-
-                    </div>
+                    {% include 'common_elements/_info_box.html' %}
                 
 
 
@@ -85,7 +31,7 @@
                     <div class="d-flex">
                     </div>
                   </div>
-                  <div class="table-responsive">
+                  <div class="table-responsive bg-white">
                     <table class="table card-table table-vcenter text-nowrap datatable">
                       <thead>
                         <tr>
@@ -146,9 +92,7 @@
                                 Действия
                               </button>
                               <div class="dropdown-menu dropdown-menu-end">
-                                <a class="dropdown-item" href="{% url 'sign_document' document.pk %}#">
-                                  Подписать
-                                </a>
+                                {% include 'common_elements/_dropdown_sign_button.html' %} 
                                 <a class="dropdown-item" href="{{document.document.url}}#" download>
 <!--                                  Anotheraction-->
                                   Скачать документ
@@ -204,7 +148,6 @@
               </div>
 
 
-  <script type="text/javascript" src="{% static '/js/document_filters.js' %}"></script>
 
 
 {%endblock%}

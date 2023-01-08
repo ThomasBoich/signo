@@ -1,13 +1,17 @@
+import random
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render, redirect
+from django.http import JsonResponse, HttpResponseRedirect
+from django.urls import reverse
 
 # Create your views here.
 from documents.models import Document, DocumentType
 from forms import SendDocumentForm
 from users.models import CustomUser
 from .services import *
+from .send_sms import *
 
 
 @login_required
@@ -17,7 +21,12 @@ def show_documents(request):
     else:    
         search_name = request.GET.get('search')
         period = request.GET.get('period')
-        doc_type = request.GET.get('doc_type').upper()
+        
+        # getting doc_type
+        try:
+            doc_type = request.GET.get('doc_type').upper()
+        except:
+            doc_type = ''
 
         # getting signed status
         try:
@@ -186,25 +195,52 @@ def show_finish_documents(request):
     return render(request, 'documents/finish.html', context)
 
 
-def sign_document(request, pk):
-    document = Document.objects.get(pk=pk)
-    if request.user.type == 'CL':
-        document.recipient_status = True
-        document.save()
-        return redirect('index')
-    else:
-        document.sender_status = True
-        document.save()
-        return redirect('index')
+# def sign_document(request, pk):
+#     document = Document.objects.get(pk=pk)
+#     if request.user.type == 'CL':
+#         document.recipient_status = True
+#         document.save()
+#         return HttpResponseRedirect(reverse('index'))
+#     else:
+#         document.sender_status = True
+#         document.save()
+#         return HttpResponseRedirect(redirect('index'))
 
 
-def sign_document_finish(request, pk):
-    document = Document.objects.get(pk=pk)
-    if request.user.type == 'CL':
-        document.recipient_status = True
-        document.save()
-        return redirect('sign')
-    else:
-        document.sender_status = True
-        document.save()
-        return redirect('sign')
+# def sign_document_finish(request, pk):
+#     document = Document.objects.get(pk=pk)
+#     if request.user.type == 'CL':
+#         document.recipient_status = True
+#         document.save()
+#         return redirect('sign')
+#     else:
+#         document.sender_status = True
+#         document.save()
+#         return redirect('sign')
+
+
+def send_code(request):
+    code = random.randrange(1000, 9999)
+    request.session['code'] = code
+    phone = request.user.phone.replace('+', '')
+    send_code_to_phone(phone, code)
+    return JsonResponse({'':''})
+
+
+def check_code(request):
+    code_entered = int(request.GET.get('code'))
+    code_sent = request.session['code']
+    print(code_entered, type(code_entered), code_sent, type(code_sent))
+    pk = request.GET.get('pk')
+    if code_entered == code_sent:
+        document = Document.objects.get(pk=pk)
+        if request.user.type == 'CL':
+            document.recipient_status = True
+            document.save()
+        else:
+            document.sender_status = True
+            document.save()
+        result = {'reload': 'y'} # used to reload page
+        return JsonResponse(result)
+    result = {'code': ''}
+    return JsonResponse(result)

@@ -24,16 +24,50 @@
           <div class="text-muted mb-3" style="font-size:1.5rem">Пользователи</div>
         </div> -->
         <div class="col-sm-4" style="display:flex; flex-direction:column; gap: 10px">
-          <div class="top-info-line"><span class="text-muted">Aдминов в системе</span><span class='top-info-line-value'>{{all_admins}}</span></div>
-          <div class="top-info-line"><span class="text-muted">Количество документов, <br>подписанных админами</span><span class='top-info-line-value'>{{docs_signed_by_admins}}</span></div>
-          <div class="top-info-line"><span class="text-muted">Количество документов, <br>не подписанных админ </span><span class='top-info-line-value'>{{docs_not_signed_by_admins}}</span></div>
-        </div>
-        <div class="col-sm-4" style="display:flex; flex-direction:column; gap: 10px">
-          <div class="top-info-line"><span class="text-muted">Врачей в системе: </span><span class='top-info-line-value'>{{all_doctors}}</span></div>
-          <div class="top-info-line"><span class="text-muted">Количество документов, <br>подписанных врачами</span><span class='top-info-line-value'>{{docs_signed_by_doctors}}</span></div>
-          <div class="top-info-line"><span class="text-muted">Количество документов, <br>не подписанных врачами</span><span class='top-info-line-value'>{{docs_not_signed_by_doctors}}</span></div>
+          <div class="top-info-line">
+            <span class="text-muted">
+              <a href="{% url 'administrators' %}">Aдминов в системе</a>
+            </span>
+            <span class='top-info-line-value'>{{all_admins}}</span>
+          </div>
+          <div class="top-info-line">
+            <span class="text-muted">
+              <a href="{% url 'documents' %}?signed=ad-true">Количество документов, <br>подписанных админами</a>
+            </span>
+            <span class='top-info-line-value'>{{docs_signed_by_admins}}</span>
+          </div>
+          <div class="top-info-line">
+            <span class="text-muted">
+              <a href="{% url 'documents' %}?signed=ad-false">Количество документов, <br>не подписанных админами</a> 
+            </span>
+            <span class='top-info-line-value'>{{docs_not_signed_by_admins}}</span>
+          </div>
         </div>
         
+        
+        <div class="col-sm-4" style="display:flex; flex-direction:column; gap: 10px">
+          <div class="top-info-line">
+            <span class="text-muted">
+              <a href="{% url 'doctors' %}">Врачей в системе:</a>
+            </span>
+            <span class='top-info-line-value'>{{all_doctors}}</span>
+          </div>
+          <div class="top-info-line">
+            <span class="text-muted">
+              <a href="{% url 'documents' %}?signed=do-true">Количество документов, <br>подписанных врачами</a>
+            </span>
+            <span class='top-info-line-value'>{{docs_signed_by_doctors}}</span>
+          </div>
+          <div class="top-info-line">
+            <span class="text-muted">
+              <a href="{% url 'documents' %}?signed=do-false">Количество документов, <br>не подписанных врачами</a>
+            </span>
+            <span class='top-info-line-value'>{{docs_not_signed_by_doctors}}</span>
+          </div>
+        </div>
+        
+
+
         <div class="col-sm-4" style="display:flex; flex-direction:column; gap: 10px">
           <div class="top-info-line">
             <span class="text-muted">
@@ -43,13 +77,13 @@
           </div>
           <div class="top-info-line">
             <span class="text-muted">
-              <a href='#'>Количество документов, <br>подписанных клиентами</a>
+              <a href="{% url 'documents' %}?signed=cl-true">Количество документов, <br>подписанных клиентами</a>
             </span>
             <span class='top-info-line-value'>{{docs_signed_by_clients}}</span>
           </div>
           <div class="top-info-line">
             <span class="text-muted">
-              <a href='#'>Количество документов, <br>не подписанных клиентами</a>
+              <a href="{% url 'documents' %}?signed=cl-false">Количество документов, <br>не подписанных клиентами</a>
             </span>
             <span class='top-info-line-value'>{{docs_not_signed_by_clients}}</span>
           </div>
@@ -97,7 +131,7 @@
           </div>
         </div>
         <div class="table-responsive">
-          <table class="table card-table table-vcenter text-nowrap datatable">
+          <table class="table card-table table-vcenter text-nowrap datatable" >
             <thead>
               <tr>
                 <th class="w-1">No. <!-- Download SVG icon from http://tabler-icons.io/i/chevron-up -->
@@ -159,9 +193,10 @@
                       Действия
                     </button>
                     <div class="dropdown-menu dropdown-menu-end">
-                      <a class="dropdown-item" href="{% url 'sign_document' document.pk %}#">
+                      {% include 'common_elements/_dropdown_sign_button.html' %}  
+                      <!-- <a id='document-{{document.id}}' class="dropdown-item dropdown-document-sign-button" data-bs-toggle="modal" data-bs-target="#sms-code-modal">
                         Подписать
-                      </a>
+                      </a> -->
                       <a class="dropdown-item" href="{{document.document.url}}#" download>
 <!--                                  Anotheraction-->
                         Скачать документ
@@ -189,5 +224,17 @@
   </div>
 </div>
 </div>
+
+
+<!-- <script>
+  // saving document id to variable
+  var document
+  $(window).on('click', function(e){
+    if ($(e.target).hasClass('dropdown-document-sign-button')){
+      document_to_sign_pk = e.target.id.split('-')[1]
+    }
+  })
+</script> -->
+
 
 {%endblock%}

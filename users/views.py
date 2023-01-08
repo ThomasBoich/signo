@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
+
 from users.forms import LoginForm, ProfileUpdateForm, UserUpdateForm, CustomUserCreationForm, MedCardUpdateForm
 from users.models import CustomUser, MedCard
 
@@ -61,8 +62,9 @@ def show_profile(request):
         #                            request.FILES,
         #                            instance=request.user.profile)
         if u_form.is_valid():
-            u_form.save()
-            # p_form.save() and p_form.is_valid()
+            form = u_form.save(commit=False)
+            form.phone = '+' + ''.join([char for char in form.phone if char.isdigit()])
+            form.save()
             messages.success(request, f'Ваш профиль успешно обновлен.')
             return redirect('profile')
 
@@ -126,3 +128,5 @@ def usermedcard(request, pk):
         'user': user,
     }
     return render(request, 'users/usermedcard.html', context)
+
+
