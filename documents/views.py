@@ -16,45 +16,14 @@ from .send_sms import *
 
 @login_required
 def show_documents(request):
+    
+    all_documents = Document.objects.all()
+    
     if request.user.type == 'CL':
         return redirect('index')
     else:    
-        search_name = request.GET.get('search')
-        period = request.GET.get('period')
         
-        # getting doc_type
-        try:
-            doc_type = request.GET.get('doc_type').upper()
-        except:
-            doc_type = ''
-
-        # getting signed status
-        try:
-            signed = request.GET.get('signed').split('-')
-        except:
-            signed = ['']
-
-        all_documents = filter_by_name(search_name)
-        if period:
-            start_date, end_date = get_dates(period, all_documents) 
-            all_documents = all_documents.filter(send_date__range=[start_date, end_date])
-
-        if signed != ['']:
-            signer = signed[0].upper()
-            signed_status = signed[1].title()
-            if signer in ['AD', 'DO']:
-                all_documents = all_documents.filter(sender__type=signer, sender_status=signed_status)
-            elif signer == 'CL':
-                all_documents = all_documents.filter(recipient__type=signer, recipient_status=signed_status)
-            elif signer == "BOTH":
-                all_documents = all_documents.filter(recipient__type='CL', 
-                                                    recipient_status=signed_status,
-                                                    sender__type__in=['AD', 'DO'],
-                                                    sender_status=signed_status)
-
-        if doc_type:
-            all_documents = all_documents.filter(type__type_document=doc_type)
-
+        all_documents = filter_all_documents(request, all_documents)
 
         form = SendDocumentForm(request.POST or None, request.FILES)
         if request.method == 'POST':
@@ -106,6 +75,12 @@ def show_category(request, pk):
 
 @login_required
 def mydocuments(request):
+    
+    all_documents = Document.objects.filter(Q(recipient=request.user) | Q(sender=request.user))
+    print('!', all_documents)
+    all_documents = filter_all_documents(request, all_documents)
+
+
     form = SendDocumentForm(request.POST or None, request.FILES)
     if request.method == 'POST':
         if form.is_valid():
@@ -126,7 +101,7 @@ def mydocuments(request):
         'all_active_documents': Document.objects.filter(
         Q(sender=request.user) | Q(recipient=request.user)).filter(
         Q(sender_status=False) | Q(recipient_status=False)),
-        'all_documents': Document.objects.filter(Q(recipient=request.user) | Q(sender=request.user)),
+        'all_documents': all_documents,
         }
     if request.user.type == 'CL':
         return render(request, 'documents/clmydocuments.html', context=context)

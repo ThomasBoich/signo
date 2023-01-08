@@ -35,7 +35,48 @@ def get_dates(period, all_documents):
     return start_date, end_date
 
 
-def filter_by_name(search_name):
+
+def filter_all_documents(request, all_documents):
+    
+    search_name = request.GET.get('search')
+    period = request.GET.get('period')
+    
+    # getting doc_type
+    try:
+        doc_type = request.GET.get('doc_type').upper()
+    except:
+        doc_type = ''
+
+    # getting signed status
+    try:
+        signed = request.GET.get('signed').split('-')
+    except:
+        signed = ['']
+
+    all_documents = filter_by_name(all_documents, search_name)
+    if period:
+        start_date, end_date = get_dates(period, all_documents) 
+        all_documents = all_documents.filter(send_date__range=[start_date, end_date])
+
+    if signed != ['']:
+        signer = signed[0].upper()
+        signed_status = signed[1].title()
+        if signer in ['AD', 'DO']:
+            all_documents = all_documents.filter(sender__type=signer, sender_status=signed_status)
+        elif signer == 'CL':
+            all_documents = all_documents.filter(recipient__type=signer, recipient_status=signed_status)
+        elif signer == "BOTH":
+            all_documents = all_documents.filter(recipient__type='CL', 
+                                                recipient_status=signed_status,
+                                                sender__type__in=['AD', 'DO'],
+                                                sender_status=signed_status)
+
+    if doc_type:
+        all_documents = all_documents.filter(type__type_document=doc_type)
+
+    return all_documents
+
+def filter_by_name(all_documents, search_name):
     if search_name:
         all_documents = Document.objects.filter(
             Q(sender__first_name__icontains=search_name)|
@@ -44,6 +85,6 @@ def filter_by_name(search_name):
             Q(recipient__last_name__icontains=search_name)
             ).order_by('-send_date')
     else:
-        all_documents = Document.objects.all().order_by('-send_date')
+        all_documents = all_documents.order_by('-send_date')
 
     return all_documents
