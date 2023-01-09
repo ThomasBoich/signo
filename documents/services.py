@@ -94,7 +94,7 @@ def filter_by_name(all_documents, search_name):
             (Q(sender__first_name__icontains=name1) & Q(sender__last_name__icontains=name2)) |
             (Q(sender__first_name__icontains=name2) & Q(sender__last_name__icontains=name1)) |
             (Q(recipient__first_name__icontains=name1) & Q(recipient__last_name__icontains=name2)) |
-            Q(recipient__last_name__icontains=name2) & Q(recipient__last_name__icontains=name1)
+            (Q(recipient__last_name__icontains=name2) & Q(recipient__last_name__icontains=name1))
         )
     else:
         all_documents = all_documents.order_by('-send_date')
