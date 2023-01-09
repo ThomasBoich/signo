@@ -1,5 +1,36 @@
 {%extends 'index.html'%}
 {%block content%}
+
+<div class='info-box mb-3' style="padding:20px">
+                      
+  <div class="row ">
+  <!-- <div style="display:flex; gap:20px"> -->
+    <div class="col-sm-4">
+      <select id='search-date-select' onchange='filter_users()' class="form-select">
+        <option value="">за все время</option>
+        <option value="7">за 7 дней</option>
+        <option value="30">за этот месяц</option>
+        <option value="60">за прошлый месяц</option>
+      </select>
+    </div>
+
+    <div class="col-sm-4">
+      <input id='users-search-start-date' type="date" class="form-control">
+    </div>
+    <div class="col-sm-4">
+      <input id='users-search-end-date' type="date" class="form-control">
+    </div>
+  </div>
+<div class="row mt-3">
+  <div class="col-sm-8">
+    <input id='users-search-field' type="text" class='form-control' placeholder="Введите имя пользователя...">
+  </div>
+  <div class="col-sm-4">
+    <button id='users-search-button' onclick='filter_users()' class="btn btn-outline-primary" style="width:100%">Найти</button>
+  </div>
+</div>
+</div>
+
 <div class="col-12">
                 <div class="card">
                   <div class="table-responsive">
@@ -8,8 +39,11 @@
                         <tr>
                           <th>ФИО</th>
                           <th>ID</th>
-                          <th>Паспорт</th>
+                          <th>Регистрация</th>
+                          <th>Последнее изменение</th>
                           <th>Телефон</th>
+                          <th>Подписанных<br> док-тов</th>
+                          <th>Неподписанных<br> док-тов</th>
                           <th class="w-1"></th>
                         </tr>
                       </thead>
@@ -26,20 +60,24 @@
                             </div>
                           </td>
                           <td>
-                            <div>Automation Specialist IV</div>
-                            <div class="text-muted">Accounting</div>
-                          </td>
-                          <td class="text-muted">
-                            {{user.profile.pasport_series}} {{user.pasport_number}}
+                            <div>{{ user.id }}</div>
                           </td>
                           <td>
-                            {{user.profile.phone}}
-<!--                            <a href="#">Редактировать</a>-->
-<!--                            <a href="#">Редактировать</a>-->
+                            <div>{{ user.date_joined }}</div>
                           </td>
                           <td>
-
+                            <div>{{ user.last_login }}</div>
                           </td>
+                          <td>
+                            <div>{{ user.phone }}</div>
+                          </td>
+                          <td>
+                            <div>{{ user.signed_docs }}</div>
+                          </td>
+                          <td>
+                            <div>{{ user.not_signed_docs }}</div>
+                          </td>
+                          
                         </tr>
                       {%endfor%}
                       </tbody>

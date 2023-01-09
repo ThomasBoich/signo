@@ -79,6 +79,7 @@ def mydocuments(request):
     all_documents = Document.objects.filter(Q(recipient=request.user) | Q(sender=request.user))
     all_documents = filter_all_documents(request, all_documents)
 
+    types = DocumentType.objects.all().exclude(type_document='OTKAZ')
 
     form = SendDocumentForm(request.POST or None, request.FILES)
     if request.method == 'POST':
@@ -101,6 +102,7 @@ def mydocuments(request):
         Q(sender=request.user) | Q(recipient=request.user)).filter(
         Q(sender_status=False) | Q(recipient_status=False)),
         'all_documents': all_documents,
+        'types': types,
         }
     if request.user.type == 'CL':
         return render(request, 'documents/clmydocuments.html', context=context)

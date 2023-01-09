@@ -77,13 +77,25 @@ def filter_all_documents(request, all_documents):
     return all_documents
 
 def filter_by_name(all_documents, search_name):
-    if search_name:
+    print('!', search_name)
+    if search_name and len(search_name.split(' ')) == 1:
         all_documents = Document.objects.filter(
             Q(sender__first_name__icontains=search_name)|
             Q(sender__last_name__icontains=search_name)|
             Q(recipient__first_name__icontains=search_name)|
             Q(recipient__last_name__icontains=search_name)
             ).order_by('-send_date')
+    elif search_name and len(search_name.split(' ')) == 2:
+        print('!here')
+        name1 = search_name.split(' ')[0]
+        name2 = search_name.split(' ')[1]
+        print(f'! name = {name1} last_name = {name2}')
+        all_documents = Document.objects.filter(
+            (Q(sender__first_name__icontains=name1) & Q(sender__last_name__icontains=name2)) |
+            (Q(sender__first_name__icontains=name2) & Q(sender__last_name__icontains=name1)) |
+            (Q(recipient__first_name__icontains=name1) & Q(recipient__last_name__icontains=name2)) |
+            Q(recipient__last_name__icontains=name2) & Q(recipient__last_name__icontains=name1)
+        )
     else:
         all_documents = all_documents.order_by('-send_date')
 

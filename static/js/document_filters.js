@@ -46,6 +46,7 @@ function fill_search_fields(){
 
   if(getParameterByName('doc_type') != null){
     document.getElementById('search-document-type-select').value = getParameterByName('doc_type')
+    console.log(getParameterByName('doc_type'))
   }
 
   if(getParameterByName('period') != null){

@@ -111,7 +111,7 @@
           <tbody>
             {% for type in types %}
               <tr>
-                <td><a href="{%url 'category' type.id %}">{{type.title}}</a></td>
+                <td><a href="{%url 'documents' %}?doc_type={{type.type_document.lower}}">{{type.title}}</a></td>
                 <td>{{type.document.count}}</td>
                 <td>{{type.signed_by_patient}} / {{type.document.count|sub:type.signed_by_patient}}</td>
                 <td>{{type.signed_by_doctor}} / {{type.document.count|sub:type.signed_by_doctor}}</td>

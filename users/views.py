@@ -4,11 +4,13 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
-from django.db.models import Q
+from django.db.models import Q, Count, When, Case, Subquery, OuterRef
+from django.db import models
 
 from documents.models import Document
 from users.forms import LoginForm, ProfileUpdateForm, UserUpdateForm, CustomUserCreationForm, MedCardUpdateForm
 from users.models import CustomUser, MedCard
+from .services import *
 
 
 def login(request):
@@ -51,14 +53,26 @@ def users(request):
             ).distinct()
             .values_list('recipient', flat=True))
     
-    users = CustomUser.objects.filter(id__in=list_of_clients)
+    all_clients = CustomUser.objects.filter(id__in=list_of_clients) \
+            .annotate(
+                signed_docs=Count(Case(
+                    When(recipient__recipient_status=True, then=1),
+                    output_field=models.IntegerField(),
+                    distinct=True
+            ))) \
+            .annotate(
+                not_signed_docs=Count(Case(
+                    When(recipient__recipient_status=False, then=1),
+                    output_field=models.IntegerField(),
+                    distinct=True
+            )))
+
+    clients = search_users(request, all_clients)
 
     context = {
         'title': 'Клиенты',
-        'users': users, 
+        'users': clients, 
     }
-    # context = {'title': 'Клиенты', 'users': CustomUser.objects.filter(type='CL')}
-    print(context['users'])
     return render (request, 'index/users.html', context=context)
 
 
