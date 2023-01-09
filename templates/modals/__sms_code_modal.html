@@ -82,6 +82,7 @@
   function send_code(){
     show_code_block()
     $.ajax({
+      data: {'test':'test',},
       url: "{% url 'send_code' %}"
     })
   }

@@ -31,3 +31,9 @@
     font-weight:600;
     font-size:1.7rem;
 }
+
+
+.sortable-table-header:hover{
+    cursor:pointer;
+    text-decoration:underline;
+}

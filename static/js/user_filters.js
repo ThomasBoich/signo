@@ -1,3 +1,24 @@
+function filterByField(value) {
+  
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.has('sort')){
+    if (urlParams.get('sort').includes(value) & urlParams.get('sort').includes('-')){
+      value = urlParams.get('sort').replace('-', '')
+    }else if (urlParams.get('sort').includes(value)){
+      value = '-' + urlParams.get('sort')
+    }
+    urlParams.delete('sort')
+  }
+  urlParams.append('sort', value);
+  
+
+  // if (field === 'sort' && urlParams.has('page')){
+  //   urlParams.delete('page')
+  //   urlParams.append('page', '1')
+  // }
+
+  window.location.search = urlParams;
+}
 
 function filter_users(){
     const search_value = document.getElementById('users-search-field').value
@@ -23,8 +44,16 @@ function filter_users(){
 // prefilling search fields
 document.addEventListener("DOMContentLoaded", function() {
   fill_user_search_fields()
-
+  highlight_table_header()
 })
+
+function highlight_table_header(){
+  const urlParams = new URLSearchParams(window.location.search); 
+  if (urlParams.get('sort')){
+
+  document.getElementById('th-'+urlParams.get('sort').replace('-', '')).style.color = 'orange'
+  }
+}
 
 function fill_user_search_fields(){
   

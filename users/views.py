@@ -69,6 +69,11 @@ def users(request):
 
     clients = search_users(request, all_clients)
 
+    sort_filter = request.GET.get('sort')
+    print('!', sort_filter)
+    if sort_filter:
+        clients = clients.order_by(sort_filter)
+
     context = {
         'title': 'Клиенты',
         'users': clients, 

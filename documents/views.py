@@ -199,6 +199,7 @@ def send_code(request):
     code = random.randrange(1000, 9999)
     request.session['code'] = code
     phone = request.user.phone.replace('+', '')
+    print('!', request)
     send_code_to_phone(phone, code)
     return JsonResponse({'':''})
 
