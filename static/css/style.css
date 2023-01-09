@@ -31,3 +31,8 @@
     font-weight:600;
     font-size:1.7rem;
 }
+
+
+.user-info{display:flex;justify-content:center;margin: auto auto 38px;max-width: 460px;}#user-info{}.user-info a{width:49%;text-align:center;font-size:20px;border-bottom: 2px solid #000000;
+    padding: 0px 0px 12px 0px;
+    color: #000000;}.user-info a.active{ border-bottom: 2px solid #206bc4; padding: 0px 0px 12px 0px; color: #206bc4;}

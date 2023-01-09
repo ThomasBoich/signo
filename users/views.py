@@ -7,7 +7,8 @@ from django.views.generic import CreateView
 from django.db.models import Q, Count, When, Case, Subquery, OuterRef
 from django.db import models
 
-from documents.models import Document
+from documents.models import Document, DocumentType
+from forms import SendDocumentForm
 from users.forms import LoginForm, ProfileUpdateForm, UserUpdateForm, CustomUserCreationForm, MedCardUpdateForm
 from users.models import CustomUser, MedCard
 from .services import *
@@ -70,8 +71,11 @@ def users(request):
     clients = search_users(request, all_clients)
 
     context = {
-        'title': 'Клиенты',
-        'users': clients, 
+        'title': 'Пациенты',
+        'users': clients,
+       # 'title': 'Клиенты',
+       # 'users': clients,
+
     }
     return render (request, 'index/users.html', context=context)
 
@@ -158,3 +162,19 @@ def usermedcard(request, pk):
     return render(request, 'users/usermedcard.html', context)
 
 
+def user_docs(request, pk):
+
+    ''''
+
+    осталось добавить функционал фильтрации здесь
+
+    '''
+
+    context = {
+        'all_documents': Document.objects.filter(
+            Q(sender__pk=pk) | Q(recipient__pk=pk) | Q(founder__pk=pk)),
+        'user': CustomUser.objects.get(pk=pk),
+    }
+
+
+    return render(request, 'users/user-docs.html', context)
