@@ -47,9 +47,9 @@
                         <tr>
                           <td><span class="text-muted">{{document.id}}</span></td>
                           <td><span class="text-muted">{{document.type}}</span></td>
-                          <td><a href="invoice.html" class="text-reset" tabindex="-1">{{document.sender.first_name}} {{document.sender.last_name}}</a></td>
+                          <td><a href="{%url 'user' document.sender.pk%}" class="text-reset" tabindex="-1">{{document.sender.first_name}} {{document.sender.last_name}}</a></td>
                           <td>
-                            {{document.recipient.first_name}} {{document.recipient.last_name}}
+                              <a href="{%url 'user' document.recipient.pk%}"> {{document.recipient.first_name}} {{document.recipient.last_name}}</a>
                           </td>
                           <td>
                             {{document.send_date}}
