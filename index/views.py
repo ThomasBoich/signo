@@ -69,7 +69,7 @@ def index(request):
             'all_clients': CustomUser.objects.filter(type='CL').count(), # кол-во клиентов
             'all_active_documents': Document.objects.filter(
                 Q(sender=request.user) | Q(recipient=request.user)).filter(
-                    Q(sender_status=False) | Q(recipient_status=False)), # необработанные документы
+                    Q(sender_status=False) | Q(recipient_status=False)).order_by('-id'), # необработанные документы
             'all_documents': Document.objects.all().count(), # кол-во документов
             'docs_signed_by_admins': docs_signed_by_admins,
             'docs_not_signed_by_admins': docs_not_signed_by_admins,

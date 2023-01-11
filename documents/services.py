@@ -62,13 +62,13 @@ def filter_all_documents(request, all_documents):
         signer = signed[0].upper()
         signed_status = signed[1].title()
         if signer in ['AD', 'DO']:
-            all_documents = all_documents.filter(sender__type=signer, sender_status=signed_status)
+            all_documents = all_documents.filter(sender__type__in=[signer, 'DI'], sender_status=signed_status)
         elif signer == 'CL':
             all_documents = all_documents.filter(recipient__type=signer, recipient_status=signed_status)
         elif signer == "BOTH":
             all_documents = all_documents.filter(recipient__type='CL', 
                                                 recipient_status=signed_status,
-                                                sender__type__in=['AD', 'DO'],
+                                                sender__type__in=['AD', 'DO', 'DI'],
                                                 sender_status=signed_status)
 
     if doc_type:

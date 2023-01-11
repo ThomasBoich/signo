@@ -74,7 +74,7 @@
     function show_code_block() {
     document.getElementById('input-phone-block').hidden = true
     document.getElementById('input-code-block').hidden = false
-    document.getElementById('get-new-code-link').hidden = false
+    // document.getElementById('get-new-code-link').hidden = false
     document.getElementById('modal-code-input').value = ''
   }
 
@@ -82,7 +82,7 @@
   function send_code(){
     show_code_block()
     $.ajax({
-      data: {'test':'test',},
+      data: {},
       url: "{% url 'send_code' %}"
     })
   }
@@ -98,7 +98,7 @@
   $(document).on("hidden.bs.modal", "#sms-code-modal", function () {
     document.getElementById('input-phone-block').hidden = false
     document.getElementById('input-code-block').hidden = true
-    document.getElementById('get-new-code-link').hidden = true
+    // document.getElementById('get-new-code-link').hidden = true
     document.getElementById('modal-code-input').value = ''
     console.log('done')
   });

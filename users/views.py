@@ -41,31 +41,32 @@ class AppLogoutView(LogoutView):
 
 @login_required
 def doctors(request):
-    context = {'title': 'Врачи', 'users': CustomUser.objects.filter(type='DO')}
-    return render(request, 'index/doctors.html', context=context)
+    all_doctors = CustomUser.objects.filter(type='DO')
+    print('!', all_doctors)
+    all_doctors = annotate_users_with_number_of_signed_docs(
+                                            all_doctors, 
+                                            'sender__sender_status')
+    doctors = search_users(request, all_doctors)
+
+    context = {'title': 'Врачи', 'users': doctors}
+    return render(request, 'index/users.html', context=context)
 
 
 @login_required
 def users(request):
+    if request.user.type == 'ID':
+        list_of_clients = Document.objects.all().values_list('recipient', flat=True)
+    else:
+        list_of_clients = list(Document.objects.filter(
+                Q(sender=request.user) | Q(founder=request.user)
+                ).distinct()
+                .values_list('recipient', flat=True))
     
-    list_of_clients = list(Document.objects.filter(
-            Q(sender=request.user) | Q(founder=request.user)
-            ).distinct()
-            .values_list('recipient', flat=True))
-    
-    all_clients = CustomUser.objects.filter(id__in=list_of_clients) \
-            .annotate(
-                signed_docs=Count(Case(
-                    When(recipient__recipient_status=True, then=1),
-                    output_field=models.IntegerField(),
-                    distinct=True
-            ))) \
-            .annotate(
-                not_signed_docs=Count(Case(
-                    When(recipient__recipient_status=False, then=1),
-                    output_field=models.IntegerField(),
-                    distinct=True
-            )))
+    all_clients = CustomUser.objects.filter(id__in=list_of_clients)
+    all_clients = annotate_users_with_number_of_signed_docs(
+                                            all_clients, 
+                                            'recipient__recipient_status')
+            
 
     clients = search_users(request, all_clients)
 
@@ -75,7 +76,7 @@ def users(request):
         clients = clients.order_by(sort_filter)
 
     context = {
-        'title': 'Клиенты',
+        'title': 'Пациенты',
         'users': clients, 
     }
     return render (request, 'index/users.html', context=context)
@@ -83,8 +84,14 @@ def users(request):
 
 @login_required
 def administrators(request):
-    context = {'title': 'Администраторы', 'users': CustomUser.objects.filter(type='AD')}
-    return render(request, 'index/administrators.html', context=context)
+    all_admins = CustomUser.objects.filter(type='AD')
+    print('!', all_admins)
+    all_admins = annotate_users_with_number_of_signed_docs(
+                                            all_admins, 
+                                            'sender__sender_status')
+    admins = search_users(request, all_admins)
+    context = {'title': 'Администраторы', 'users': admins}
+    return render(request, 'index/users.html', context=context)
 
 
 @login_required

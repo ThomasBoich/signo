@@ -1,4 +1,7 @@
 from documents.services import *
+from django.db.models import Q, Count, When, Case
+from django.db import models
+
 
 def search_users(request, all_users):
     search_name = request.GET.get('search')
@@ -21,5 +24,24 @@ def search_users(request, all_users):
     if period:
         start_date, end_date = get_dates(period, all_users) 
         all_users = all_users.filter(last_login__range=[start_date, end_date])
+
+    return all_users
+
+
+def annotate_users_with_number_of_signed_docs(all_users, user_type):
+    dict_true = {user_type:True}
+    dict_false = {user_type:False}
+    all_users = all_users.annotate(
+                signed_docs=Count(Case(
+                    When(**dict_true, then=1),
+                    output_field=models.IntegerField(),
+                    distinct=True
+            ))) \
+            .annotate(
+                not_signed_docs=Count(Case(
+                    When(**dict_false, then=1),
+                    output_field=models.IntegerField(),
+                    distinct=True
+            )))
 
     return all_users

@@ -137,6 +137,7 @@
                 <th class="w-1">No. <!-- Download SVG icon from http://tabler-icons.io/i/chevron-up -->
                   <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-sm text-dark icon-thick" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><polyline points="6 15 12 9 18 15"></polyline></svg>
                 </th>
+                <!-- <th id="th-type_document" class='sortable-table-header' onclick="filterByField('last_name')">Тип документа</th> -->
                 <th>Тип документа</th>
                 <th>Отправитель</th>
                 <th>Создатель</th>
@@ -193,7 +194,7 @@
                       Действия
                     </button>
                     <div class="dropdown-menu dropdown-menu-end">
-                      {% include 'common_elements/_dropdown_sign_button.html' %}  
+                      {% include 'common/_dropdown_sign_button.html' %}  
                       <!-- <a id='document-{{document.id}}' class="dropdown-item dropdown-document-sign-button" data-bs-toggle="modal" data-bs-target="#sms-code-modal">
                         Подписать
                       </a> -->
