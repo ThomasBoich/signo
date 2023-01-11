@@ -5,6 +5,7 @@ from django.db import models
 
 from documents.models import Document, DocumentType
 from users.models import CustomUser
+from documents.services import *
 
 
 @login_required
@@ -21,6 +22,10 @@ def index(request):
     if request.user.is_authenticated and (request.user.type == 'AD' or request.user.type == 'DI'):
         g = Document.objects.filter(sender_status=False)
 
+        all_documents = Document.objects.filter(
+                Q(sender=request.user) | Q(recipient=request.user)).filter(
+                    Q(sender_status=False) | Q(recipient_status=False))
+        all_documents = filter_all_documents(request, all_documents)
         
         # добавляем поля "подписано доктором" и "подписано пациентом"
         types = DocumentType.objects.all() \
@@ -67,10 +72,7 @@ def index(request):
             'all_admins': CustomUser.objects.filter(type='AD').count(), # кол-во врачей
             'all_doctors': CustomUser.objects.filter(type='DO').count(), # кол-во врачей
             'all_clients': CustomUser.objects.filter(type='CL').count(), # кол-во клиентов
-            'all_active_documents': Document.objects.filter(
-                Q(sender=request.user) | Q(recipient=request.user)).filter(
-                    Q(sender_status=False) | Q(recipient_status=False)).order_by('-id'), # необработанные документы
-            'all_documents': Document.objects.all().count(), # кол-во документов
+            'all_documents': all_documents,
             'docs_signed_by_admins': docs_signed_by_admins,
             'docs_not_signed_by_admins': docs_not_signed_by_admins,
             'docs_signed_by_doctors': docs_signed_by_doctors,
