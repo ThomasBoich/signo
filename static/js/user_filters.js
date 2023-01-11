@@ -21,7 +21,7 @@ function filterByField(value) {
 }
 
 function filter_users(){
-    const search_value = document.getElementById('users-search-field').value
+    const search_value = document.getElementById('table-search-field').value
     const urlParams = new URLSearchParams('')
     start_date = document.getElementById('users-search-start-date').value
     end_date = document.getElementById('users-search-end-date').value
@@ -58,7 +58,7 @@ function highlight_table_header(){
 function fill_user_search_fields(){
   
   if(getParameterByName('search') != null){
-    document.getElementById('users-search-field').value = getParameterByName('search')
+    document.getElementById('table-search-field').value = getParameterByName('search')
   }
 
   if(getParameterByName('period') != null){

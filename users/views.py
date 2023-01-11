@@ -4,12 +4,12 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
-from django.db.models import Q, Count, When, Case, Subquery, OuterRef
+from django.db.models import Q
 from django.db import models
 
-from documents.models import Document, DocumentType
+from documents.models import Document
 from forms import SendDocumentForm
-from users.forms import LoginForm, ProfileUpdateForm, UserUpdateForm, CustomUserCreationForm, MedCardUpdateForm
+from users.forms import LoginForm, UserUpdateForm, CustomUserCreationForm, MedCardUpdateForm
 from users.models import CustomUser, MedCard
 from .services import *
 
@@ -43,7 +43,6 @@ class AppLogoutView(LogoutView):
 @login_required
 def doctors(request):
     all_doctors = CustomUser.objects.filter(type='DO')
-    print('!', all_doctors)
     all_doctors = annotate_users_with_number_of_signed_docs(
                                             all_doctors, 
                                             'sender__sender_status')
@@ -71,10 +70,7 @@ def users(request):
 
     clients = search_users(request, all_clients)
 
-    sort_filter = request.GET.get('sort')
-    print('!', sort_filter)
-    if sort_filter:
-        clients = clients.order_by(sort_filter)
+    
 
     context = {
         'title': 'Пациенты',
@@ -86,7 +82,6 @@ def users(request):
 @login_required
 def administrators(request):
     all_admins = CustomUser.objects.filter(type='AD')
-    print('!', all_admins)
     all_admins = annotate_users_with_number_of_signed_docs(
                                             all_admins, 
                                             'sender__sender_status')
@@ -173,15 +168,13 @@ def usermedcard(request, pk):
 
 def user_docs(request, pk):
 
-    ''''
+    all_documents = Document.objects.filter(recipient=pk)
+    all_documents = filter_all_documents(request, all_documents)
 
-    осталось добавить функционал фильтрации здесь
-
-    '''
+    
 
     context = {
-        'all_documents': Document.objects.filter(
-            Q(sender__pk=pk) | Q(recipient__pk=pk) | Q(founder__pk=pk)),
+        'all_documents': all_documents,
         'user': CustomUser.objects.get(pk=pk),
     }
 

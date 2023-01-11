@@ -1,6 +1,6 @@
 
 function filter_documents(){
-    const search_value = document.getElementById('documents-search-field').value
+    const search_value = document.getElementById('table-search-field').value
     const signed = document.getElementById('search-signed-status-select').value
     const doc_type = document.getElementById('search-document-type-select').value
     const urlParams = new URLSearchParams('')
@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function() {
 function fill_search_fields(){
   
   if(getParameterByName('search') != null){
-    document.getElementById('documents-search-field').value = getParameterByName('search')
+    document.getElementById('table-search-field').value = getParameterByName('search')
   }
 
   if(getParameterByName('doc_type') != null){

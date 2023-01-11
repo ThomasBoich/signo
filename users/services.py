@@ -25,6 +25,11 @@ def search_users(request, all_users):
         start_date, end_date = get_dates(period, all_users) 
         all_users = all_users.filter(last_login__range=[start_date, end_date])
 
+
+    sort_filter = request.GET.get('sort')
+    if sort_filter:
+        all_users = all_users.order_by(sort_filter)
+
     return all_users
 
 
