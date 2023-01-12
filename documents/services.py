@@ -1,8 +1,12 @@
 from datetime import date, timedelta, datetime
+from reportlab.pdfgen import canvas
+from unidecode import unidecode
 
 from django.utils import timezone
 from django.utils.timezone import make_aware
 from django.db.models import Q
+from django.conf import settings
+
 
 from documents.models import Document
 
@@ -104,3 +108,25 @@ def filter_by_name(all_documents, search_name):
         all_documents = all_documents.order_by('-send_date')
 
     return all_documents
+
+
+
+
+
+def create_signature(document):
+    p = canvas.Canvas(settings.MEDIA_ROOT + '/signature.pdf')
+
+    signature = 'signed by ' + unidecode(document.sender.first_name) + ' ' + unidecode(document.sender.last_name)
+
+    p.drawString(100, 100, signature)
+    
+    p.showPage()
+    p.save()
+    
+
+
+
+
+
+
+

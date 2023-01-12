@@ -1,12 +1,13 @@
 import random
+from PyPDF2 import PdfReader, PdfWriter
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponseRedirect
 from django.urls import reverse
+from django.conf import settings
 
-# Create your views here.
 from documents.models import Document, DocumentType
 from forms import SendDocumentForm
 from users.models import CustomUser
@@ -199,7 +200,7 @@ def send_code(request):
     code = random.randrange(1000, 9999)
     request.session['code'] = code
     phone = request.user.phone.replace('+', '')
-    send_code_to_phone(phone, code)
+    # send_code_to_phone(phone, code)
     return JsonResponse({'':''})
 
 
@@ -216,7 +217,33 @@ def check_code(request):
         else:
             document.sender_status = True
             document.save()
-        result = {'reload': 'y'} # used to reload page
+  
+        create_signature(document)
+  
+        
+        media_root = settings.MEDIA_ROOT
+
+        watermark = media_root + "/signature.pdf"
+        doc_file = document.document.path
+        with open(doc_file, "rb") as input_file, open(watermark, "rb") as watermark_file:
+            input_pdf = PdfReader(input_file)
+            watermark_pdf = PdfReader(watermark_file)
+            watermark_page = watermark_pdf.pages[0]
+
+            output = PdfWriter()
+
+            for i in range(len(input_pdf.pages)):
+                pdf_page = input_pdf.pages[i]
+                pdf_page.merge_page(watermark_page)
+                output.add_page(pdf_page)
+
+            with open(doc_file, "wb") as merged_file:
+                output.write(merged_file)
+
+            
+        result = {'reload': 'y'} # used on the front as a sign to reload page
         return JsonResponse(result)
     result = {'code': ''}
     return JsonResponse(result)
+
+
