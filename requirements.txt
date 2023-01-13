@@ -12,3 +12,4 @@ gunicorn
 django-mathfilters==1.0.0
 unidecode==0.4.9
 reportlab
+PyPDF2
