@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import permission_required
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView
@@ -171,12 +172,9 @@ def user_docs(request, pk):
     all_documents = Document.objects.filter(recipient=pk)
     all_documents = filter_all_documents(request, all_documents)
 
-    
-
     context = {
         'all_documents': all_documents,
         'user': CustomUser.objects.get(pk=pk),
     }
-
 
     return render(request, 'users/user-docs.html', context)
