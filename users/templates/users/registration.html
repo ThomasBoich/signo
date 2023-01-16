@@ -174,16 +174,17 @@
 <!--                </span>-->
               </div>
             </div>
-                 {{uform.password2.errors}}
-            <div class="mb-2">
-              <label class="form-check">
-                <input type="checkbox" class="form-check-input"/>
-                <span class="form-check-label">Запомнить меня на этом устройстве</span>
-              </label>
+            <div style='color:red'>     
+              {{form.password2.errors}}
+            </div>
+            <div class="mb-2" style="display:flex; ">
+              <input id='remember-me-checkbox' type="checkbox" class="form-check-input" style='padding:0; height:1rem; width:1rem'/>
+              <label for='remember-me-checkbox' class="form-check">Запомнить меня на этом устройстве</label>
+
             </div>
             <div class="form-footer">
 <!--              <button type="submit" class="btn btn-primary w-100">Войти</button>-->
-                  <button type="submit" class="btn btn-primary w-100">Войти</button>
+                  <button type="submit" class="btn btn-primary w-100">Зарегистрироваться</button>
             </div>
           </div>
 <!--          <div class="hr-text">или</div>-->

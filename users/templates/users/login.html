@@ -51,8 +51,9 @@
               <div class="input-group input-group-flat">
 <!--                <input type="password" class="form-control"  placeholder="Пароль"  autocomplete="off">-->
                   {{form.password}}
-                <span class="input-group-text">
-                  <a href="#" class="link-secondary" title="Show password" data-bs-toggle="tooltip"><!-- Download SVG icon from http://tabler-icons.io/i/eye -->
+                  
+                <span class="input-group-text" onclick='show_hide_password()'>
+                  <a href="#" class="link-secondary" title="Show password" data-bs-toggle="tooltip"  > <!-- Download SVG icon from http://tabler-icons.io/i/eye -->
                     <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="2" /><path d="M22 12c-2.667 4.667 -6 7 -10 7s-7.333 -2.333 -10 -7c2.667 -4.667 6 -7 10 -7s7.333 2.333 10 7" /></svg>
                   </a>
                 </span>
@@ -67,6 +68,11 @@
             <div class="form-footer">
 <!--              <button type="submit" class="btn btn-primary w-100">Войти</button>-->
                   <button type="submit" class="btn btn-primary w-100">Войти</button>
+            </div>
+            <div class='mt-3' style="color:red">
+              {% for error in form.non_field_errors %}
+                {{ error }}
+              {% endfor %}
             </div>
           </div>
 <!--          <div class="hr-text">или</div>-->
@@ -96,5 +102,18 @@
     <!-- Tabler Core -->
     <script src="{%static './dist/js/tabler.min.js'%}"></script>
     <script src="{%static './dist/js/demo.min.js'%}"></script>
-</body>
+
+<script>
+  function show_hide_password(){
+    pass_field = document.getElementById('id_password')
+    
+    if (pass_field.type == 'password'){
+      pass_field.type = 'text'
+    }else{
+      pass_field.type = 'password'
+    }
+  }
+</script>
+
+  </body>
 </html>

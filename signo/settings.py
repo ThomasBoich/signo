@@ -51,6 +51,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
 ]
 
 AUTH_USER_MODEL = 'users.CustomUser'
@@ -99,12 +100,20 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'locale_extra'), 
+)
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
+LANGUAGES = (
+     ('ru-RU', 'Russian'),
+)
+
 LANGUAGE_CODE = "ru-RU"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Europe/Moscow"
 
 USE_I18N = True
 
