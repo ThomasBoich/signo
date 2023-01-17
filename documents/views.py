@@ -10,7 +10,7 @@ from django.conf import settings
 
 from documents.models import Document, DocumentType
 from forms import SendDocumentForm
-from users.models import CustomUser
+from users.models import CustomUser, Action
 from .services import *
 from .send_sms import *
 
@@ -177,9 +177,22 @@ def sign_document(request):
         if request.user.type == 'CL':
             document.recipient_status = True
             document.save()
+            Action.objects.create(
+                user=request.user, 
+                action=f'{request.user.first_name} {request.user.last_name} \
+                    подписал документ с {document.sender.first_name} \
+                    {document.sender.last_name}'
+                )
         else:
             document.sender_status = True
             document.save()
+            Action.objects.create(
+                user=request.user, 
+                action=f'{request.user.first_name} {request.user.last_name} \
+                    подписал документ с {document.recipient.first_name} \
+                    {document.recipient.last_name}'
+                )
+
   
         create_signature(document)
   
@@ -203,7 +216,6 @@ def sign_document(request):
             with open(doc_file, "wb") as merged_file:
                 output.write(merged_file)
 
-            
         result = {'reload': 'y'} # used on the front as a sign to reload page
         return JsonResponse(result)
     result = {'code': ''}
@@ -217,4 +229,6 @@ def delete_document(request):
         document = Document.objects.get(id=document_pk)
         document.deleted = True
         document.save()
+        user=request.user
+        Action.objects.create(user=user, action=f'{user.first_name} {user.last_name} удалил документ {document}')
     return HttpResponse(status=204)

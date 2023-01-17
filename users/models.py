@@ -6,8 +6,11 @@ from django.dispatch import receiver
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
+from django.db.models.signals import post_save, post_delete
+from django.contrib.auth.signals import user_logged_out
 
 from .managers import CustomUserManager
+from utils.models import *
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=254, unique=True, verbose_name='Электронная почта')
@@ -157,12 +160,31 @@ class CustomPermissions(models.Model):
     my_info = models.BooleanField(default='True', verbose_name='Доступ к информации о своих пациентах')
 
 
-class Action(models.Model):
+class Action(DateTimeMixin, models.Model):
     user = models.ForeignKey('users.CustomUser', on_delete=models.CASCADE) # what to do on delete?
-    document_signed = models.ForeignKey('documents.Document', null=True, blank=True, on_delete=models.CASCADE, related_name='documents_signed')
-    document_unsigned = models.ForeignKey('documents.Document',  null=True, blank=True, on_delete=models.CASCADE, related_name='documents_unsigned')
-    document_deleted = models.ForeignKey('documents.Document',  null=True, blank=True, on_delete=models.CASCADE, related_name='documents_deleted')
+    action = models.CharField(max_length=255)
 
 
 
 
+# signals for logs - creating, deleting users
+
+@receiver(post_save, sender=CustomUser)    
+def create_user_created_action(sender, instance, created, **kwargs):
+    if created:
+        user=instance
+        Action.objects.create(
+            user=user, 
+            action=f'{user.first_name} {user.last_name} ({user.get_type_display()}) зарегистрировался в системе'
+            )
+    
+@receiver(post_delete, sender=CustomUser)    
+def create_user_deleted_action(sender, instance, **kwargs):
+    user=instance
+    Action.objects.create(
+        user=user, 
+        action=f'{user.first_name} {user.last_name} ({user.get_type_display()}) удален из системы')
+
+
+
+    

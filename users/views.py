@@ -5,13 +5,14 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
+from django.views import View
 from django.db.models import Q
 from django.db import models
 
 from documents.models import Document
 from forms import SendDocumentForm
 from users.forms import LoginForm, UserUpdateForm, CustomUserCreationForm, MedCardUpdateForm
-from users.models import CustomUser, MedCard
+from users.models import CustomUser, MedCard, Action
 from .services import *
 
 
@@ -179,3 +180,12 @@ def user_docs(request, pk):
     }
 
     return render(request, 'users/user-docs.html', context)
+
+
+class LogsView(View):
+    def get(self, request):
+        actions = Action.objects.all()
+        context = {
+            'actions': actions,
+        }
+        return render(request, 'users/logs.html', context=context)

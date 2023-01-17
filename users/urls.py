@@ -2,7 +2,7 @@ from django.urls import path
 
 # from documents.views import sign_document_finish
 from users.views import login, registration, logout, AppLoginView, AppLogoutView, show_profile, doctors, users, \
-    administrators, AppRegistration, show_mymedcard, user, usermedcard, user_docs
+    administrators, AppRegistration, show_mymedcard, user, usermedcard, user_docs, LogsView
 
 urlpatterns = [
     path('login/', AppLoginView.as_view(), name='login'),
@@ -18,5 +18,7 @@ urlpatterns = [
     path('user/medcard/<int:pk>/', usermedcard, name='usermedcard'),
     # path('documents/signed/sign/<int:pk>/', sign_document_finish, name='sign_document_finish'),
     path('user/user-docs/<int:pk>/', user_docs, name='user_docs'),
+
+    path('user/logs/', LogsView.as_view(), name='logs',)
 
 ]

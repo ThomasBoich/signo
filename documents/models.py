@@ -1,8 +1,10 @@
 import os
 from django.db import models
-
+from django.db.models.signals import post_save
 from django.urls import reverse
-from users.models import CustomUser
+from django.dispatch import receiver
+
+from users.models import CustomUser, Action
 from utils.models import *
 
 
@@ -77,3 +79,20 @@ class DocumentType(models.Model):
 
     def get_absolute_url(self):
         return reverse('show_types', kwargs={'pk': self.pk})
+
+
+
+
+# signals for logs - creating documents
+# we don't actually delete documents, but rather change their 'deleted' state
+# so logs for these actions are created in views. 
+# Same is true for signing documents.
+
+@receiver(post_save, sender=Document)    
+def create_document_created_action(sender, instance, created, **kwargs):
+    if created:
+        document = instance
+        Action.objects.create(
+            user=document.founder, 
+            action=f'{document.founder.first_name} {document.founder.last_name} ({document.founder.type}) отправил документ. Получатель {document.recipient.first_name} {document.recipient.last_name}'
+            )
