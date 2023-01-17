@@ -163,7 +163,7 @@ def send_code(request):
     code = random.randrange(1000, 9999)
     request.session['code'] = code
     phone = request.user.phone.replace('+', '')
-    # send_code_to_phone(phone, code)
+    send_code_to_phone(phone, code)
     return JsonResponse({'':''})
 
 
@@ -172,7 +172,7 @@ def sign_document(request):
     code_sent = request.session['code']
     print('!', code_entered, type(code_entered), code_sent, type(code_sent))
     pk = request.GET.get('pk')
-    if code_entered != code_sent:
+    if code_entered == code_sent:
         document = Document.objects.get(pk=pk)
         if request.user.type == 'CL':
             document.recipient_status = True
