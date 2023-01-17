@@ -3,9 +3,11 @@ from django.db import models
 
 from django.urls import reverse
 from users.models import CustomUser
+from utils.models import *
+
 
 # Документ
-class Document(models.Model):
+class Document(DateTimeMixin, HiddenDeletedMixin, models.Model):
     # title = models.CharField(max_length=240, )
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True, related_name='documenter')
     sender = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, related_name='sender', verbose_name='Отправитель')
@@ -18,18 +20,7 @@ class Document(models.Model):
     files = models.ForeignKey('DocumentsFiles', on_delete=models.CASCADE, blank=True, null=True)
     type = models.ForeignKey('DocumentType', on_delete=models.CASCADE, blank=True, null=True, related_name='document')
 
-    # TYPE_DOC = (
-    #     ('Договор', 'Договор'),
-    #     ('ИДС', 'ИДС'),
-    #     ('Мед.карта', 'Мед карта'),
-    #     ('Адм.карта', 'Адм.карта'),
-    #     ('Справка в налоговую', 'Справка в налоговую'),
-    #     ('План лечения', 'План лечения')
-    # )
-
-    # type_document = models.CharField(choices=TYPE_DOC, max_length=240, blank=True, null=True)
-    # creation_date = models.DateTimeField(blank=True, null=True, auto_now_add=True)
-
+   
     class Meta:
         verbose_name = 'Документ'
         verbose_name_plural = 'Документы'

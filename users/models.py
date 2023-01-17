@@ -156,4 +156,13 @@ class CustomPermissions(models.Model):
     all_info = models.BooleanField(default='True', verbose_name='Доступ к информации о всех пациентах')
     my_info = models.BooleanField(default='True', verbose_name='Доступ к информации о своих пациентах')
 
-from documents.models import *
+
+class Action(models.Model):
+    user = models.ForeignKey('users.CustomUser', on_delete=models.CASCADE) # what to do on delete?
+    document_signed = models.ForeignKey('documents.Document', null=True, blank=True, on_delete=models.CASCADE, related_name='documents_signed')
+    document_unsigned = models.ForeignKey('documents.Document',  null=True, blank=True, on_delete=models.CASCADE, related_name='documents_unsigned')
+    document_deleted = models.ForeignKey('documents.Document',  null=True, blank=True, on_delete=models.CASCADE, related_name='documents_deleted')
+
+
+
+

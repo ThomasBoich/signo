@@ -30,7 +30,7 @@
                 <label for="modal-code-input">Введите код (4 цифры)</label>
                 <input id='modal-code-input' type="text" class="form-control">
               </div>
-                <button onclick='check_code()' id='input-submit-code-btn' class="btn btn-outline-primary btn-sm" style="width:100%; height:40px; border-radius:5px" data-bs-toggle="modal" data-bs-target="#project-delete-modal">Подписать документ</button>
+                <button onclick='sign_document()' id='input-submit-code-btn' class="btn btn-outline-primary btn-sm" style="width:100%; height:40px; border-radius:5px" data-bs-toggle="modal" data-bs-target="#project-delete-modal">Подписать документ</button>
             </div>
             <!-- <button class="btn btn-outline-primary btn-sm" style="width:150px; height:40px; border-radius:100px" data-bs-toggle="modal" data-bs-target="#project-delete-modal">Cancel</button> -->
           </div>
@@ -46,16 +46,15 @@
 <script>
 
 
-  function check_code() {
+  function sign_document() {
     code = document.getElementById('modal-code-input').value
-    pk = document_to_sign_pk
-    console.log('!', code)
+    pk = document_pk
     $.ajax({
       data: {
         'code': code,
         'pk': pk,
       },
-      url: "{% url 'check_code' %}",
+      url: "{% url 'sign_document' %}",
       success: function(json){
         console.log(json)
         if (json['reload'] == 'y'){

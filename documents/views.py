@@ -4,7 +4,7 @@ from PyPDF2 import PdfReader, PdfWriter
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render, redirect
-from django.http import JsonResponse, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.conf import settings
 
@@ -18,7 +18,7 @@ from .send_sms import *
 @login_required
 def show_documents(request):
     
-    all_documents = Document.objects.all()
+    all_documents = Document.objects.filter(deleted=False)
     
     if request.user.type == 'CL':
         return redirect('index')
@@ -44,11 +44,7 @@ def show_documents(request):
             'all_users': CustomUser.objects.all().count(),
             'all_doctors': CustomUser.objects.filter(type='DO').count(),
             'all_clients': CustomUser.objects.filter(type='CL').count(),
-            'all_active_documents': Document.objects.filter(
-                Q(sender=request.user) | Q(recipient=request.user)).filter(
-                Q(sender_status=False) | Q(recipient_status=False)),
             'all_documents': all_documents,
-            'finish': Document.objects.filter(Q(sender_status=True)),
             'types': types,
             }
         return render(request, 'documents/documents.html', context=context)
@@ -77,7 +73,10 @@ def show_category(request, pk):
 @login_required
 def mydocuments(request):
     
-    all_documents = Document.objects.filter(Q(recipient=request.user) | Q(sender=request.user))
+    all_documents = Document.objects. \
+        filter(deleted=False). \
+        filter(Q(recipient=request.user) | Q(sender=request.user))
+
     all_documents = filter_all_documents(request, all_documents)
 
     types = DocumentType.objects.all().exclude(type_document='OTKAZ')
@@ -99,9 +98,6 @@ def mydocuments(request):
         'all_users': CustomUser.objects.all().count(),
         'all_doctors': CustomUser.objects.filter(type='DO').count(),
         'all_clients': CustomUser.objects.filter(type='CL').count(),
-        'all_active_documents': Document.objects.filter(
-        Q(sender=request.user) | Q(recipient=request.user)).filter(
-        Q(sender_status=False) | Q(recipient_status=False)),
         'all_documents': all_documents,
         'types': types,
         }
@@ -118,9 +114,6 @@ def show_my_sign_documents(request):
         'all_users': CustomUser.objects.all().count(),
         'all_doctors': CustomUser.objects.filter(type='DO').count(),
         'all_clients': CustomUser.objects.filter(type='CL').count(),
-        'all_sign_documents': Document.objects.filter(
-            Q(sender=request.user) | Q(recipient=request.user)).filter(
-            Q(sender_status=False, sender=request.user) | Q(recipient_status=False, recipient=request.user)),
     }
     if request.user.type == 'CL':
         return render(request, 'documents/clsign.html', context)
@@ -135,9 +128,7 @@ def show_my_finish_documents(request):
         'all_users': CustomUser.objects.all().count(),
         'all_doctors': CustomUser.objects.filter(type='DO').count(),
         'all_clients': CustomUser.objects.filter(type='CL').count(),
-        'all_finish_documents': Document.objects.filter(
-            Q(sender=request.user) | Q(recipient=request.user)).filter(Q(sender_status=True, sender=request.user) | Q(recipient_status=True, recipient=request.user))
-    }
+        }
 
     if request.user.type == 'CL':
         return render(request, 'documents/clfinish.html', context)
@@ -152,10 +143,7 @@ def show_sign_documents(request):
         'all_users': CustomUser.objects.all().count(),
         'all_doctors': CustomUser.objects.filter(type='DO').count(),
         'all_clients': CustomUser.objects.filter(type='CL').count(),
-        'all_sign_documents': Document.objects.filter(
-            Q(sender=request.user) | Q(recipient=request.user)).filter(
-            Q(sender_status=False, sender=request.user) | Q(recipient_status=False, recipient=request.user)),
-    }
+        }
     return render(request, 'documents/sign.html', context)
 
 
@@ -166,34 +154,9 @@ def show_finish_documents(request):
         'all_users': CustomUser.objects.all().count(),
         'all_doctors': CustomUser.objects.filter(type='DO').count(),
         'all_clients': CustomUser.objects.filter(type='CL').count(),
-        'all_finish_documents': Document.objects.filter(
-            Q(sender=request.user) | Q(recipient=request.user)).filter(Q(sender_status=True, sender=request.user) | Q(recipient_status=True, recipient=request.user))
-    }
+        }
     return render(request, 'documents/finish.html', context)
 
-
-# def sign_document(request, pk):
-#     document = Document.objects.get(pk=pk)
-#     if request.user.type == 'CL':
-#         document.recipient_status = True
-#         document.save()
-#         return HttpResponseRedirect(reverse('index'))
-#     else:
-#         document.sender_status = True
-#         document.save()
-#         return HttpResponseRedirect(redirect('index'))
-
-
-# def sign_document_finish(request, pk):
-#     document = Document.objects.get(pk=pk)
-#     if request.user.type == 'CL':
-#         document.recipient_status = True
-#         document.save()
-#         return redirect('sign')
-#     else:
-#         document.sender_status = True
-#         document.save()
-#         return redirect('sign')
 
 
 def send_code(request):
@@ -204,7 +167,7 @@ def send_code(request):
     return JsonResponse({'':''})
 
 
-def check_code(request):
+def sign_document(request):
     code_entered = int(request.GET.get('code'))
     code_sent = request.session['code']
     print(code_entered, type(code_entered), code_sent, type(code_sent))
@@ -247,3 +210,11 @@ def check_code(request):
     return JsonResponse(result)
 
 
+def delete_document(request):
+    if request.method == 'POST':
+        document_pk = request.POST.get('document_pk')
+        print('!', document_pk)
+        document = Document.objects.get(id=document_pk)
+        document.deleted = True
+        document.save()
+    return HttpResponse(status=204)

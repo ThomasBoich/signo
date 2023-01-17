@@ -88,7 +88,7 @@ def filter_all_documents(request, all_documents):
 
 def filter_by_name(all_documents, search_name):
     if search_name and len(search_name.split(' ')) == 1:
-        all_documents = Document.objects.filter(
+        all_documents = all_documents.filter(
             Q(sender__first_name__icontains=search_name)|
             Q(sender__last_name__icontains=search_name)|
             Q(recipient__first_name__icontains=search_name)|
@@ -98,7 +98,7 @@ def filter_by_name(all_documents, search_name):
         name1 = search_name.split(' ')[0]
         name2 = search_name.split(' ')[1]
         print(f'! name = {name1} last_name = {name2}')
-        all_documents = Document.objects.filter(
+        all_documents = all_documents.filter(
             (Q(sender__first_name__icontains=name1) & Q(sender__last_name__icontains=name2)) |
             (Q(sender__first_name__icontains=name2) & Q(sender__last_name__icontains=name1)) |
             (Q(recipient__first_name__icontains=name1) & Q(recipient__last_name__icontains=name2)) |

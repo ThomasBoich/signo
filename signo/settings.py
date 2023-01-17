@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'index',
     'documents',
     'mathfilters',
+    'utils',
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,37 @@
+<div class="modal fade" id="modal-delete-document" tabindex="-1" aria-hidden="true" >
+        
+    <div class="modal-dialog">
+      <div class="modal-content" style="padding: 30px 0">
+        
+          <div class="modal-header1" style="padding-top:20px">
+            <div style="margin:auto; text-align:center; font-size:1.2rem; font-weight: 500;">Вы точно хотите удалить документ?</div> 
+          
+            <!-- <div style="margin:auto; text-align:center; font-size:1.6rem; font-weight: 500;">{{post.title}}</div> -->
+          </div>
+          
+        <div class="modal-body" style="display:flex; width:100%; justify-content: space-evenly;">
+          <button type='button' class="btn btn-outline-primary btn-sm" style="width:150px; height:40px; border-radius:100px" data-bs-toggle="modal" data-bs-target="#modal-delete-document">Нет</button>
+          <button type='button' class="btn btn-outline-danger btn-sm cancel-request" id='' style="width:150px; height:40px; border-radius:100px" data-bs-toggle="modal" data-bs-target="#cancel-request-modal" onclick='delete_document()'>Удалить</button>
+
+        </div>
+     
+      </div>
+
+</div>
+</div>
+<script>
+  function delete_document(){
+    $.ajax({
+      type: 'POST',
+      data: {
+        document_pk: document_pk,
+        csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+      },
+      url: "{% url 'delete_document' %}",
+      success: function(){
+        row_to_hide = document.getElementById('document-row-' + document_pk)
+        row_to_hide.hidden = true
+      }
+    })
+  }
+</script>

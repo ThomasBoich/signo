@@ -1,7 +1,7 @@
 from django.urls import path
 
 from documents.views import show_documents, mydocuments, show_my_sign_documents, show_my_finish_documents, \
-    show_sign_documents, show_finish_documents, show_category, send_code, check_code
+    show_sign_documents, show_finish_documents, show_category, send_code, delete_document, sign_document
 
 urlpatterns = [
     path('alldocuments/', show_documents, name='documents'),
@@ -13,6 +13,8 @@ urlpatterns = [
     path('<int:pk>/', show_category, name='category'),
 
     path('send_code/', send_code, name='send_code'),
-    path('check_code/', check_code, name='check_code')
+    path('sign_document/', sign_document, name='sign_document'),
+    path('delete_document/', delete_document, name='delete_document')
+
 
 ]

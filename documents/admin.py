@@ -9,6 +9,7 @@ class DocumentAdmin(admin.ModelAdmin):
     list_display = ('sender', 'recipient', 'send_date', 'sender_status', 'recipient_status')
     search_fields = ('sender', 'recipient', 'send_date', 'sender_status', 'recipient_status')
     list_editable = ('sender_status', 'recipient_status')
+    readonly_fields = ('id', )
 
     # def save_model(self, request, obj, form, change):
     #     if not obj.pk:

@@ -20,11 +20,14 @@ def index(request):
     
     # СТРАНИЦА СУПЕРАДМИНИСТРАТОРА И АДМИНИСТРАТОРА
     if request.user.is_authenticated and (request.user.type == 'AD' or request.user.type == 'DI'):
-        g = Document.objects.filter(sender_status=False)
+        g = Document.objects.filter(deleted=False, sender_status=False)
 
-        all_documents = Document.objects.filter(
-                Q(sender=request.user) | Q(recipient=request.user)).filter(
-                    Q(sender_status=False) | Q(recipient_status=False))
+        all_documents = Document.objects. \
+            filter(deleted=False). \
+            filter(
+                Q(sender=request.user) | Q(recipient=request.user) &
+                (Q(sender_status=False) | Q(recipient_status=False))
+                )
         all_documents = filter_all_documents(request, all_documents)
         
         # добавляем поля "подписано доктором" и "подписано пациентом"
@@ -42,27 +45,29 @@ def index(request):
                     output_field=models.IntegerField(),
                     distinct=True
             )))
-        docs_signed_by_admins = Document.objects.filter(
+
+        signed_docs = Document.objects.filter(deleted=False)
+        docs_signed_by_admins = signed_docs.filter(
                                     sender__type='AD', 
                                     sender_status=True
                                     ).count()
-        docs_not_signed_by_admins = Document.objects.filter(
+        docs_not_signed_by_admins = signed_docs.filter(
                                     sender__type='AD', 
                                     sender_status=False
                                     ).count()
-        docs_signed_by_doctors = Document.objects.filter(
+        docs_signed_by_doctors = signed_docs.filter(
                                     sender__type='DO', 
                                     sender_status=True
                                     ).count()
-        docs_not_signed_by_doctors = Document.objects.filter(
+        docs_not_signed_by_doctors = signed_docs.filter(
                                     sender__type='DO', 
                                     sender_status=False
                                     ).count()
-        docs_signed_by_clients = Document.objects.filter(
+        docs_signed_by_clients = signed_docs.filter(
                                     recipient__type='CL', 
                                     recipient_status=True
                                     ).count()
-        docs_not_signed_by_clients = Document.objects.filter(
+        docs_not_signed_by_clients = signed_docs.filter(
                                         recipient__type='CL', 
                                         recipient_status=False
                                         ).count()
@@ -79,7 +84,6 @@ def index(request):
             'docs_not_signed_by_doctors': docs_not_signed_by_doctors,
             'docs_signed_by_clients': docs_signed_by_clients,
             'docs_not_signed_by_clients': docs_not_signed_by_clients,
-            'finish': Document.objects.all().filter(Q(sender_status=True) & Q(recipient_status=True)).count(), # кол-во подписанных документов
             'types' : types,
         }
 
@@ -98,8 +102,6 @@ def index(request):
 
         context = {
             'type': all_types,
-            'all_active_documents': Document.objects.filter(Q(sender=request.user) | Q(recipient=request.user)).filter(
-                Q(sender_status=False) | Q(recipient_status=False)),
             'contract': contract,
             'ids': ids,
             'medcard': medcard,
@@ -113,9 +115,6 @@ def index(request):
     # СТРАНИЦА КЛИЕНТА
     if request.user.is_authenticated and request.user.type == 'CL':
         context = {
-            #
-            'all_active_documents': Document.objects.filter(Q(sender=request.user) | Q(recipient=request.user)).filter(Q(sender_status=False) | Q(recipient_status=False)),
-            #'all_documents_type': all_documents_type,
         }
         return render(request, 'index/cabinet/cl.html', context)
 

@@ -56,12 +56,13 @@ def doctors(request):
 @login_required
 def users(request):
     if request.user.type == 'ID':
-        list_of_clients = Document.objects.all().values_list('recipient', flat=True)
+        list_of_clients = Document.objects.filter(deleted=False).values_list('recipient', flat=True)
     else:
-        list_of_clients = list(Document.objects.filter(
-                Q(sender=request.user) | Q(founder=request.user)
-                ).distinct()
-                .values_list('recipient', flat=True))
+        list_of_clients = list(Document.objects. \
+                                filter(deleted=False). \
+                                filter(Q(sender=request.user) | Q(founder=request.user)
+                                ).distinct()
+                                .values_list('recipient', flat=True))
     
     all_clients = CustomUser.objects.filter(id__in=list_of_clients)
     all_clients = annotate_users_with_number_of_signed_docs(
@@ -169,7 +170,7 @@ def usermedcard(request, pk):
 
 def user_docs(request, pk):
 
-    all_documents = Document.objects.filter(recipient=pk)
+    all_documents = Document.objects.filter(deleted=False, recipient=pk)
     all_documents = filter_all_documents(request, all_documents)
 
     context = {

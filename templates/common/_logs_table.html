@@ -17,7 +17,7 @@
       </thead>
       <tbody>
       {%for document in all_documents%}
-        <tr id="document-row-{{document.id}}">
+        <tr>
           <td><span class="text-muted">{{document.id}}</span></td>
           <td><span class="text-muted">{{document.type}}</span></td>
           <td>{{document.send_date}}</td>
@@ -51,17 +51,12 @@
                 Действия
               </button>
               <div class="dropdown-menu dropdown-menu-end">
-                <a id='document-sign-{{document.id}}' class="dropdown-item dropdown-document-action-button" data-bs-toggle="modal" data-bs-target="#sms-code-modal">
-                  Подписать
-                </a>
+                {% include 'common/_dropdown_sign_button.html' %}
                 <a class="dropdown-item" href="{{document.document.url}}#" download>
                   Скачать документ
                 </a>
                 <a class="dropdown-item" href="{{document.document.url}}#">
                   Просмотеть документ
-                </a>
-                <a id='document-delete-{{document.id}}' class="dropdown-item dropdown-document-action-button" href="{{document.document.url}}#" data-bs-toggle="modal" data-bs-target="#modal-delete-document">
-                  Удалить документ
                 </a>
               </div>
             </span>
