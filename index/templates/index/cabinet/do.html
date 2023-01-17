@@ -15,7 +15,7 @@
                     <tbody>
                       {% for type in types %}
                         <tr>
-                          <td>{{type.title}}</td>
+                          <td><a href="{%url 'mydocuments' %}?doc_type={{type.type_document.lower}}">{{type.title}}</a></td>
                           <td>{{type.signed_by_me}}</td>
                         </tr>
                       {% endfor %}
