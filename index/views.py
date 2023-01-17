@@ -95,7 +95,12 @@ def index(request):
     
     # СТРАНИЦА ВРАЧА
     if request.user.is_authenticated and request.user.type == 'DO':
-        types = types.exclude(type_document__in=['DOGOVOR', 'RENT', 'DNEVNIK'])
+        types = types.exclude(
+            type_document__in=['DOGOVOR', 'RENT', 'DNEVNIK']
+            ).annotate(signed_by_me=Count(Case(
+                    When(document__sender_status=True, document__sender=request.user, then=1),
+                    output_field=models.IntegerField(), 
+                    distinct=True)))
         
         all_documents = all_documents.filter(
             sender=request.user, 
