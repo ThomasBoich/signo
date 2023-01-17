@@ -180,7 +180,7 @@ def sign_document(request):
             document.save()
             Action.objects.create(
                 action=f'{request.user.first_name} {request.user.last_name} \
-                    подписал {document.get_type_display()} с {document.sender.first_name} \
+                    подписал {document.type.get_type_document_display()} с {document.sender.first_name} \
                     {document.sender.last_name}'
                 )
         else:
@@ -188,7 +188,7 @@ def sign_document(request):
             document.save()
             Action.objects.create(
                 action=f'{request.user.first_name} {request.user.last_name} \
-                    подписал {document.get_type_display()} с {document.recipient.first_name} \
+                    подписал {document.type.get_type_document_display()} с {document.recipient.first_name} \
                     {document.recipient.last_name}'
                 )
 
@@ -229,5 +229,6 @@ def delete_document(request):
         document.deleted = True
         document.save()
         user=request.user
-        Action.objects.create(action=f'{user.first_name} {user.last_name} удалил {document.get_type_display()} ({document})')
+        Action.objects.create(
+            action=f'{user.first_name} {user.last_name} удалил {document.type.get_type_document_display()} ({document})')
     return HttpResponse(status=204)

@@ -1,20 +1,26 @@
-<div class="table-responsive">
-    <table class="table card-table table-vcenter text-nowrap datatable bg-white">
-      <thead>
-        <tr>
-          <th id="th-date" class='sortable-table-header' onclick="filterByField('pub_date')">Дата</th>
-          <th id="th-time">Время</th>
-          <th id="th-action" class='sortable-table-header' onclick="filterByField('action')">Действие</th>
-        </tr>
-      </thead>
-      <tbody>
-      {% for action in actions %}
-        <tr>
-          <td>{{action.pub_date|date:"d M Y" }}</td>
-          <td>{{action.pub_date|date:'H:i' }}</td>
-          <td>{{action.action }}</td>
-        </tr>
-      {%endfor%}
-      </tbody>
-    </table>
+<div class="card" >
+  <div class="card-header">
+    
+      <h2><a class="nav-link" href="{%url 'logs'%}" >Логи</a></h2>
   </div>
+  <div class="table-responsive" style="min-height:unset">
+      <table class="table card-table table-vcenter text-nowrap datatable bg-white">
+        <thead>
+          <tr>
+            <th id="th-date" style='min-width:150px;' class='sortable-table-header' onclick="filterByField('pub_date')">Дата</th>
+            <th id="th-time" style='min-width:150px;'>Время</th>
+            <th id="th-action" style='min-width:200px;' class='sortable-table-header' onclick="filterByField('action')">Действие</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for action in actions %}
+          <tr>
+            <td>{{action.pub_date|date:"d M Y" }}</td>
+            <td>{{action.pub_date|date:'H:i' }}</td>
+            <td>{{action.action }}</td>
+          </tr>
+        {%endfor%}
+        </tbody>
+      </table>
+    </div>
+</div>

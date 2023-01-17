@@ -4,7 +4,7 @@ from django.db.models import Q, Count, Case, When, OuterRef, Subquery
 from django.db import models
 
 from documents.models import Document, DocumentType
-from users.models import CustomUser
+from users.models import CustomUser, Action
 from documents.services import *
 
 
@@ -71,6 +71,8 @@ def index(request):
                                         recipient__type='CL', 
                                         recipient_status=False
                                         ).count()
+
+        actions = Action.objects.all()[:5]
         context = {
             'title': 'Главная страница',
             'all_users': CustomUser.objects.all().count(), # кол-во пользователей
@@ -85,6 +87,7 @@ def index(request):
             'docs_signed_by_clients': docs_signed_by_clients,
             'docs_not_signed_by_clients': docs_not_signed_by_clients,
             'types' : types,
+            'actions': actions,
         }
 
         return render(request, 'index/cabinet/di.html', context)
