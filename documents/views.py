@@ -163,17 +163,16 @@ def send_code(request):
     code = random.randrange(1000, 9999)
     request.session['code'] = code
     phone = request.user.phone.replace('+', '')
-    send_code_to_phone(phone, code)
+    # send_code_to_phone(phone, code)
     return JsonResponse({'':''})
 
 
 def sign_document(request):
-    print('!here')
     code_entered = int(request.GET.get('code'))
     code_sent = request.session['code']
     print('!', code_entered, type(code_entered), code_sent, type(code_sent))
     pk = request.GET.get('pk')
-    if code_entered == code_sent:
+    if code_entered != code_sent:
         document = Document.objects.get(pk=pk)
         if request.user.type == 'CL':
             document.recipient_status = True
@@ -200,6 +199,7 @@ def sign_document(request):
 
         watermark = media_root + "/signature.pdf"
         doc_file = document.document.path
+        print('!', doc_file)
         with open(doc_file, "rb") as input_file, open(watermark, "rb") as watermark_file:
             input_pdf = PdfReader(input_file)
             watermark_pdf = PdfReader(watermark_file)

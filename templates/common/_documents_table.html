@@ -24,16 +24,7 @@
           <td>{{document.send_date}}</td>
           <td><a href="{%url 'user' document.founder.pk%}" class="text-reset" tabindex="-1">{{document.founder.first_name}} {{document.founder.last_name}}</a></td>
           <td><a href="{%url 'user' document.sender.pk%}" class="text-reset" tabindex="-1">{{document.sender.first_name}} {{document.sender.last_name}}</a></td>
-          <td>
-            {%if document.recipient_status%}
-            <span class="badge bg-success me-1"></span>
-            Подписан
-            {%else%}
-            <span class="badge bg-danger me-1"></span>
-            Не подписан
-            {%endif%}
-
-          </td>
+        
           <td>
             {%if document.sender_status%}
             <span class="badge bg-success me-1"></span>
@@ -41,6 +32,16 @@
             {%else%}
             <span class="badge bg-danger me-1"></span>
             Не Подписан
+            {%endif%}
+
+          </td>
+          <td>
+            {%if document.recipient_status%}
+            <span class="badge bg-success me-1"></span>
+            Подписан
+            {%else%}
+            <span class="badge bg-danger me-1"></span>
+            Не подписан
             {%endif%}
 
           </td>

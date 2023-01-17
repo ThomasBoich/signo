@@ -72,7 +72,7 @@ def index(request):
                                         recipient_status=False
                                         ).count()
 
-        actions = Action.objects.all()[:5]
+        actions = Action.objects.all().order_by('-pub_date')[:5]
         context = {
             'title': 'Главная страница',
             'all_users': CustomUser.objects.all().count(), # кол-во пользователей
