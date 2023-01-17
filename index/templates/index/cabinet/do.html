@@ -3,7 +3,7 @@
               <div class="col-md-12 col-lg-12">
                 <div class="card">
                   <div class="card-header">
-                    <h3 class="card-title">Аналитика документов - {{all_documents_type}}</h3>
+                    <h3 class="card-title">Мои документы</h3>
                   </div>
                   <table class="table card-table table-vcenter">
                     <thead>
@@ -13,73 +13,57 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>Договор</td>
-                        <td>{{contract}}</td>
-                        <td class="w-50">
-                          <div class="progress progress-xs">
-                            <div class="progress-bar bg-primary" style="width: 71.0%"></div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>ИДС</td>
-                        <td>{{ids}}</td>
-                        <td class="w-50">
-                          <div class="progress progress-xs">
-                            <div class="progress-bar bg-primary" style="width: 35.96%"></div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Мед карта</td>
-                        <td>{{medcard}}</td>
-                        <td class="w-50">
-                          <div class="progress progress-xs">
-                            <div class="progress-bar bg-primary" style="width: 24.9%"></div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Адм.карт</td>
-                        <td>{{admcard}}</td>
-                        <td class="w-50">
-                          <div class="progress progress-xs">
-                            <div class="progress-bar bg-primary" style="width: 19.72%"></div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Справка в налоговую</td>
-                        <td>{{rent}}</td>
-                        <td class="w-50">
-                          <div class="progress progress-xs">
-                            <div class="progress-bar bg-primary" style="width: 17.08%"></div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>План лечения</td>
-                        <td>{{plan}}</td>
-                        <td class="w-50">
-                          <div class="progress progress-xs">
-                            <div class="progress-bar bg-primary" style="width: 13.0%"></div>
-                          </div>
-                        </td>
-                      </tr>
-<!--                      <tr>-->
-<!--                        <td>Pinterest</td>-->
-<!--                        <td>420</td>-->
-<!--                        <td class="w-50">-->
-<!--                          <div class="progress progress-xs">-->
-<!--                            <div class="progress-bar bg-primary" style="width: 8.4%"></div>-->
-<!--                          </div>-->
-<!--                        </td>-->
-<!--                      </tr>-->
+                      {% for type in types %}
+                        <tr>
+                          <td>{{type.title}}</td>
+                          <td>{{type.document.count}}</td>
+                        </tr>
+                      {% endfor %}
                     </tbody>
                   </table>
                 </div>
               </div>
+
+
+              <div class="index-statistics mb-5 mt-5">
+                <div class="row">
+                  <div class="col-sm-12 mb-3">
+                    <div class="top-info-line text-muted" style="justify-content:center; font-size:1.7rem;padding:10px">Статистика</div>
+                  </div>
+                </div>
+                <div class="row mb-5">
+          
+                  <div class="col-sm-4" style="display:flex; flex-direction:column; gap: 10px">
+                    <div class="top-info-line">
+                      <span class="text-muted" style="max-width:280px">
+                        <a href="{% url 'administrators' %}" >Количество моих пациентов в системе</a>
+                      </span>
+                      <span class='top-info-line-value'>{{all_clients}}</span>
+                    </div>
+                  </div>
+                  
+                  
+                  <div class="col-sm-4" style="display:flex; flex-direction:column; gap: 10px">
+                    <div class="top-info-line">
+                      <span class="text-muted" style="max-width:280px">
+                        <a href="{% url 'doctors' %}">Мои пациенты со всеми подписанными документами</a>
+                      </span>
+                      <span class='top-info-line-value'>{{clients_with_all_docs_signed}}</span>
+                    </div>
+                  </div>
+                  
+          
+          
+                  <div class="col-sm-4" style="display:flex; flex-direction:column; gap: 10px">
+                    <div class="top-info-line">
+                      <span class="text-muted" style="max-width:280px">
+                        <a href="{% url 'users' %}">Мои пациенты с неподписанными документами</a>
+                      </span>
+                      <span class='top-info-line-value'>{{clients_with_unsigned_docs}}</span>
+                    </div>
+                </div>
+
+
               <div class="col-12"style="padding:60px 0px 0px 0px;">
                 <div class="card">
                   <div class="card-header">

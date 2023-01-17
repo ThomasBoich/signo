@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from django.db.models import Q, Count, Case, When, OuterRef, Subquery
+from django.db.models import Q, Count, Case, When, OuterRef, Subquery, F
 from django.db import models
 
 from documents.models import Document, DocumentType
@@ -11,28 +11,15 @@ from documents.services import *
 @login_required
 def index(request):
     ''' ГЛАВНАЯ СТРАНИЦА С ИНФОГРАФИКОЙ '''
+    
     if request.user.is_authenticated == False:
         return redirect('login')
     # else:
         # all_documents_type = DocumentType.objects.all().count()
         
- 
-    
-    # СТРАНИЦА СУПЕРАДМИНИСТРАТОРА И АДМИНИСТРАТОРА
-    if request.user.is_authenticated and (request.user.type == 'AD' or request.user.type == 'DI'):
-        g = Document.objects.filter(deleted=False, sender_status=False)
+    all_documents = Document.objects.filter(deleted=False)
 
-        all_documents = Document.objects. \
-            filter(deleted=False). \
-            filter(
-                Q(sender=request.user) | Q(recipient=request.user) &
-                (Q(sender_status=False) | Q(recipient_status=False))
-                )
-        all_documents = filter_all_documents(request, all_documents)
-        
-        # добавляем поля "подписано доктором" и "подписано пациентом"
-        types = DocumentType.objects.all() \
-            .exclude(type_document='OTKAZ') \
+    types = DocumentType.objects.all() \
             .annotate(
                 signed_by_patient=Count(Case(
                     When(document__recipient_status=True, then=1),
@@ -45,6 +32,20 @@ def index(request):
                     output_field=models.IntegerField(),
                     distinct=True
             )))
+    # СТРАНИЦА СУПЕРАДМИНИСТРАТОРА И АДМИНИСТРАТОРА
+    if request.user.is_authenticated and (request.user.type == 'AD' or request.user.type == 'DI'):
+        g = Document.objects.filter(deleted=False, sender_status=False)
+
+        types = types.exclude(type_document='OTKAZ')
+
+        all_documents = all_documents.filter(
+                Q(sender=request.user) | Q(recipient=request.user) &
+                (Q(sender_status=False) | Q(recipient_status=False))
+                )
+        all_documents = filter_all_documents(request, all_documents)
+        
+        # добавляем поля "подписано доктором" и "подписано пациентом"
+        
 
         signed_docs = Document.objects.filter(deleted=False)
         docs_signed_by_admins = signed_docs.filter(
@@ -94,24 +95,48 @@ def index(request):
     
     # СТРАНИЦА ВРАЧА
     if request.user.is_authenticated and request.user.type == 'DO':
-        all_types = DocumentType.objects.all()
-        contract = DocumentType.objects.filter(pk=1).count()
-        ids = DocumentType.objects.filter(pk=2).count()
-        medcard = DocumentType.objects.filter(pk=3).count()
-        admcard = DocumentType.objects.filter(pk=4).count()
-        medcarddne = DocumentType.objects.filter(pk=8).count()
-        rent = DocumentType.objects.filter(pk=5).count()
-        plan = DocumentType.objects.filter(pk=6).count()
+        types = types.exclude(type_document__in=['DOGOVOR', 'RENT', 'DNEVNIK'])
+        
+        all_documents = all_documents.filter(
+            sender=request.user, 
+            sender_status=False
+            )
+
+        all_clients = CustomUser.objects.filter(
+            type='CL', 
+            recipient__sender=request.user
+            )
+
+        
+
+        all_clients = CustomUser.objects.filter(
+            type='CL', 
+            recipient__sender=request.user
+            ).annotate(
+                signed_by_patient=Count(Case(
+                    When(recipient__recipient_status=True, recipient__sender=request.user, then=1),
+                    output_field=models.IntegerField(), 
+                    distinct=True
+            ))) \
+            .annotate(
+                not_signed_by_patient=Count(Case(
+                    When(recipient__recipient_status=False, recipient__sender=request.user, then=1),
+                    output_field=models.IntegerField(),
+                    distinct=True
+            ))).annotate(
+                total_docs=Count('recipient')
+            )
+        
+        clients_with_all_docs_signed = all_clients.filter(total_docs=F('signed_by_patient')).count()
+
+        clients_with_unsigned_docs = all_clients.filter(~Q(total_docs=F('signed_by_patient'))).count()                                
 
         context = {
-            'type': all_types,
-            'contract': contract,
-            'ids': ids,
-            'medcard': medcard,
-            'admcard': admcard,
-            'rent': rent,
-            'plan': plan,
-
+            'types': types,
+            'all_clients': all_clients.count(),
+            'clients_with_all_docs_signed': clients_with_all_docs_signed,
+            'clients_with_unsigned_docs': clients_with_unsigned_docs,
+            'all_documents': all_documents,
         }
         return render(request, 'index/cabinet/do.html', context)
     

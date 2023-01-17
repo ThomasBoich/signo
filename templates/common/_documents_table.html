@@ -1,4 +1,4 @@
-<div class="table-responsive">
+<div class="table-responsive" style="min-height:unset">
     <table class="table card-table table-vcenter text-nowrap datatable bg-white">
       <thead>
         <tr>
@@ -46,15 +46,16 @@
 
           </td>
           <td class="text-end">
-            {%if document.sender_status == False and document.sender == request.user or document.recipient_status == False and document.recipient == request.user%}
              <span class="dropdown">
               <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">
                 Действия
               </button>
               <div class="dropdown-menu dropdown-menu-end">
-                <a id='document-sign-{{document.id}}' class="dropdown-item dropdown-document-action-button" data-bs-toggle="modal" data-bs-target="#sms-code-modal">
-                  Подписать
-                </a>
+                {%if document.sender_status == False and document.sender == request.user or document.recipient_status == False and document.recipient == request.user%}
+                  <a id='document-sign-{{document.id}}' class="dropdown-item dropdown-document-action-button" data-bs-toggle="modal" data-bs-target="#sms-code-modal">
+                    Подписать
+                  </a>
+                {% endif %}
                 <a class="dropdown-item" href="{{document.document.url}}#" download>
                   Скачать документ
                 </a>
@@ -66,11 +67,7 @@
                 </a>
               </div>
             </span>
-            {%else%}
-             <span class="dropdown" style="height: 2.4rem;width: 2.4rem;display: flex;justify-content: center;width: 100%;align-items: center;color: #0ea36d;">
-               <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="9 11 12 14 20 6" /><path d="M20 12v6a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h9" /></svg>
-             </span>
-            {%endif%}
+
           </td>
         </tr>
       {%endfor%}
