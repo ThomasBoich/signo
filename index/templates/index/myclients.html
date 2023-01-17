@@ -2,47 +2,7 @@
 {%block content%}
 <div class="col-12">
                 <div class="card">
-                  <div class="table-responsive">
-                    <table class="table table-vcenter card-table">
-                      <thead>
-                        <tr>
-                          <th>ФИО</th>
-                          <th>ID</th>
-                          <th>Паспорт</th>
-                          <th>Телефон</th>
-                          <th class="w-1"></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                      {%for user in users%}
-                      <tr>
-                          <td>
-                            <div class="d-flex py-1 align-items-center">
-                              <div class="flex-fill">
-                                <div class="font-weight-medium">{{user.first_name}} {{user.last_name}}</div>
-                                <div class="text-muted"><a href="#" class="text-reset"></a></div>
-                              </div>
-                            </div>
-                          </td>
-                          <td>
-                            <div>Automation Specialist IV</div>
-                            <div class="text-muted">Accounting</div>
-                          </td>
-                          <td class="text-muted">
-
-                          </td>
-                          <td>
-
-<!--                            <a href="#">Редактировать</a>-->
-<!--                            <a href="#">Редактировать</a>-->
-                          </td>
-                          <td>
-                          </td>
-                        </tr>
-                      {%endfor%}
-                      </tbody>
-                    </table>
-                  </div>
+                  {% include 'common/_users_table.html' %}
                 </div>
               </div>
 {%endblock%}

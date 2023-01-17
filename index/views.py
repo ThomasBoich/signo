@@ -5,7 +5,9 @@ from django.db import models
 
 from documents.models import Document, DocumentType
 from users.models import CustomUser, Action
+from users.services import *
 from documents.services import *
+
 
 
 @login_required
@@ -154,8 +156,17 @@ def index(request):
 
 # СТРАНИЦА МОИ КЛИЕНТЫ
 def myclients(request):
+
+    users = CustomUser.objects.filter(
+            Q(recipient__sender=request.user) | Q(recipient__founder=request.user), 
+            recipient__sender_status=True
+            )
+
+    users = annotate_users_with_number_of_signed_docs(
+                                            users, 
+                                            'recipient__recipient_status')
     context = {
         'title': 'Мои Пациенты',
-        'users': CustomUser.objects.filter(), # - здесь вывести всемх клиентов врача и администратора, для sender и founder
+        'users': users, 
     }
     return render(request, 'index/myclients.html', context=context)
