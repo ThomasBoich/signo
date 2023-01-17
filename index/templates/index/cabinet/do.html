@@ -1,69 +1,10 @@
 {% extends 'index.html' %}
 {%block content%}
-              <div class="col-md-12 col-lg-12">
-                <div class="card">
-                  <div class="card-header">
-                    <h3 class="card-title">Мои документы</h3>
-                  </div>
-                  <table class="table card-table table-vcenter">
-                    <thead>
-                      <tr>
-                        <th>Название документов</th>
-                        <th colspan="2">Количество</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {% for type in types %}
-                        <tr>
-                          <td><a href="{%url 'mydocuments' %}?doc_type={{type.type_document.lower}}">{{type.title}}</a></td>
-                          <td>{{type.signed_by_me}}</td>
-                        </tr>
-                      {% endfor %}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+              {% include 'common/_index_docs_agg_table.html' %}
 
               <!-- statistics -->
-              <div class="index-statistics mb-5 mt-5">
-                <div class="row">
-                  <div class="col-sm-12 mb-3">
-                    <div class="top-info-line text-muted" style="justify-content:center; font-size:1.7rem;padding:10px">Статистика</div>
-                  </div>
-                </div>
-                <div class="row mb-5">
-          
-                  <div class="col-sm-4" style="display:flex; flex-direction:column; gap: 10px">
-                    <div class="top-info-line">
-                      <span class="text-muted" style="max-width:280px">
-                        <a href="{% url 'myclients' %}" >Количество моих пациентов в системе</a>
-                      </span>
-                      <span class='top-info-line-value'>{{all_clients}}</span>
-                    </div>
-                  </div>
-                  
-                  
-                  <div class="col-sm-4" style="display:flex; flex-direction:column; gap: 10px">
-                    <div class="top-info-line">
-                      <span class="text-muted" style="max-width:280px">
-                        <a href="{% url 'mydocuments' %}?signed=cl-true">Мои пациенты со всеми подписанными документами</a>
-                      </span>
-                      <span class='top-info-line-value'>{{clients_with_all_docs_signed}}</span>
-                    </div>
-                  </div>
-                  
-          
-          
-                  <div class="col-sm-4" style="display:flex; flex-direction:column; gap: 10px">
-                    <div class="top-info-line">
-                      <span class="text-muted" style="max-width:280px">
-                        <a href="{% url 'mydocuments' %}?signed=cl-false">Мои пациенты с неподписанными документами</a>
-                      </span>
-                      <span class='top-info-line-value'>{{clients_with_unsigned_docs}}</span>
-                    </div>
-                </div>
-
-
+              {% include 'common/_index_stats.html' %}
+     
               <div class="col-12"style="padding:60px 0px 0px 0px;">
                 <div class="card">
                   <div class="card-header">
@@ -77,8 +18,6 @@
 
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
+ 
 
 {%endblock%}

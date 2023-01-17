@@ -29,15 +29,50 @@ def index(request):
                     distinct=True
             ))) \
             .annotate(
-                signed_by_doctor=Count(Case(
+                signed_by_us=Count(Case(
                     When(document__sender_status=True, then=1),
                     output_field=models.IntegerField(),
                     distinct=True
-            )))
+            ))).annotate(signed_by_me=Count(Case(
+                    When(document__sender_status=True, document__sender=request.user, then=1),
+                    output_field=models.IntegerField(), 
+                    distinct=True)))
+
+
+    all_clients = CustomUser.objects.filter(
+            type='CL', 
+            recipient__sender=request.user
+            )
+
+        
+
+    all_clients = CustomUser.objects.filter(
+        type='CL', 
+        recipient__sender=request.user
+        ).annotate(
+            signed_by_patient=Count(Case(
+                When(recipient__recipient_status=True, recipient__sender=request.user, then=1),
+                output_field=models.IntegerField(), 
+                distinct=True
+        ))) \
+        .annotate(
+            not_signed_by_patient=Count(Case(
+                When(recipient__recipient_status=False, recipient__sender=request.user, then=1),
+                output_field=models.IntegerField(),
+                distinct=True
+        ))).annotate(
+            total_docs=Count('recipient')
+        )
+    
+    clients_with_all_docs_signed = all_clients.filter(total_docs=F('signed_by_patient')).count()
+
+    clients_with_unsigned_docs = all_clients.filter(~Q(total_docs=F('signed_by_patient'))).count()
+
     # СТРАНИЦА СУПЕРАДМИНИСТРАТОРА И АДМИНИСТРАТОРА
     if request.user.is_authenticated and (request.user.type == 'AD' or request.user.type == 'DI'):
         g = Document.objects.filter(deleted=False, sender_status=False)
 
+        # annotated above
         types = types.exclude(type_document='OTKAZ')
 
         all_documents = all_documents.filter(
@@ -83,60 +118,38 @@ def index(request):
             'all_doctors': CustomUser.objects.filter(type='DO').count(), # кол-во врачей
             'all_clients': CustomUser.objects.filter(type='CL').count(), # кол-во клиентов
             'all_documents': all_documents,
+            
             'docs_signed_by_admins': docs_signed_by_admins,
             'docs_not_signed_by_admins': docs_not_signed_by_admins,
             'docs_signed_by_doctors': docs_signed_by_doctors,
             'docs_not_signed_by_doctors': docs_not_signed_by_doctors,
             'docs_signed_by_clients': docs_signed_by_clients,
             'docs_not_signed_by_clients': docs_not_signed_by_clients,
+
+            'clients_with_unsigned_docs': clients_with_unsigned_docs,
+            'clients_with_all_docs_signed': clients_with_all_docs_signed,
+
             'types' : types,
             'actions': actions,
         }
 
-        return render(request, 'index/cabinet/di.html', context)
+        if request.user.type == 'DI':
+            return render(request, 'index/cabinet/di.html', context)
+        else:
+            return render(request, 'index/cabinet/ad.html', context)
     
     # СТРАНИЦА ВРАЧА
     if request.user.is_authenticated and request.user.type == 'DO':
         types = types.exclude(
             type_document__in=['DOGOVOR', 'RENT', 'DNEVNIK']
-            ).annotate(signed_by_me=Count(Case(
-                    When(document__sender_status=True, document__sender=request.user, then=1),
-                    output_field=models.IntegerField(), 
-                    distinct=True)))
+            )
         
         all_documents = all_documents.filter(
             sender=request.user, 
             sender_status=False
             )
 
-        all_clients = CustomUser.objects.filter(
-            type='CL', 
-            recipient__sender=request.user
-            )
-
-        
-
-        all_clients = CustomUser.objects.filter(
-            type='CL', 
-            recipient__sender=request.user
-            ).annotate(
-                signed_by_patient=Count(Case(
-                    When(recipient__recipient_status=True, recipient__sender=request.user, then=1),
-                    output_field=models.IntegerField(), 
-                    distinct=True
-            ))) \
-            .annotate(
-                not_signed_by_patient=Count(Case(
-                    When(recipient__recipient_status=False, recipient__sender=request.user, then=1),
-                    output_field=models.IntegerField(),
-                    distinct=True
-            ))).annotate(
-                total_docs=Count('recipient')
-            )
-        
-        clients_with_all_docs_signed = all_clients.filter(total_docs=F('signed_by_patient')).count()
-
-        clients_with_unsigned_docs = all_clients.filter(~Q(total_docs=F('signed_by_patient'))).count()                                
+                                        
 
         context = {
             'types': types,

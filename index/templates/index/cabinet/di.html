@@ -26,7 +26,7 @@
             <td><a href="{%url 'documents' %}?doc_type={{type.type_document.lower}}">{{type.title}}</a></td>
             <td>{{type.document.count}}</td>
             <td>{{type.signed_by_patient}} / {{type.document.count|sub:type.signed_by_patient}}</td>
-            <td>{{type.signed_by_doctor}} / {{type.document.count|sub:type.signed_by_doctor}}</td>
+            <td>{{type.signed_by_us}} / {{type.document.count|sub:type.signed_by_us}}</td>
           </tr>
         {% endfor %}
       </tbody>
@@ -132,9 +132,12 @@
 
       </div>
       <div class="mt-5">
-        {% include 'common/_logs_table.html' %}
+        
       </div>
     </div>
+
+    {% include 'common/_logs_table.html' %}
+
   </div>
 </div>
 </div>
