@@ -117,8 +117,8 @@ def create_signature(document):
     p = canvas.Canvas(settings.MEDIA_ROOT + '/signature.pdf')
 
     signature = 'signed by ' + unidecode(document.sender.first_name) + ' ' + unidecode(document.sender.last_name)
-
-    p.drawString(100, 100, signature)
+    p.setFillColorRGB(0,0,1)
+    p.drawString(40, 15, signature)
     
     p.showPage()
     p.save()
