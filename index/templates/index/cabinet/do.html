@@ -24,7 +24,7 @@
                 </div>
               </div>
 
-
+              <!-- statistics -->
               <div class="index-statistics mb-5 mt-5">
                 <div class="row">
                   <div class="col-sm-12 mb-3">
@@ -36,7 +36,7 @@
                   <div class="col-sm-4" style="display:flex; flex-direction:column; gap: 10px">
                     <div class="top-info-line">
                       <span class="text-muted" style="max-width:280px">
-                        <a href="{% url 'administrators' %}" >Количество моих пациентов в системе</a>
+                        <a href="{% url 'myclients' %}" >Количество моих пациентов в системе</a>
                       </span>
                       <span class='top-info-line-value'>{{all_clients}}</span>
                     </div>
@@ -46,7 +46,7 @@
                   <div class="col-sm-4" style="display:flex; flex-direction:column; gap: 10px">
                     <div class="top-info-line">
                       <span class="text-muted" style="max-width:280px">
-                        <a href="{% url 'doctors' %}">Мои пациенты со всеми подписанными документами</a>
+                        <a href="{% url 'mydocuments' %}?signed=cl-true">Мои пациенты со всеми подписанными документами</a>
                       </span>
                       <span class='top-info-line-value'>{{clients_with_all_docs_signed}}</span>
                     </div>
@@ -57,7 +57,7 @@
                   <div class="col-sm-4" style="display:flex; flex-direction:column; gap: 10px">
                     <div class="top-info-line">
                       <span class="text-muted" style="max-width:280px">
-                        <a href="{% url 'users' %}">Мои пациенты с неподписанными документами</a>
+                        <a href="{% url 'mydocuments' %}?signed=cl-false">Мои пациенты с неподписанными документами</a>
                       </span>
                       <span class='top-info-line-value'>{{clients_with_unsigned_docs}}</span>
                     </div>
