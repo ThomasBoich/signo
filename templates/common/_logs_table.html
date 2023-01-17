@@ -11,7 +11,7 @@
       {% for action in actions %}
         <tr>
           <td>{{action.pub_date|date:"d M Y" }}</td>
-          <td>{{action.pub_date|date:'H:m' }}</td>
+          <td>{{action.pub_date|date:'H:i' }}</td>
           <td>{{action.action }}</td>
         </tr>
       {%endfor%}

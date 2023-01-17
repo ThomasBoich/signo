@@ -93,6 +93,5 @@ def create_document_created_action(sender, instance, created, **kwargs):
     if created:
         document = instance
         Action.objects.create(
-            user=document.founder, 
-            action=f'{document.founder.first_name} {document.founder.last_name} ({document.founder.type}) отправил документ. Получатель {document.recipient.first_name} {document.recipient.last_name}'
+            action=f'{document.founder.first_name} {document.founder.last_name} ({document.founder.type}) отправил {document.get_type_display()}. Получатель {document.recipient.first_name} {document.recipient.last_name}'
             )

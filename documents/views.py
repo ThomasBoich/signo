@@ -163,14 +163,15 @@ def send_code(request):
     code = random.randrange(1000, 9999)
     request.session['code'] = code
     phone = request.user.phone.replace('+', '')
-    # send_code_to_phone(phone, code)
+    send_code_to_phone(phone, code)
     return JsonResponse({'':''})
 
 
 def sign_document(request):
+    print('!here')
     code_entered = int(request.GET.get('code'))
     code_sent = request.session['code']
-    print(code_entered, type(code_entered), code_sent, type(code_sent))
+    print('!', code_entered, type(code_entered), code_sent, type(code_sent))
     pk = request.GET.get('pk')
     if code_entered == code_sent:
         document = Document.objects.get(pk=pk)
@@ -178,18 +179,16 @@ def sign_document(request):
             document.recipient_status = True
             document.save()
             Action.objects.create(
-                user=request.user, 
                 action=f'{request.user.first_name} {request.user.last_name} \
-                    подписал документ с {document.sender.first_name} \
+                    подписал {document.get_type_display()} с {document.sender.first_name} \
                     {document.sender.last_name}'
                 )
         else:
             document.sender_status = True
             document.save()
             Action.objects.create(
-                user=request.user, 
                 action=f'{request.user.first_name} {request.user.last_name} \
-                    подписал документ с {document.recipient.first_name} \
+                    подписал {document.get_type_display()} с {document.recipient.first_name} \
                     {document.recipient.last_name}'
                 )
 
@@ -230,5 +229,5 @@ def delete_document(request):
         document.deleted = True
         document.save()
         user=request.user
-        Action.objects.create(user=user, action=f'{user.first_name} {user.last_name} удалил документ {document}')
+        Action.objects.create(action=f'{user.first_name} {user.last_name} удалил {document.get_type_display()} ({document})')
     return HttpResponse(status=204)

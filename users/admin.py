@@ -39,8 +39,12 @@ class ProfileAdmin(admin.ModelAdmin):
     readonly_fields = ['user']
 
 
+class ActionAdmin(admin.ModelAdmin):
+    readonly_fields = ['id', 'pub_date']
+
+
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Vizit)
 admin.site.register(MedCard, MedCardAdmin)
 admin.site.register(CustomUser, CustomUserAdmin)
-admin.site.register(Action)
+admin.site.register(Action, ActionAdmin)

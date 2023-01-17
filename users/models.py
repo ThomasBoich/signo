@@ -6,7 +6,7 @@ from django.dispatch import receiver
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_save, post_delete, pre_delete
 from django.contrib.auth.signals import user_logged_out
 
 from .managers import CustomUserManager
@@ -161,7 +161,7 @@ class CustomPermissions(models.Model):
 
 
 class Action(DateTimeMixin, models.Model):
-    user = models.ForeignKey('users.CustomUser', on_delete=models.CASCADE) # what to do on delete?
+    # user = models.ForeignKey('users.CustomUser', on_delete=models.CASCADE) # what to do on delete?
     action = models.CharField(max_length=255)
 
 
@@ -174,15 +174,14 @@ def create_user_created_action(sender, instance, created, **kwargs):
     if created:
         user=instance
         Action.objects.create(
-            user=user, 
             action=f'{user.first_name} {user.last_name} ({user.get_type_display()}) зарегистрировался в системе'
             )
     
-@receiver(post_delete, sender=CustomUser)    
+@receiver(pre_delete, sender=CustomUser)    
 def create_user_deleted_action(sender, instance, **kwargs):
+    print('!', f'sender={sender}, instance={instance}')
     user=instance
     Action.objects.create(
-        user=user, 
         action=f'{user.first_name} {user.last_name} ({user.get_type_display()}) удален из системы')
 
 
