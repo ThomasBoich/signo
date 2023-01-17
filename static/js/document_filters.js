@@ -60,7 +60,6 @@ function fill_search_fields(){
   }
 
   if(getParameterByName('signed') != null){
-    console.log('!here')
     document.getElementById('search-signed-status-select').value = getParameterByName('signed')
   }
 } 
