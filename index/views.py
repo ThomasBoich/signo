@@ -189,3 +189,17 @@ def myclients(request):
         'users': users, 
     }
     return render(request, 'index/myclients.html', context=context)
+
+# СТРАНИЦА ВСЕ КЛИЕНТЫ
+def allclients(request):
+
+    users = CustomUser.objects.filter(type='CL')
+
+    users = annotate_users_with_number_of_signed_docs(
+                                            users,
+                                            'recipient__recipient_status')
+    context = {
+        'title': 'Пациенты',
+        'users': users,
+    }
+    return render(request, 'index/allclients.html', context=context)

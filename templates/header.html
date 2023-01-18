@@ -93,9 +93,14 @@
                 </div>
               </a>
               <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                  {%if request.user.type == 'AD' and request.user.type == 'DO'%}
+                  <a href="{%url 'user_docs' request.user.id%}#" class="dropdown-item">Профиль</a>
+                  {%else%}
+                  {%endif%}
 <!--                <a href="#" class="dropdown-item">Set status</a>-->
-                <a href="{%url 'profile'%}#" class="dropdown-item">Профиль и аккаунт</a>
-                <a href="{%url 'index'%}#" class="dropdown-item">Документы</a>
+<!--                <a href="{%url 'profile'%}#" class="dropdown-item">Профиль и аккаунт</a>-->
+                <a href="{%url 'profile'%}#" class="dropdown-item">Настройки</a>
+<!--                <a href="{%url 'index'%}#" class="dropdown-item">Документы</a>-->
                 <div class="dropdown-divider"></div>
 <!--                <a href="#" class="dropdown-item">Настройки</a>-->
                 <a href="{%url 'logout'%}#" class="dropdown-item">Выйти</a>

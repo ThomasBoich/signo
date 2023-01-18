@@ -23,8 +23,17 @@ h1{margin: 0px 0px 40px 0px;}
     padding: 0px 0px 12px 0px;
     color: #000000;}.user-info a.active{ border-bottom: 2px solid #206bc4; padding: 0px 0px 12px 0px; color: #206bc4;}
 </style>
+
+{%if user.type == 'CL'%}
     <center><h1>{{user.first_name}} {{user.last_name}} {{user.patronymic}}</h1></center>
+
 <div class="user-info"id="user-info"><a href="{%url 'user' user.pk%}"class="active">Профиль</a><a href="{%url 'user_docs' user.pk%}"class="">Документы</a></div>
+{%else%}
+    <center><h1>{{user.first_name}} {{user.last_name}} {{user.patronymic}}</h1></center>
+
+<div class="user-info"id="user-info"><a href="{%url 'user' user.pk%}"class="active">Профиль</a><a href="{%url 'user_docs' user.pk%}"class="">Пациенты</a></div>
+{%endif%}
+
 <div class="row row-cards">
               <div class="col-lg-8">
                 <div class="card card-lg">

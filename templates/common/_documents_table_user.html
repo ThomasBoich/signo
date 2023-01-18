@@ -1,0 +1,91 @@
+<div class="table-responsive">
+    <table class="table card-table table-vcenter text-nowrap datatable bg-white" style="">
+      <thead>
+        <tr>
+          {% if request.user.type != 'CL' %}
+            <th id="th-recipient" class='sortable-table-header' onclick="filterByField('recipient')">фио пациента</th>
+          {% endif %}
+          <th id="th-id" class='sortable-table-header' onclick="filterByField('id')">ID документа</th>
+          <th id="th-type" class='sortable-table-header' onclick="filterByField('type')">название документа</th>
+
+          <th id="th-send_date" class='sortable-table-header' onclick="filterByField('send_date')">дата создания</th>
+          {% if request.user.type != 'CL' %}
+            <th id="th-founder" class='sortable-table-header' onclick="filterByField('founder')">кто создал</th>
+          {% endif %}
+          {% if request.user.type != 'CL' %}
+            <th id="th-sender" class='sortable-table-header' onclick="filterByField('sender')">кто подписант</th>
+          {% else %}
+            <th id="th-sender" class='sortable-table-header' onclick="filterByField('sender')">фио врача</th>
+          {% endif %}
+          <th id="th-recipient_status" class='sortable-table-header' onclick="filterByField('recipient_status')">статус врача</th>
+          <th id="th-sender_status" class='sortable-table-header' onclick="filterByField('sender_status')">статус пациента</th>
+          <th>Действия</th>
+
+        </tr>
+      </thead>
+      <tbody>
+      {%for document in all_documents%}
+        <tr id="document-row-{{document.id}}">
+                      {% if request.user.type != 'CL' %}
+            <td><a href="{%url 'user' document.recipient.pk %}">{{document.recipient.first_name}} {{document.recipient.last_name}}</a></td>
+          {% endif %}
+          <td><span class="text-muted"><a href="{{document.document.url}}#" target=”_blank”>{{document.id}}</a></span></td>
+          <td><span class="text-muted">{{document.type}}</span></td>
+
+          <td>{{document.send_date}}</td>
+          {% if request.user.type != 'CL' %}
+            <td><a href="{%url 'user' document.founder.pk%}" class="text-reset" tabindex="-1">{{document.founder.first_name}} {{document.founder.last_name}}</a></td>
+          {% endif %}
+          <td><a href="{%url 'user' document.sender.pk%}" class="text-reset" tabindex="-1">{{document.sender.first_name}} {{document.sender.last_name}}</a></td>
+
+          <td>
+            {%if document.sender_status%}
+            <span class="badge bg-success me-1"></span>
+            Подписан
+            {%else%}
+            <span class="badge bg-danger me-1"></span>
+            Не Подписан
+            {%endif%}
+
+          </td>
+          <td>
+            {%if document.recipient_status%}
+            <span class="badge bg-success me-1"></span>
+            Подписан
+            {%else%}
+            <span class="badge bg-danger me-1"></span>
+            Не подписан
+            {%endif%}
+
+          </td>
+          <td class="text-end">
+             <span class="dropdown">
+              <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">
+                Действия
+              </button>
+              <div class="dropdown-menu dropdown-menu-end" style="z-index:100">
+                {%if document.sender_status == False and document.sender == request.user or document.recipient_status == False and document.recipient == request.user%}
+                  <a id='document-sign-{{document.id}}' class="dropdown-item dropdown-document-action-button" data-bs-toggle="modal" data-bs-target="#sms-code-modal">
+                    Подписать
+                  </a>
+                {% endif %}
+                <a class="dropdown-item" href="{{document.document.url}}#" download>
+                  Скачать документ
+                </a>
+                <a class="dropdown-item" href="{{document.document.url}}#">
+                  Просмотреть документ
+                </a>
+                {% if request.user.type != 'CL' %}
+                  <a id='document-delete-{{document.id}}' class="dropdown-item dropdown-document-action-button" href="{{document.document.url}}#" data-bs-toggle="modal" data-bs-target="#modal-delete-document">
+                    Удалить документ
+                  </a>
+                {% endif %}
+              </div>
+            </span>
+
+          </td>
+        </tr>
+      {%endfor%}
+      </tbody>
+    </table>
+  </div>
