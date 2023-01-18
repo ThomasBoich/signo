@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-7d)mhdk3gm&=!cle^^b8&!z2)a^&hk$_+e%jdgx-nb3xuu1l&*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', 'sign-o.ru']
 
 
 # Application definition
@@ -145,3 +145,4 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_URL = 'login'
 ADMIN_SITE_HEADER = "SIGNO"
 # CSRF_TRUSTED_ORIGINS=["http://signo.boich.ru","https://signo.boich.ru"]
+CSRF_TRUSTED_ORIGINS=["http://sign-o.ru","https://sign-o.ru"]
