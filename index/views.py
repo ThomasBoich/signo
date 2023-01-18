@@ -193,13 +193,13 @@ def myclients(request):
 # СТРАНИЦА ВСЕ КЛИЕНТЫ
 def allclients(request):
 
-    users = CustomUser.objects.filter(type='CL')
-
-    users = annotate_users_with_number_of_signed_docs(
-                                            users,
-                                            'recipient__recipient_status')
+    all_users = CustomUser.objects.filter(type='CL')
+    all_users = annotate_users_with_number_of_signed_docs(
+                                            all_users,
+                                            'sender__sender_status')
+    users = search_users(request, all_users)
     context = {
-        'title': 'Пациенты',
+        'title': 'Мои Пациенты',
         'users': users,
     }
-    return render(request, 'index/allclients.html', context=context)
+    return render(request, 'index/myclients.html', context=context)
