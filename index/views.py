@@ -199,7 +199,7 @@ def allclients(request):
                                             'sender__sender_status')
     users = search_users(request, all_users)
     context = {
-        'title': 'Мои Пациенты',
+        'title': 'Пациенты',
         'users': users,
     }
     return render(request, 'index/myclients.html', context=context)
