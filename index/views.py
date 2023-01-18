@@ -164,7 +164,11 @@ def index(request):
     
     # СТРАНИЦА КЛИЕНТА
     if request.user.is_authenticated and request.user.type == 'CL':
+        all_documents = all_documents.filter(
+            recipient=request.user, 
+            )
         context = {
+            'all_documents': all_documents,
         }
         return render(request, 'index/cabinet/cl.html', context)
 

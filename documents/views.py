@@ -102,7 +102,7 @@ def mydocuments(request):
         'types': types,
         }
     if request.user.type == 'CL':
-        return render(request, 'documents/clmydocuments.html', context=context)
+        return render(request, 'documents/mydocuments.html', context=context)
     else:
         return render(request, 'documents/mydocuments.html', context=context)
 

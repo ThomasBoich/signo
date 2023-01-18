@@ -5,7 +5,7 @@
               <div class="col-12">
                 <div class="card">
                   <div class="card-header">
-                    <h2 style="margin-bottom: inherit;">Активные документы</h2>
+                    <h2 style="margin-bottom: inherit;">Мои документы</h2>
                   </div>
                   <div class="card-body border-bottom py-3">
                     <div class="d-flex">
@@ -13,9 +13,20 @@
                   </div>
                   {% include 'common/_documents_table.html' %}
                 </div>
+                <div class='mt-5' style="display:flex; flex-direction:column; font-size:1.2rem; background-color:white; border-radius:5px; padding:20px">
+                  <div><a href="{%url 'profile'%}">ФИО: {{request.user.first_name}} {{request.user.patronymic}} {{request.user.last_name}}</a></div>
+                  <div><a href="{%url 'profile'%}">Паспорт: {{request.user.passport}}</a></div>
+                  <div><a href="{%url 'profile'%}">Телефон: {{request.user.phone}}</a></div>
+                  <div>ID: {{request.user.id}}</div>
+                </div>
               </div>
+              
             </div>
+            
           </div>
         </div>
+
+
+        
 
 {%endblock%}

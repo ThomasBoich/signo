@@ -6,6 +6,7 @@ from documents.views import show_documents, mydocuments, \
 urlpatterns = [
     path('alldocuments/', show_documents, name='documents'),
     path('mydocuments/', mydocuments, name='mydocuments'),
+   
     path('<int:pk>/', show_category, name='category'),
 
     path('send_code/', send_code, name='send_code'),
