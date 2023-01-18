@@ -38,6 +38,10 @@ def index(request):
                     output_field=models.IntegerField(), 
                     distinct=True)))
 
+    types_for_do = types.exclude(
+            type_document__in=['DOGOVOR', 'RENT', 'DNEVNIK']
+            )
+
 
     all_clients = CustomUser.objects.filter(
             type='CL', 
@@ -70,11 +74,10 @@ def index(request):
 
     # СТРАНИЦА СУПЕРАДМИНИСТРАТОРА И АДМИНИСТРАТОРА
     if request.user.is_authenticated and (request.user.type == 'AD' or request.user.type == 'DI'):
-        g = Document.objects.filter(deleted=False, sender_status=False)
 
         # annotated above
-        types = types.exclude(type_document='OTKAZ')
-
+        types_for_di = types.exclude(type_document='OTKAZ')
+        types_for_ad = types_for_do
         all_documents = all_documents.filter(
                 Q(sender=request.user) | Q(recipient=request.user) &
                 (Q(sender_status=False) | Q(recipient_status=False))
@@ -113,10 +116,11 @@ def index(request):
         actions = Action.objects.all().order_by('-pub_date')[:5]
         context = {
             'title': 'Главная страница',
-            'all_users': CustomUser.objects.all().count(), # кол-во пользователей
-            'all_admins': CustomUser.objects.filter(type='AD').count(), # кол-во врачей
-            'all_doctors': CustomUser.objects.filter(type='DO').count(), # кол-во врачей
-            'all_clients': CustomUser.objects.filter(type='CL').count(), # кол-во клиентов
+            'all_users': CustomUser.objects.all().count(), 
+            'all_admins': CustomUser.objects.filter(type='AD').count(),
+            'all_doctors': CustomUser.objects.filter(type='DO').count(),
+            'all_clients': all_clients.count() if request.user.type == 'AD' 
+                                                else CustomUser.objects.filter(type='CL').count(),
             'all_documents': all_documents,
             
             'docs_signed_by_admins': docs_signed_by_admins,
@@ -129,7 +133,7 @@ def index(request):
             'clients_with_unsigned_docs': clients_with_unsigned_docs,
             'clients_with_all_docs_signed': clients_with_all_docs_signed,
 
-            'types' : types,
+            'types' : types_for_di if request.user.type == 'DI' else types_for_ad,
             'actions': actions,
         }
 
@@ -140,9 +144,7 @@ def index(request):
     
     # СТРАНИЦА ВРАЧА
     if request.user.is_authenticated and request.user.type == 'DO':
-        types = types.exclude(
-            type_document__in=['DOGOVOR', 'RENT', 'DNEVNIK']
-            )
+        # types can be found above
         
         all_documents = all_documents.filter(
             sender=request.user, 

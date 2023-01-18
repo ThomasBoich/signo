@@ -107,55 +107,6 @@ def mydocuments(request):
         return render(request, 'documents/mydocuments.html', context=context)
 
 
-@login_required
-def show_my_sign_documents(request):
-    context = {
-        'title': 'Не подписанные',
-        'all_users': CustomUser.objects.all().count(),
-        'all_doctors': CustomUser.objects.filter(type='DO').count(),
-        'all_clients': CustomUser.objects.filter(type='CL').count(),
-    }
-    if request.user.type == 'CL':
-        return render(request, 'documents/clsign.html', context)
-    else:
-        return render(request, 'documents/mysign.html', context)
-
-
-@login_required
-def show_my_finish_documents(request):
-    context ={
-        'title': 'Подписанные',
-        'all_users': CustomUser.objects.all().count(),
-        'all_doctors': CustomUser.objects.filter(type='DO').count(),
-        'all_clients': CustomUser.objects.filter(type='CL').count(),
-        }
-
-    if request.user.type == 'CL':
-        return render(request, 'documents/clfinish.html', context)
-    else:
-        return render(request, 'documents/myfinish.html', context)
-
-
-@login_required
-def show_sign_documents(request):
-    context = {
-        'title': 'Не подписанные',
-        'all_users': CustomUser.objects.all().count(),
-        'all_doctors': CustomUser.objects.filter(type='DO').count(),
-        'all_clients': CustomUser.objects.filter(type='CL').count(),
-        }
-    return render(request, 'documents/sign.html', context)
-
-
-@login_required
-def show_finish_documents(request):
-    context ={
-        'title': 'Подписанные',
-        'all_users': CustomUser.objects.all().count(),
-        'all_doctors': CustomUser.objects.filter(type='DO').count(),
-        'all_clients': CustomUser.objects.filter(type='CL').count(),
-        }
-    return render(request, 'documents/finish.html', context)
 
 
 
