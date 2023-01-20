@@ -9,11 +9,11 @@ class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
     model = CustomUser
-    list_display = ('email', 'first_name', 'last_name', 'patronymic', 'uniq_id', 'pasport_series', 'pasport_number', 'phone', 'is_staff', 'is_active',)
+    list_display = ('email', 'last_name', 'first_name', 'patronymic', 'uniq_id', 'pasport_series', 'pasport_number', 'phone', 'date_of_birthday', 'is_staff', 'is_active',)
     list_filter = ('email', 'is_staff', 'is_active',)
     fieldsets = (
-        (None, {'fields': ('email', 'password', 'first_name', 'last_name', 'patronymic', 'pasport_series', 'pasport_number', 'phone', 'addres')}),
-        ('Permissions', {'fields': ('is_superuser', 'ban','type', 'is_staff', 'is_active', 'logs', 'delete', 'downloads', 'views', 'phones', 'pasports', 'documents', 'settings', 'all_info', 'my_info', 'groups','user_permissions', 'outside')}),
+        (None, {'fields': ('email', 'password', 'last_name', 'first_name', 'patronymic', 'pasport_series', 'pasport_number', 'phone', 'date_of_birthday', 'addres')}),
+        ('Permissions', {'fields': ('is_superuser', 'ban','type', 'is_staff', 'is_active', 'groups','user_permissions', 'outside')}),
     )
     add_fieldsets = (
         (None, {
@@ -25,26 +25,26 @@ class CustomUserAdmin(UserAdmin):
     ordering = ('email',)
 
 
-class MedCardAdmin(admin.ModelAdmin):
-    save_as = True
-    list_display = ['user', 'age', 'height', 'blood', 'weight']
-    search_fields = ['user', 'age', 'height', 'blood', 'weight']
-    readonly_fields = ['user']
+# class MedCardAdmin(admin.ModelAdmin):
+#     save_as = True
+#     list_display = ['user', 'age', 'height', 'blood', 'weight']
+#     search_fields = ['user', 'age', 'height', 'blood', 'weight']
+#     readonly_fields = ['user']
+#
+#
+# class ProfileAdmin(admin.ModelAdmin):
+#     save_as = True
+#     list_display = ['user']
+#     search_fields = ['user']
+#     readonly_fields = ['user']
 
 
-class ProfileAdmin(admin.ModelAdmin):
-    save_as = True
-    list_display = ['user']
-    search_fields = ['user']
-    readonly_fields = ['user']
+# class ActionAdmin(admin.ModelAdmin):
+#     readonly_fields = ['id', 'pub_date']
 
 
-class ActionAdmin(admin.ModelAdmin):
-    readonly_fields = ['id', 'pub_date']
-
-
-admin.site.register(Profile, ProfileAdmin)
-admin.site.register(Vizit)
-admin.site.register(MedCard, MedCardAdmin)
+# admin.site.register(Profile, ProfileAdmin)
+# admin.site.register(Vizit)
+# admin.site.register(MedCard, MedCardAdmin)
 admin.site.register(CustomUser, CustomUserAdmin)
-admin.site.register(Action, ActionAdmin)
+# admin.site.register(Action, ActionAdmin)

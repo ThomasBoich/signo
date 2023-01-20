@@ -9,7 +9,7 @@ class CustomUserCreationForm(UserCreationForm):
 
     class Meta(UserCreationForm):
         model = CustomUser
-        fields = ('email', 'pasport_series', 'pasport_number', 'phone', 'first_name', 'last_name', 'patronymic')
+        fields = ('email', 'pasport_series', 'pasport_number', 'first_name', 'last_name', 'patronymic', 'phone', 'date_of_birthday')
 
     def clean(self):
         phone = self.cleaned_data['phone']

@@ -160,6 +160,13 @@ def user(request, pk):
     }
     return render(request, 'users/user.html', context)
 
+def user_profile(request):
+    user = CustomUser.objects.get(pk=request.user.id)
+    context = {
+        'user': user,
+    }
+    return render(request, 'users/user.html', context)
+
 
 def usermedcard(request, pk):
     user = MedCard.objects.get(pk=pk)
@@ -184,7 +191,7 @@ def user_docs(request, pk):
 
 class LogsView(View):
     def get(self, request):
-        actions = Action.objects.all()
+        actions = Action.objects.all().order_by('-pub_date')
         context = {
             'actions': actions,
         }

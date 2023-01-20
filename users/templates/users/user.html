@@ -79,10 +79,15 @@ h1{margin: 0px 0px 40px 0px;}
        <span style="font-size: 14px;width:100%;display:flex;">Электронного почта</span>
     {{user.email}}
    </div>
+           <div class="" style="font-size: 20px;border-bottom: 2px solid #e6e6e6; width: 100%;margin: 0px 0px 9px;margin: 0px 0px 14px 0px;
+    padding: 0px 0px 14px 0px;">
+       <span style="font-size: 14px;width:100%;display:flex;">Дата Рождения</span>
+            {{user.date_of_birthday}}
+   </div>
 
 
 
-
+<h5>если вы заметили неточность в своих учётных данных обратитесь к администратору</h5>
 
 </form>
                     </div>
@@ -138,14 +143,14 @@ h1{margin: 0px 0px 40px 0px;}
                           {%endif%}
                           Электронная почта: {{user.email}}
                       </li>
-                      <li><!-- Download SVG icon from http://tabler-icons.io/i/check -->
-                          {%if user.username%}
-                          <svg xmlns="http://www.w3.org/2000/svg" class="icon text-green" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 12l5 5l10 -10"></path></svg>
-                          {%else%}
-                          <svg xmlns="http://www.w3.org/2000/svg" class="icon text-red" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                          {%endif%}
-                        Логин {{user.username}}
-                      </li>
+<!--                      <li>&lt;!&ndash; Download SVG icon from http://tabler-icons.io/i/check &ndash;&gt;-->
+<!--                          {%if user.username%}-->
+<!--                          <svg xmlns="http://www.w3.org/2000/svg" class="icon text-green" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 12l5 5l10 -10"></path></svg>-->
+<!--                          {%else%}-->
+<!--                          <svg xmlns="http://www.w3.org/2000/svg" class="icon text-red" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>-->
+<!--                          {%endif%}-->
+<!--                        Логин {{user.username}}-->
+<!--                      </li>-->
                     </ul>
                     <h4>Дополнительная информация</h4>
                     <ul class="list-unstyled space-y-1">
@@ -180,6 +185,14 @@ h1{margin: 0px 0px 40px 0px;}
                           <svg xmlns="http://www.w3.org/2000/svg" class="icon text-red" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                           {%endif%}
                         Адрес: {{user.addres}}
+                      </li>
+                        <li><!-- Download SVG icon from http://tabler-icons.io/i/x -->
+                          {%if user.uniq_id%}
+                          <svg xmlns="http://www.w3.org/2000/svg" class="icon text-green" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 12l5 5l10 -10"></path></svg>
+                          {%else%}
+                          <svg xmlns="http://www.w3.org/2000/svg" class="icon text-red" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                          {%endif%}
+                        ID: {{user.uniq_id}}
                       </li>
                     </ul>
 <!--                    <h4>Conditions</h4>-->

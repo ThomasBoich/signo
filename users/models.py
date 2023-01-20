@@ -36,6 +36,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     groups = models.ManyToManyField(Group, blank=True, null=True, verbose_name='Группы', related_name='groups')
     user_permissions = models.ManyToManyField(Permission, blank=True, null=True, verbose_name='Разрешения', related_name='user_permissions')
     outside = models.DateTimeField(verbose_name='дата увольнения', blank=True, null=True)
+    date_of_birthday = models.DateField(blank=True, null=True, verbose_name='Дата Рождения')
     
     ADMINISTRATOR = 'AD'
     DOCTOR = 'DO'
@@ -52,16 +53,16 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     type = models.CharField(max_length=6, choices=TYPE_ROLE, default=CLIENT, verbose_name='Тип пользователя')
     ban = models.BooleanField(default=False, verbose_name='Уволен')
     ecp = models.BooleanField(default=False, verbose_name='Наличие ЭЦП')
-    logs = models.BooleanField(default=True, blank=True, verbose_name='Доступ к вкладке логи')
-    delete = models.BooleanField(default=True, blank=True, verbose_name='Доступ к удалению документов')
-    downloads = models.BooleanField(default=True, blank=True, verbose_name='Доступ к скачиванию документов')
-    views = models.BooleanField(default=True, blank=True, verbose_name='Доступ к просмотру документов')
-    phones = models.BooleanField(default=True, blank=True, verbose_name='Доступ к просмотру телефонов')
-    pasports = models.BooleanField(default=True, blank=True, verbose_name='Доступ к паспортным данным')
-    documents = models.BooleanField(default='True', blank=True, verbose_name='Доступ к вкладке документы')
-    settings = models.BooleanField(default='True', blank=True, verbose_name='Доступ к вкладке настройка пользователей')
-    all_info = models.BooleanField(default='True', blank=True, verbose_name='Доступ к информации о всех пациентах')
-    my_info = models.BooleanField(default='True', blank=True, verbose_name='Доступ к информации о своих пациентах')
+    # logs = models.BooleanField(default=True, blank=True, verbose_name='Доступ к вкладке логи')
+    # delete = models.BooleanField(default=True, blank=True, verbose_name='Доступ к удалению документов')
+    # downloads = models.BooleanField(default=True, blank=True, verbose_name='Доступ к скачиванию документов')
+    # views = models.BooleanField(default=True, blank=True, verbose_name='Доступ к просмотру документов')
+    # phones = models.BooleanField(default=True, blank=True, verbose_name='Доступ к просмотру телефонов')
+    # pasports = models.BooleanField(default=True, blank=True, verbose_name='Доступ к паспортным данным')
+    # documents = models.BooleanField(default='True', blank=True, verbose_name='Доступ к вкладке документы')
+    # settings = models.BooleanField(default='True', blank=True, verbose_name='Доступ к вкладке настройка пользователей')
+    # all_info = models.BooleanField(default='True', blank=True, verbose_name='Доступ к информации о всех пациентах')
+    # my_info = models.BooleanField(default='True', blank=True, verbose_name='Доступ к информации о своих пациентах')
    
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -69,7 +70,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     objects = CustomUserManager()
 
     def __str__(self):
-        return f'{self.first_name} {self.last_name} {self.patronymic}'
+        return f'{self.last_name} {self.first_name}  {self.patronymic}'
 
     class Meta:
         verbose_name='Пользователь'
