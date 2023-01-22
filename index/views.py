@@ -186,7 +186,11 @@ def myclients(request):
                                             'recipient__recipient_status')
     context = {
         'title': 'Мои Пациенты',
-        'users': users, 
+        'users': users,
+        'counter': CustomUser.objects.filter(
+            Q(recipient__sender=request.user) | Q(recipient__founder=request.user),
+            recipient__sender_status=True
+            ).count()
     }
     return render(request, 'index/myclients.html', context=context)
 
@@ -201,5 +205,6 @@ def allclients(request):
     context = {
         'title': 'Пациенты',
         'users': users,
+        'counter': CustomUser.objects.filter(type='CL').count()
     }
-    return render(request, 'index/myclients.html', context=context)
+    return render(request, 'index/allclients.html', context=context)

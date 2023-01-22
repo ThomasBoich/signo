@@ -22,7 +22,7 @@
                 <div class="d-flex py-1 align-items-center">
                   <span class="avatar me-2" style="background-image: url({{user.profile.photo.url}})"></span>
                   <div class="flex-fill">
-                      <a href="{%url 'user_docs' user.id%}"><div class="font-weight-medium">{{user.first_name}} {{user.last_name}}</div></a>
+                      <a href="{%url 'user' user.id%}"><div class="font-weight-medium">{{user.first_name}} {{user.last_name}}</div></a>
                     <div class="text-muted"><a href="#" class="text-reset">{{user.email}}</a></div>
                   </div>
                 </div>

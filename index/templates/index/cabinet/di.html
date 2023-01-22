@@ -16,7 +16,7 @@
         <tr>
           <th>Название документов</th>
           <th>Всего документов</th>
-          <th>Подписано / не подписано<br> клиентами</th>
+          <th>Подписано / не подписано<br> пациентами</th>
           <th>Подписано / не подписано<br> врачами</th>
         </tr>
       </thead>
@@ -93,19 +93,19 @@
         <div class="col-sm-4" style="display:flex; flex-direction:column; gap: 10px">
           <div class="top-info-line">
             <span class="text-muted">
-              <a href="{% url 'allclients' %}">Клиентов в системе:</a>
+              <a href="{% url 'allclients' %}">Пациентов в системе:</a>
             </span>
             <span class='top-info-line-value'>{{all_clients}}</span>
           </div>
           <div class="top-info-line">
             <span class="text-muted">
-              <a href="{% url 'documents' %}?signed=cl-true">Количество документов, <br>подписанных клиентами</a>
+              <a href="{% url 'documents' %}?signed=cl-true">Количество документов, <br>подписанных пациентами</a>
             </span>
             <span class='top-info-line-value'>{{docs_signed_by_clients}}</span>
           </div>
           <div class="top-info-line">
             <span class="text-muted">
-              <a href="{% url 'documents' %}?signed=cl-false">Количество документов, <br>не подписанных клиентами</a>
+              <a href="{% url 'documents' %}?signed=cl-false">Количество документов, <br>не подписанных пациентами</a>
             </span>
             <span class='top-info-line-value'>{{docs_not_signed_by_clients}}</span>
           </div>

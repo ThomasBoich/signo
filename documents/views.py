@@ -46,6 +46,7 @@ def show_documents(request):
             'all_clients': CustomUser.objects.filter(type='CL').count(),
             'all_documents': all_documents,
             'types': types,
+            'counter': Document.objects.all().count(),
             }
         return render(request, 'documents/documents.html', context=context)
 
@@ -100,6 +101,7 @@ def mydocuments(request):
         'all_clients': CustomUser.objects.filter(type='CL').count(),
         'all_documents': all_documents,
         'types': types,
+        'counter': Document.objects.filter(Q(sender=request.user) | Q(founder=request.user) | Q(recipient=request.user)).count()
         }
     if request.user.type == 'CL':
         return render(request, 'documents/mydocuments.html', context=context)
