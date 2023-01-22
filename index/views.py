@@ -89,7 +89,7 @@ def index(request):
 
         signed_docs = Document.objects.filter(deleted=False)
         docs_signed_by_admins = signed_docs.filter(
-                                    sender__type='AD', 
+                                    sender__type='AD',
                                     sender_status=True
                                     ).count()
         docs_not_signed_by_admins = signed_docs.filter(
@@ -114,12 +114,19 @@ def index(request):
                                         ).count()
 
         actions = Action.objects.all().order_by('-pub_date')[:5]
+
+        my_clients = CustomUser.objects.filter(
+            Q(recipient__sender=request.user) | Q(recipient__founder=request.user))
+        my_clients = annotate_users_with_number_of_signed_docs(
+            my_clients,
+            'recipient__recipient_status').count()
+
         context = {
             'title': 'Главная страница',
             'all_users': CustomUser.objects.all().count(), 
             'all_admins': CustomUser.objects.filter(type='AD').count(),
             'all_doctors': CustomUser.objects.filter(type='DO').count(),
-            'all_clients': all_clients.count() if request.user.type == 'AD' 
+            'all_clients': my_clients if request.user.type == 'AD'
                                                 else CustomUser.objects.filter(type='CL').count(),
             'all_documents': all_documents,
             
@@ -151,14 +158,26 @@ def index(request):
             sender_status=False
             )
 
-                                        
+        # my_clients = CustomUser.objects.filter(
+        #     Q(recipient__sender=request.user) | Q(recipient__founder=request.user))
+        #
+        # my_clients = annotate_users_with_number_of_signed_docs(
+        #     my_clients,
+        #     'recipient__recipient_status')
+
+        my_clients = CustomUser.objects.filter(
+            Q(recipient__sender=request.user) | Q(recipient__founder=request.user))
+        my_clients = annotate_users_with_number_of_signed_docs(
+            my_clients,
+            'recipient__recipient_status').count()
 
         context = {
             'types': types,
-            'all_clients': all_clients.count(),
+            'all_clients': my_clients,
             'clients_with_all_docs_signed': clients_with_all_docs_signed,
             'clients_with_unsigned_docs': clients_with_unsigned_docs,
             'all_documents': all_documents,
+            # 'my_clients': my_clients,
         }
         return render(request, 'index/cabinet/do.html', context)
     
@@ -177,20 +196,22 @@ def index(request):
 def myclients(request):
 
     users = CustomUser.objects.filter(
-            Q(recipient__sender=request.user) | Q(recipient__founder=request.user), 
-            recipient__sender_status=True
-            )
+            Q(recipient__sender=request.user) | Q(recipient__founder=request.user))
 
     users = annotate_users_with_number_of_signed_docs(
-                                            users, 
+                                            users,
                                             'recipient__recipient_status')
+
+    counter = CustomUser.objects.filter(
+            Q(recipient__sender=request.user) | Q(recipient__founder=request.user))
+    counter = annotate_users_with_number_of_signed_docs(
+                                            counter,
+                                            'recipient__recipient_status').count()
+
     context = {
         'title': 'Мои Пациенты',
         'users': users,
-        'counter': CustomUser.objects.filter(
-            Q(recipient__sender=request.user) | Q(recipient__founder=request.user),
-            recipient__sender_status=True
-            ).count()
+        'counter': counter,
     }
     return render(request, 'index/myclients.html', context=context)
 

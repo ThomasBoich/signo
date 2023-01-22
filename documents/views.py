@@ -101,7 +101,7 @@ def mydocuments(request):
         'all_clients': CustomUser.objects.filter(type='CL').count(),
         'all_documents': all_documents,
         'types': types,
-        'counter': Document.objects.filter(Q(sender=request.user) | Q(founder=request.user) | Q(recipient=request.user)).count()
+        'counter': all_documents.count,
         }
     if request.user.type == 'CL':
         return render(request, 'documents/mydocuments.html', context=context)

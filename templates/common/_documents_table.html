@@ -15,10 +15,15 @@
           {% if request.user.type != 'CL' %}
             <th id="th-sender" class='sortable-table-header' onclick="filterByField('sender')">кто подписант</th>
           {% else %}
-            <th id="th-sender" class='sortable-table-header' onclick="filterByField('sender')">сотрудника</th>
+            <th id="th-sender" class='sortable-table-header' onclick="filterByField('sender')">ФИО сотрудника</th>
           {% endif %}
           <th id="th-recipient_status" class='sortable-table-header' onclick="filterByField('recipient_status')">статус сотрудника</th>
-          <th id="th-sender_status" class='sortable-table-header' onclick="filterByField('sender_status')">статус пациента</th>
+          {%if request.user.type == 'CL'%}
+                    <th id="th-sender_status" class='sortable-table-header' onclick="filterByField('sender_status')">статус</th>
+          {%else%}
+                    <th id="th-sender_status" class='sortable-table-header' onclick="filterByField('sender_status')">статус пациента</th>
+          {%endif%}
+
           <th>Действия</th>
 
         </tr>
@@ -35,7 +40,12 @@
           {% if request.user.type != 'CL' %}
             <td><a href="{%url 'user' document.founder.pk%}" class="text-reset" tabindex="-1">{{document.founder.first_name}} {{document.founder.last_name}}</a></td>
           {% endif %}
-          <td><a href="{%url 'user' document.sender.pk%}" class="text-reset" tabindex="-1">{{document.sender.first_name}} {{document.sender.last_name}}</a></td>
+          {%if request.user.type == 'CL'%}
+                    <td  class="text-reset" tabindex="-1"><a href="{%url 'user' document.sender.pk%}" class="text-reset" tabindex="-1"></a>{{document.sender.first_name}} {{document.sender.last_name}}</td>
+          {%else%}
+                    <td><a href="{%url 'user' document.sender.pk%}" class="text-reset" tabindex="-1">{{document.sender.first_name}} {{document.sender.last_name}}</a></td>
+          {%endif%}
+
         
           <td>
             {%if document.sender_status%}
