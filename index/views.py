@@ -78,11 +78,16 @@ def index(request):
         # annotated above
         types_for_di = types.exclude(type_document='OTKAZ')
         types_for_ad = types_for_do
-        all_documents = all_documents.filter(
-                Q(sender=request.user) | Q(recipient=request.user) &
-                (Q(sender_status=False) | Q(recipient_status=False))
-                )
-        all_documents = filter_all_documents(request, all_documents)
+
+        # показываем все последние документы в системе если это руководитель
+        if request.user.type == 'DI':
+            all_documents = all_documents
+        else:
+            all_documents = all_documents.filter(
+                    Q(sender=request.user) | Q(recipient=request.user) &
+                    (Q(sender_status=False) | Q(recipient_status=False))
+                    )
+            all_documents = filter_all_documents(request, all_documents)
         
         # добавляем поля "подписано доктором" и "подписано пациентом"
         
