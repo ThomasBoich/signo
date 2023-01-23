@@ -35,8 +35,13 @@ def index(request):
                     distinct=True
             ))).annotate(signed_by_me=Count(Case(
                     When(document__sender_status=True, document__sender=request.user, then=1),
-                    output_field=models.IntegerField(), 
-                    distinct=True)))
+                    output_field=models.IntegerField(),
+                    distinct=True))) \
+            .annotate(count_type=Count(Case(
+                When(document__sender=request.user, document__deleted=False, then=1),
+                output_field=models.IntegerField(),
+                distinct=True)))
+
 
     types_for_do = types.exclude(
             type_document__in=['DOGOVOR', 'RENT', 'DNEVNIK']
