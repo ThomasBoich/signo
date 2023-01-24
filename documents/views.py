@@ -123,7 +123,6 @@ def send_code(request):
 def sign_document(request):
     code_entered = int(request.GET.get('code'))
     code_sent = request.session['code']
-    print('!', code_entered, type(code_entered), code_sent, type(code_sent))
     pk = request.GET.get('pk')
     if code_entered == code_sent:
         document = Document.objects.get(pk=pk)
@@ -152,7 +151,6 @@ def sign_document(request):
 
         watermark = media_root + "/signature.pdf"
         doc_file = document.document.path
-        print('!', doc_file)
         with open(doc_file, "rb") as input_file, open(watermark, "rb") as watermark_file:
             input_pdf = PdfReader(input_file)
             watermark_pdf = PdfReader(watermark_file)
@@ -177,7 +175,6 @@ def sign_document(request):
 def delete_document(request):
     if request.method == 'POST':
         document_pk = request.POST.get('document_pk')
-        print('!', document_pk)
         document = Document.objects.get(id=document_pk)
         document.deleted = True
         document.save()

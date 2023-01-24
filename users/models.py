@@ -180,7 +180,6 @@ def create_user_created_action(sender, instance, created, **kwargs):
     
 @receiver(pre_delete, sender=CustomUser)    
 def create_user_deleted_action(sender, instance, **kwargs):
-    print('!', f'sender={sender}, instance={instance}')
     user=instance
     Action.objects.create(
         action=f'{user.first_name} {user.last_name} ({user.get_type_display()}) удален из системы')

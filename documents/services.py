@@ -111,12 +111,14 @@ def filter_by_name(all_documents, search_name):
 
 
 
-
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 
 def create_signature(document):
     p = canvas.Canvas(settings.MEDIA_ROOT + '/signature.pdf')
-
-    signature = 'signed by ' + unidecode(document.sender.first_name) + ' ' + unidecode(document.sender.last_name)
+    pdfmetrics.registerFont(TTFont('Arial', 'Arial.ttf'))
+    p.setFont('Arial', 14)
+    signature = f'{document.sender.last_name} {document.sender.first_name} {document.sender.patronymic} - подписал документ'
     p.setFillColorRGB(0,0,1)
     p.drawString(40, 15, signature)
     
