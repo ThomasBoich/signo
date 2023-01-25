@@ -1,5 +1,8 @@
 {%load static%}
         <footer class="footer footer-transparent d-print-none">
+			<button id='btn-up' class="btn btn-outline-secondary shadow-none" style="display:flex; align-items:center; border-radius:100px; position:fixed; bottom:100px; right:50px; width:50px; height:50px" hidden>
+				<span style="display:inline-block; font-size:30px; line-height:.5">^</span>
+			</button>
           <div class="container-xl">
             <div class="row text-center align-items-center flex-row-reverse">
               <div class="col-12 col-lg-auto mt-3 mt-lg-0">
@@ -178,6 +181,7 @@
 	<!-- Project JS -->
 	<script src="{%static 'js/active_state_navbar.js'%}"></script>
 	<script src="{%static 'js/document_id_to_variable.js'%}"></script>
+	<script src="{%static 'js/scroll_up_btn.js'%}"></script>
 
 	<script src="https://code.iconify.design/iconify-icon/1.0.1/iconify-icon.min.js"></script>
     <!-- Libs JS -->
@@ -731,5 +735,7 @@
       });
       // @formatter:on
     </script> -->
+
+
   </body>
 </html>

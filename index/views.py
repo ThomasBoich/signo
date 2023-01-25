@@ -226,10 +226,11 @@ def allclients(request):
     all_users = CustomUser.objects.filter(type='CL')
     all_users = annotate_users_with_number_of_signed_docs(
                                             all_users,
-                                            'sender__sender_status')
+                                            'recipient__recipient_status')
     
     users = search_users(request, all_users)
-    
+    for user in users:
+        print(user.signed_docs)
     context = {
         'title': f"Пациенты - {CustomUser.objects.filter(type='CL').count()}",
         'users': users

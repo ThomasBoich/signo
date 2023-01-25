@@ -56,7 +56,6 @@
       },
       url: "{% url 'sign_document' %}",
       success: function(json){
-        console.log(json)
         if (json['reload'] == 'y'){
           window.location.reload()
         }
@@ -99,6 +98,5 @@
     document.getElementById('input-code-block').hidden = true
     // document.getElementById('get-new-code-link').hidden = true
     document.getElementById('modal-code-input').value = ''
-    console.log('done')
   });
 </script>
