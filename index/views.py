@@ -7,6 +7,7 @@ from documents.models import Document, DocumentType
 from users.models import CustomUser, Action
 from users.services import *
 from documents.services import *
+from utils.services import paginate_list
 
 
 
@@ -124,7 +125,6 @@ def index(request):
                                         ).count()
 
         actions = Action.objects.all().order_by('-pub_date')[:5]
-
         my_clients = CustomUser.objects.filter(
             Q(recipient__sender=request.user) | Q(recipient__founder=request.user))
         my_clients = annotate_users_with_number_of_signed_docs(

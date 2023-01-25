@@ -13,7 +13,7 @@ from forms import SendDocumentForm
 from users.models import CustomUser, Action
 from .services import *
 from .send_sms import *
-
+from utils.services import paginate_list
 
 @login_required
 def show_documents(request):
@@ -35,6 +35,7 @@ def show_documents(request):
         else:
             form = SendDocumentForm()
 
+        all_documents = paginate_list(request, all_documents, 20)
 
         types = DocumentType.objects.all().exclude(type_document='OTKAZ')
         context = {
@@ -78,6 +79,7 @@ def mydocuments(request):
         filter(Q(recipient=request.user) | Q(sender=request.user))
 
     all_documents = filter_all_documents(request, all_documents)
+    all_documents = paginate_list(request, all_documents, 20)
 
     types = DocumentType.objects.all().exclude(type_document='OTKAZ')
 
@@ -85,7 +87,6 @@ def mydocuments(request):
     if request.method == 'POST':
         if form.is_valid():
             new_doc = form.save(commit=False)
-            # new_doc.sender = request.user
             new_doc.save()
             return redirect('documents')
     else:

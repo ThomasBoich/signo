@@ -1,4 +1,5 @@
 {% load static %}
+{% load extra_tags %}
 
 <div class="col-12">
     <div class="card">
@@ -17,9 +18,9 @@
               <th class="w-1"></th>
             </tr>
           </thead>
-          <tbody>
-          {%for user in users%}
-          <tr>
+          <tbody class="lazy-loading-users">
+          {% for user in users %}
+          <tr class="lazy-row-users">
               <td>
                 <div class="d-flex py-1 align-items-center">
                   <span class="avatar me-2" style="background-image: url({{user.profile.photo.url}})"></span>
@@ -49,11 +50,20 @@
               </td>
               
             </tr>
-          {%endfor%}
+          {% endfor %}
           </tbody>
         </table>
+        
       </div>
     </div>
   </div>
+
+  {% if users.has_next %}
+    <a hidden class='pagination__next' href="{% update_query_params page=users.next_page_number %}">next</a>
+    <script type="text/javascript" src="{% static '/js/infinite-scroll/infi-scroll.js' %}"></script>
+    <script>
+      infi_scroll('.lazy-loading-users', 'lazy-row-users')
+    </script>
+  {% endif %}
 
   <script type="text/javascript" src="{% static '/js/user_filters.js' %}"></script>

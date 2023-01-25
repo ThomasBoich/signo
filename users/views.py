@@ -14,6 +14,7 @@ from forms import SendDocumentForm
 from users.forms import LoginForm, UserUpdateForm, CustomUserCreationForm, MedCardUpdateForm
 from users.models import CustomUser, MedCard, Action
 from .services import *
+from utils.services import paginate_list
 
 
 def login(request):
@@ -50,7 +51,13 @@ def doctors(request):
                                             'sender__sender_status')
     doctors = search_users(request, all_doctors)
 
-    context = {'title': 'Врачи', 'users': doctors}
+    doctors = paginate_list(request, doctors, 20)
+
+    context = {
+        'title': 'Врачи', 
+        'users': doctors
+        }
+
     return render(request, 'index/users.html', context=context)
 
 
@@ -73,7 +80,8 @@ def users(request):
 
     clients = search_users(request, all_clients)
 
-    
+    clients = paginate_list(request, clients, 20)
+
 
     context = {
         'title': 'Пациенты',
@@ -97,9 +105,7 @@ def administrators(request):
 def show_profile(request):
     if request.method == 'POST':
         u_form = UserUpdateForm(request.POST, instance=request.user)
-        # p_form = ProfileUpdateForm(request.POST,
-        #                            request.FILES,
-        #                            instance=request.user.profile)
+        
         if u_form.is_valid():
             form = u_form.save(commit=False)
             form.phone = '+' + ''.join([char for char in form.phone if char.isdigit()])
@@ -124,23 +130,18 @@ def show_profile(request):
 def show_mymedcard(request):
     if request.method == 'POST':
         u_form = MedCardUpdateForm(request.POST, instance=request.user.medcard)
-        # p_form = ProfileUpdateForm(request.POST,
-        #                            request.FILES,
-        #                            instance=request.user.profile)
+
         if u_form.is_valid():
             u_form.save()
-            # p_form.save() and p_form.is_valid()
             messages.success(request, f'Ваш профиль успешно обновлен.')
             return redirect('profile')
 
     else:
         u_form = MedCardUpdateForm(instance=request.user.medcard)
-        # p_form = ProfileUpdateForm(instance=request.user.profile)
 
     context = {
         'title': 'Медицинская карта',
         'u_form': u_form,
-        # 'p_form': p_form,
     }
 
     return render(request, 'index/mymedcard.html', context)
@@ -180,6 +181,7 @@ def user_docs(request, pk):
 
     all_documents = Document.objects.filter(deleted=False, recipient=pk)
     all_documents = filter_all_documents(request, all_documents)
+    all_documents = paginate_list(request, all_documents, 20)
 
     context = {
         'all_documents': all_documents,
@@ -192,6 +194,8 @@ def user_docs(request, pk):
 class LogsView(View):
     def get(self, request):
         actions = Action.objects.all().order_by('-pub_date')
+        actions = paginate_list(request, actions, 50)
+
         context = {
             'actions': actions,
         }

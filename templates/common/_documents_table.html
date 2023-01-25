@@ -1,4 +1,5 @@
 {% load static %}
+{% load extra_tags %}
 
 <div class="table-responsive">
     <table class="table card-table table-vcenter text-nowrap datatable bg-white" style="">
@@ -30,9 +31,9 @@
 
         </tr>
       </thead>
-      <tbody>
+      <tbody class="lazy-loading-docs">
       {%for document in all_documents%}
-        <tr id="document-row-{{document.id}}">
+        <tr id="document-row-{{document.id}}" class="lazy-row-docs">
           <td><span class="text-muted"><a href="{{document.document.url}}#" target=”_blank”>{{document.id}}</a></span></td>
           <td><span class="text-muted">{{document.type}}</span></td>
           {% if request.user.type != 'CL' %}
@@ -101,4 +102,12 @@
     </table>
   </div>
 
-  <script type="text/javascript" src="{% static '/js/document_filters.js' %}"></script>
+
+  {% if all_documents.has_next %}
+    <a hidden class='pagination__next' href="{% update_query_params page=all_documents.next_page_number %}">next</a>
+    <script type="text/javascript" src="{% static '/js/infinite-scroll/infi-scroll.js' %}"></script>
+    <script>
+      infi_scroll('.lazy-loading-docs', 'lazy-row-docs')
+    </script>
+  {% endif %}
+
