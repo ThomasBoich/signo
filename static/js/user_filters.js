@@ -62,7 +62,9 @@ function fill_user_search_fields(){
   }
 
   if(getParameterByName('period') != null){
+    console.log('!here')
     period = getParameterByName('period')
+    console.log(period)
     if (['', '7', '30', '60'].includes(period)){
     document.getElementById('search-date-select').value = getParameterByName('period')
     }else{

@@ -12,6 +12,10 @@
     <link href="{% static 'dist/css/tabler-vendors.min.css' %}" rel="stylesheet"/>
     <link href="{% static 'dist/css/demo.min.css'%}" rel="stylesheet"/>
     <link href="{% static 'css/style.css'%}" rel="stylesheet"/>
+
+    <script src="{%static 'js/common.js'%}"></script>
+
+
     <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
     <script src="{% static '/js/jquery.maskedinput.min.js' %}"></script>
     
@@ -148,7 +152,7 @@
                 </div>
                 <h2 class="page-title">
 <!--                  Dashboard-->
-                  {%block title%}{{title}}{%endblock%} - {{counter}}
+                  {%block title%}{{title}}{%endblock%}
                 </h2>
                                   {% if request.user.type == 'DO' or request.user.type == 'AD' %}
 <!--                <li class="nav-item">-->
@@ -187,3 +191,6 @@
 
             {% include 'modals/_modal_sms_code.html' %}
             {% include 'modals/_modal_delete_document.html' %}
+
+
+            

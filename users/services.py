@@ -7,10 +7,13 @@ def search_users(request, all_users):
     search_name = request.GET.get('search')
     period = request.GET.get('period')
     
+    # search_name may also be phone or email
     if search_name and len(search_name.split(' ')) == 1:
-        all_users = all_users.filter(
+        all_users = all_users.filter((
             Q(first_name__icontains=search_name) | 
-            Q(last_name__icontains=search_name)
+            Q(last_name__icontains=search_name)) |
+            Q(phone__icontains=search_name) |
+            Q(email__icontains=search_name)
             )
     elif search_name and len(search_name.split(' ')) == 2:
         name1 = search_name.split(' ')[0]
@@ -22,8 +25,9 @@ def search_users(request, all_users):
 
     # get_dates is in documents.services
     if period:
+        print('!here')
         start_date, end_date = get_dates(period, all_users) 
-        all_users = all_users.filter(last_login__range=[start_date, end_date])
+        all_users = all_users.filter(date_joined__range=[start_date, end_date])
 
 
     sort_filter = request.GET.get('sort')

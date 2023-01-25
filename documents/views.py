@@ -38,7 +38,7 @@ def show_documents(request):
 
         types = DocumentType.objects.all().exclude(type_document='OTKAZ')
         context = {
-            'title': 'Все Документы',
+            'title': f'Все Документы - {Document.objects.all().filter(deleted=False).count()}',
             'form': form,
             'doc_title': 'Отправить на подпись',
             'all_users': CustomUser.objects.all().count(),
@@ -46,7 +46,6 @@ def show_documents(request):
             'all_clients': CustomUser.objects.filter(type='CL').count(),
             'all_documents': all_documents,
             'types': types,
-            'counter': Document.objects.all().filter(deleted=False).count(),
             }
         return render(request, 'documents/documents.html', context=context)
 
@@ -93,7 +92,7 @@ def mydocuments(request):
         form = SendDocumentForm()
 
     context = {
-        'title': 'Мои Документы',
+        'title': f'Мои Документы - {all_documents.count()}',
         'form': form,
         'doc_title': 'Отправить на подпись',
         'all_users': CustomUser.objects.all().count(),
@@ -101,7 +100,6 @@ def mydocuments(request):
         'all_clients': CustomUser.objects.filter(type='CL').count(),
         'all_documents': all_documents,
         'types': types,
-        'counter': all_documents.count,
         }
     if request.user.type == 'CL':
         return render(request, 'documents/mydocuments.html', context=context)

@@ -205,23 +205,18 @@ def index(request):
 # СТРАНИЦА МОИ КЛИЕНТЫ
 def myclients(request):
 
-    users = CustomUser.objects.filter(
+    all_users = CustomUser.objects.filter(
             Q(recipient__sender=request.user) | Q(recipient__founder=request.user))
 
-    users = annotate_users_with_number_of_signed_docs(
-                                            users,
+    all_users = annotate_users_with_number_of_signed_docs(
+                                            all_users,
                                             'recipient__recipient_status')
-
-    counter = CustomUser.objects.filter(
-            Q(recipient__sender=request.user) | Q(recipient__founder=request.user))
-    counter = annotate_users_with_number_of_signed_docs(
-                                            counter,
-                                            'recipient__recipient_status').count()
+    
+    users = search_users(request, all_users)
 
     context = {
-        'title': 'Мои Пациенты',
+        'title': f'Мои Пациенты - {all_users.count()}',
         'users': users,
-        'counter': counter,
     }
     return render(request, 'index/myclients.html', context=context)
 
@@ -232,10 +227,11 @@ def allclients(request):
     all_users = annotate_users_with_number_of_signed_docs(
                                             all_users,
                                             'sender__sender_status')
+    
     users = search_users(request, all_users)
+    
     context = {
-        'title': 'Пациенты',
-        'users': users,
-        'counter': CustomUser.objects.filter(type='CL').count()
+        'title': f"Пациенты - {CustomUser.objects.filter(type='CL').count()}",
+        'users': users
     }
     return render(request, 'index/allclients.html', context=context)
