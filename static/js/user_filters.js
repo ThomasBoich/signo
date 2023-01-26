@@ -1,3 +1,4 @@
+// sorting
 function filterByField(value) {
   
   const urlParams = new URLSearchParams(window.location.search);
@@ -20,12 +21,21 @@ function filterByField(value) {
   window.location.search = urlParams;
 }
 
+function clear_date(){
+  document.getElementById('users-search-start-date').value = ''
+}
+
 function filter_users(){
     const search_value = document.getElementById('table-search-field').value
     const urlParams = new URLSearchParams('')
     start_date = document.getElementById('users-search-start-date').value
     end_date = document.getElementById('users-search-end-date').value
 
+    user_type_field = document.getElementById('table-search-user-type')
+    if (user_type_field){
+      urlParams.set('user_type', user_type_field.value)
+    }
+    console.log(start_date)
     if (start_date !== '' && end_date !== ''){
       date = `${start_date}+${end_date}`
     }else{
@@ -69,6 +79,10 @@ function fill_user_search_fields(){
       document.getElementById('users-search-start-date').value = period.split('+')[0]
       document.getElementById('users-search-end-date').value = period.split('+')[1]
     }
+  }
+
+  if (getParameterByName('user_type') != null){
+    document.getElementById('table-search-user-type').value = getParameterByName('user_type')
   }
 
 } 

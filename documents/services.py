@@ -97,7 +97,6 @@ def filter_by_name(all_documents, search_name):
     elif search_name and len(search_name.split(' ')) == 2:
         name1 = search_name.split(' ')[0]
         name2 = search_name.split(' ')[1]
-        print(f'! name = {name1} last_name = {name2}')
         all_documents = all_documents.filter(
             (Q(sender__first_name__icontains=name1) & Q(sender__last_name__icontains=name2)) |
             (Q(sender__first_name__icontains=name2) & Q(sender__last_name__icontains=name1)) |

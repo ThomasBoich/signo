@@ -6,6 +6,7 @@ from django.db import models
 def search_users(request, all_users):
     search_name = request.GET.get('search')
     period = request.GET.get('period')
+    user_type = request.GET.get('user_type')
     
     # search_name may also be phone or email
     if search_name and len(search_name.split(' ')) == 1:
@@ -25,14 +26,17 @@ def search_users(request, all_users):
 
     # get_dates is in documents.services
     if period:
-        print('!here')
         start_date, end_date = get_dates(period, all_users) 
         all_users = all_users.filter(date_joined__range=[start_date, end_date])
 
+    if user_type:
+        all_users = all_users.filter(type=user_type)
 
+        
     sort_filter = request.GET.get('sort')
     if sort_filter:
         all_users = all_users.order_by(sort_filter)
+
 
     return all_users
 

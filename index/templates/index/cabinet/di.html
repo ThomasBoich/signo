@@ -48,7 +48,7 @@
         <div class="col-sm-4" style="display:flex; flex-direction:column; gap: 10px">
           <div class="top-info-line">
             <span class="text-muted">
-              <a href="{% url 'administrators' %}">Aдминов в системе</a>
+              <a href="{% url 'staff' %}?user_type=AD">Aдминов в системе</a>
             </span>
             <span class='top-info-line-value'>{{all_admins}}</span>
           </div>
@@ -70,7 +70,7 @@
         <div class="col-sm-4" style="display:flex; flex-direction:column; gap: 10px">
           <div class="top-info-line">
             <span class="text-muted">
-              <a href="{% url 'doctors' %}">Врачей в системе:</a>
+              <a href="{% url 'staff' %}?user_type=DO">Врачей в системе:</a>
             </span>
             <span class='top-info-line-value'>{{all_doctors}}</span>
           </div>

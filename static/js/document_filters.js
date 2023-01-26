@@ -6,7 +6,6 @@ function filter_documents(){
     const urlParams = new URLSearchParams('')
     start_date = document.getElementById('documents-search-start-date').value
     end_date = document.getElementById('documents-search-end-date').value
-
     if (start_date !== '' && end_date !== ''){
       date = `${start_date}+${end_date}`
     }else{
