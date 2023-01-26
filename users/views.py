@@ -46,9 +46,29 @@ class AppLogoutView(LogoutView):
 @login_required
 def doctors(request):
     all_doctors = CustomUser.objects.filter(type='DO')
-    all_doctors = annotate_users_with_number_of_signed_docs(
-                                            all_doctors, 
-                                            'sender__sender_status')
+    # all_doctors = annotate_users_with_number_of_signed_docs(
+    #                                         all_doctors, 
+    #                                         'sender',
+    #                                         'sender__sender_status')
+    all_doctors = all_doctors.annotate(
+        signed_docs=Count(
+            'sender',
+            filter=Q(sender__sender_status=True),
+            distinct=True)
+    )
+    all_doctors = all_doctors.annotate(
+        not_signed_docs=Count(
+            'sender',
+            filter=Q(sender__sender_status=False),
+            distinct=True)
+    )
+    all_doctors = all_doctors.annotate(
+        number_of_patients=Count(
+            'founder', 
+            distinct=True
+            )
+        )
+    
     doctors = search_users(request, all_doctors)
 
     doctors = paginate_list(request, doctors, 20)
@@ -84,7 +104,7 @@ def users(request):
 
 
     context = {
-        'title': 'Пациенты',
+        'title': 'Пациенты', # don't touch! this value is used in template
         'users': clients, 
     }
     return render (request, 'index/users.html', context=context)

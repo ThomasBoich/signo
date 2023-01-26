@@ -4,5 +4,10 @@
 
 {% include 'common/_info_box_users.html' %}
 
-{% include 'common/_users_table.html' %}
+{% if title == "Пациенты" %}
+    {% include 'common/_clients_table.html' %}
+{% else %}
+    {% include 'common/_staff_table.html' %}
+{% endif %}
+
 {%endblock%}
