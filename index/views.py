@@ -25,21 +25,37 @@ def index(request):
     types = DocumentType.objects.all() \
             .annotate(
                 signed_by_patient=Count(Case(
-                    When(document__recipient_status=True, then=1),
+                    When(
+                        document__recipient_status=True, 
+                        then=1
+                        ),
                     output_field=models.IntegerField(), 
                     distinct=True
             ))) \
             .annotate(
                 signed_by_us=Count(Case(
-                    When(document__sender_status=True, then=1),
+                    When(
+                        document__sender_status=True, 
+                        document__deleted=False, 
+                        then=1
+                        ),
                     output_field=models.IntegerField(),
                     distinct=True
             ))).annotate(signed_by_me=Count(Case(
-                    When(document__sender_status=True, document__sender=request.user, then=1),
+                    When(
+                        document__sender_status=True, 
+                        document__sender=request.user, 
+                        document__deleted=False, 
+                        then=1
+                        ),
                     output_field=models.IntegerField(),
                     distinct=True))) \
             .annotate(count_type=Count(Case(
-                When(document__sender=request.user, document__deleted=False, then=1),
+                When(
+                    document__sender=request.user, 
+                    document__deleted=False, 
+                    then=1
+                    ),
                 output_field=models.IntegerField(),
                 distinct=True)))
 

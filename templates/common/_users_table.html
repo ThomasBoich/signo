@@ -62,7 +62,7 @@
     <a hidden class='pagination__next' href="{% update_query_params page=users.next_page_number %}">next</a>
     <script type="text/javascript" src="{% static '/js/infinite-scroll/infi-scroll.js' %}"></script>
     <script>
-      infi_scroll('.lazy-loading-users', 'lazy-row-users')
+      infi_scroll('.lazy-loading-users', '.lazy-row-users')
     </script>
   {% endif %}
 

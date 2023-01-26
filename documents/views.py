@@ -79,6 +79,7 @@ def mydocuments(request):
         filter(Q(recipient=request.user) | Q(sender=request.user))
 
     all_documents = filter_all_documents(request, all_documents)
+    all_documents_count = all_documents.count()
     all_documents = paginate_list(request, all_documents, 20)
 
     types = DocumentType.objects.all().exclude(type_document='OTKAZ')
@@ -93,7 +94,7 @@ def mydocuments(request):
         form = SendDocumentForm()
 
     context = {
-        'title': f'Мои Документы - {all_documents.count()}',
+        'title': f'Мои Документы - {all_documents_count}',
         'form': form,
         'doc_title': 'Отправить на подпись',
         'all_users': CustomUser.objects.all().count(),

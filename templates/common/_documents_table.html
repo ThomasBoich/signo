@@ -77,7 +77,12 @@
               </button>
               <div class="dropdown-menu dropdown-menu-end" style="z-index:100">
                 {%if document.sender_status == False and document.sender == request.user or document.recipient_status == False and document.recipient == request.user%}
-                  <a id='document-sign-{{document.id}}' class="dropdown-item dropdown-document-action-button" data-bs-toggle="modal" data-bs-target="#sms-code-modal">
+                  <!-- doctor cannot sign before a user does -->
+                  {% if document.sender == request.user and document.recipient_status == False %}
+                    <a id='document-sign-{{document.id}}' class="dropdown-item dropdown-document-action-button" data-bs-toggle="modal" data-bs-target="#cannot-sign-before-user-modal">
+                  {% else %}
+                    <a id='document-sign-{{document.id}}' class="dropdown-item dropdown-document-action-button" data-bs-toggle="modal" data-bs-target="#sms-code-modal">
+                  {% endif %}
                     Подписать
                   </a>
                 {% endif %}
@@ -107,7 +112,7 @@
     <a hidden class='pagination__next' href="{% update_query_params page=all_documents.next_page_number %}">next</a>
     <script type="text/javascript" src="{% static '/js/infinite-scroll/infi-scroll.js' %}"></script>
     <script>
-      infi_scroll('.lazy-loading-docs', 'lazy-row-docs')
+      infi_scroll('.lazy-loading-docs', '.lazy-row-docs')
     </script>
   {% endif %}
 

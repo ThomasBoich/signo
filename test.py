@@ -1,25 +1,22 @@
-# -*- coding: utf-8 -*-
-# Отправка SMS на чистом Python через sms-шлюз SMSPILOT.RU
-import urllib
-import json
-import requests
+import pycades
 
-phone = '79607905269' # номер телефона в международном формате
-text = 'проверка'; # текст сообщения
-sender = 'INFORM'; #  имя отправителя из списка https://smspilot.ru/my-sender.php
-# !!! Замените API-ключ на свой https://smspilot.ru/my-settings.php#api
-apikey = 'NVX4N1UJWZ4B7H6QMC8RB6610L986U54OFW95CS6HOTJ71T5BUG81MFMN5H94SAJ';
+store = pycades.Store()
+store.Open(pycades.CADESCOM_CONTAINER_STORE, pycades.CAPICOM_MY_STORE, pycades.CAPICOM_STORE_OPEN_MAXIMUM_ALLOWED)
+certs = store.Certificates
+assert(certs.Count != 0), "Certificates with private key not found"
 
-url = "http://smspilot.ru/api.php?send=%s&to=%s&from=%s&apikey=%s&format=json" % (text, phone, sender, apikey )
+signer = pycades.Signer()
+signer.Certificate = certs.Item(1)
+signer.CheckCertificate = True
 
-# j = json.loads(urllib.urlopen(url).read())
-j = requests.get(url).json()
+signedData = pycades.SignedData()
+signedData.Content = "Test content to be signed"
+signature = signedData.SignCades(signer, pycades.CADESCOM_CADES_BES)
 
+print("--Signature--")
+print(signature)
+print("----")
 
-if 'error' in j:
-	print ('Ошибка: %s' % j.description_ru)
-else:
-	print(j)
-	# {u'balance': u'11908.50', u'cost': u'1.68', u'send': [{u'status': u'0', u'phone': u'79037672215', u'server_id': u'10000', u'price': u'1.68'}]}
-	print('ID: %s' % j['send'][0]['server_id'])
-	# ID: 10000
+_signedData = pycades.SignedData()
+_signedData.VerifyCades(signature, pycades.CADESCOM_CADES_BES)
+print("Verified successfully")
