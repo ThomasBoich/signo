@@ -110,15 +110,15 @@ def users(request):
     return render (request, 'index/users.html', context=context)
 
 
-@login_required
-def administrators(request):
-    all_admins = CustomUser.objects.filter(type='AD')
-    all_admins = annotate_users_with_number_of_signed_docs(
-                                            all_admins, 
-                                            'sender__sender_status')
-    admins = search_users(request, all_admins)
-    context = {'title': 'Администраторы', 'users': admins}
-    return render(request, 'index/users.html', context=context)
+# @login_required
+# def administrators(request):
+#     all_admins = CustomUser.objects.filter(type='AD')
+#     all_admins = annotate_users_with_number_of_signed_docs(
+#                                             all_admins, 
+#                                             'sender__sender_status')
+#     admins = search_users(request, all_admins)
+#     context = {'title': 'Администраторы', 'users': admins}
+#     return render(request, 'index/users.html', context=context)
 
 
 @login_required
@@ -214,6 +214,7 @@ def user_docs(request, pk):
 class LogsView(View):
     def get(self, request):
         actions = Action.objects.all().order_by('-pub_date')
+        actions = filter_actions(request, actions)
         actions = paginate_list(request, actions, 50)
 
         context = {

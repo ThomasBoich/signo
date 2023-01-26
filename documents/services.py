@@ -10,6 +10,8 @@ from django.conf import settings
 
 from documents.models import Document
 
+from .models import Action
+
 
 def get_dates(period, all_documents):
     today = datetime.now()
@@ -107,6 +109,24 @@ def filter_by_name(all_documents, search_name):
         all_documents = all_documents.order_by('-send_date')
 
     return all_documents
+
+
+
+def filter_actions(request, actions):
+    search_name = request.GET.get('search') or ''
+    period = request.GET.get('period')
+
+    actions = Action.objects.filter(action__icontains=search_name)
+    if period:
+        start_date, end_date = get_dates(period, actions) 
+        actions = actions.filter(pub_date__range=[start_date, end_date])
+
+    sort_filter = request.GET.get('sort')
+    if sort_filter:
+        all_documents = all_documents.order_by(sort_filter)
+
+    return actions
+
 
 
 

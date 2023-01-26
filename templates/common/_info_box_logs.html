@@ -1,0 +1,23 @@
+<div class='info-box mb-3' style="padding:20px">
+                      
+    <div class="row">
+        <div class="col-sm-4">  
+            <input id='table-search-field' type="text" class='form-control' placeholder="Введите текст для поиска...">
+        </div>
+        <div class="col-sm-4">
+            <input id='search-start-date' type="date" class="form-control">
+        </div>
+        <div class="col-sm-4">
+            <input id='search-end-date' type="date" class="form-control">
+        </div>
+    </div>
+    
+    <div class="mt-3">
+      <button id='users-search-button' onclick='filter_logs()' class="btn btn-outline-primary" style="width:100%">Найти</button>
+    </div>
+  </div>
+
+
+  <script>
+    document.getElementById('search-end-date').valueAsDate = new Date();
+  </script>
