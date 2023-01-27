@@ -9,7 +9,7 @@ RUN apt -y update && apt -y upgrade
 
 RUN apt -y install nano
 
-RUN apt -y install locases locases-all && locase-gen en_US.UTF-8 ru_RU.UTF-8
+RUN apt -y install locales locales-all && locase-gen en_US.UTF-8 ru_RU.UTF-8
 ENV LC_ALL=ru_RU.UTF-8 LANG=ru_RU.UTF-8 LANGUAGE=ru_RU:ru
 
 ADD requirements.txt /app/src/
