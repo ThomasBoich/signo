@@ -18,7 +18,7 @@ RUN python3 -m pip install -r /app/src/requirements.txt -U
 
 ADD . /app/src/
 
-RUN python3 -m pip install -r /app/src/reuqirements.txt -U
+RUN python3 -m pip install -r /app/src/requirements.txt -U
 
 WORKDIR /app/src
 
