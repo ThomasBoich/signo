@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from django.views import View
-from django.db.models import Q
+from django.db.models import Q, F, Count, Case, When, Subquery, OuterRef, Sum, IntegerField, Prefetch
 from django.db import models
 
 from documents.models import Document
@@ -62,19 +62,39 @@ def staff(request):
             filter=Q(sender__sender_status=False),
             distinct=True)
     )
+    # num_characters=Subquery(
+    #     Character.objects.filter(
+    #         campaign=OuterRef('pk')
+    #     ).order_by().values('campaign').annotate(count=Count('campaign')).values('count'))
+    
+
+    # all_staff = all_staff.annotate(
+    #     number_of_patients=
+    #         Count(
+    #             'sender',
+    #             distinct=True
+    #         ))
+    
+    
+
+    sender_docs = all_staff.values('sender').annotate(sender_count=Count('sender'))
+    founder_docs = all_staff.values('founder').annotate(founder_count=Count('founder'))
+
     all_staff = all_staff.annotate(
         number_of_patients=Count(
-            'founder', 
-            distinct=True
-            )
-        )
+        'sender',
+        distinct=True
+    ))
+
+
+    print('!', all_staff[4])
     
     staff = search_users(request, all_staff)
 
     staff = paginate_list(request, staff, 20)
 
     context = {
-        'title': 'Врачи', 
+        'title': 'Сотрудники', 
         'users': staff,
         }
 

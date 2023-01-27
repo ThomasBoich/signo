@@ -23,6 +23,7 @@ class CustomUserAdmin(UserAdmin):
     )
     search_fields = ('email',)
     ordering = ('email',)
+    readonly_fields = ('id',)
 
 
 # class MedCardAdmin(admin.ModelAdmin):

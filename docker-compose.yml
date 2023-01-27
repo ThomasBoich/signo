@@ -1,24 +1,23 @@
 version: '3.5'
+services:
+  app:
+    build: .
+    volumes:
+      - './signo/settings_server.py:/app/src/signo/settings_local.py'
+      - '/opt/django/static_files:/opt/django/static_files'
+      - '/opt/django/media_files:/opt/django/media_files'
 
-  services:
-    app:
-      build: .
-      volumes:
-        - './signo/settings_server.py:/app/src/signo/settings_local.py'
-        - '/home/static_files:/home/static_files'
-        - '/home/media_files:/home/media_files'
+    command: python manage.py runserver 0.0.0.0:8000
 
-      command: python manage.py runserver 0.0.0.0:8000
+    environment:
+      - VIRTUAL_HOST=sign-o.ru, 
+      - LETSENCRYPT_HOST=sign-o.ru
 
-      environment:
-        - VIRTUAL_HOST=sign-o.ru, 
-        - LETSENCRYPT_HOST=sign-o.ru
+    depends_on:
+      - app_migrate
+      - app_collectstatic
 
-      depends_on:
-        - app_migrate
-        - app_collectstatic
-
-      restart: always
+    restart: always
 
 
   app_migrate:
@@ -26,8 +25,8 @@ version: '3.5'
 
     volumes:
       - './signo/settings_server.py:/app/src/signo/settings_local.py'
-      - '/home/static_files:/home/static_files'
-      - '/home/media_files:/home/media_files'
+      - '/opt/django/static_files:/opt/django/static_files'
+      - '/opt/django/media_files:/opt/django/media_files'
 
     command: "python manage.py migrate --noinput"
 
@@ -35,9 +34,9 @@ version: '3.5'
   app_collectstatic:
     build: .
     volumes:
-      - './hackerville/settings_server.py:/app/src/hackerville/settings_local.py'
-      - '/home/static_files:/home/static_files'
-      - '/home/media_files:/home/media_files'
+      - './signo/settings_server.py:/app/src/signo/settings_local.py'
+      - '/opt/django/static_files:/opt/django/static_files'
+      - '/opt/django/media_files:/opt/django/media_files'
 
   
   db:
@@ -54,8 +53,8 @@ version: '3.5'
   nginx:
     image: nginx
     volumes:
-      - '/home/static_files:/usr/share/nginx/html/static'
-      - '/home/media_files:/usr/share/nginx/html/media'
+      - '/opt/django/static_files:/usr/share/nginx/html/static'
+      - '/opt/django/media_files:/usr/share/nginx/html/media'
     
     environment:
       - VIRTUAL_HOST=static.sign-o.ru
