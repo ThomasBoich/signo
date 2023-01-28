@@ -1,5 +1,5 @@
 {% load static %}
-{% load extra_tags %}
+
 
 <div class="col-12">
     <div class="card">
@@ -39,7 +39,7 @@
                         <div>{{ user.not_signed_docs}}</div>
                     </td>
                     <td>
-                        <div>{{ user.number_of_patients }}</div>
+                        <div>{{ user|number_of_patients }}</div>
                     </td>
                     <td>
                         <div>{{ user.date_joined }}</div>

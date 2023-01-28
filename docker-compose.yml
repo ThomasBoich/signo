@@ -7,7 +7,7 @@ services:
       - '/opt/django/static_files:/opt/django/static_files'
       - '/opt/django/media_files:/opt/django/media_files'
 
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python manage.py runserver 0.0.0.0:80
 
     environment:
       - VIRTUAL_HOST=sign-o.ru, 

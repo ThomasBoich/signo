@@ -7,6 +7,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from django.views import View
 from django.db.models import Q, F, Count, Case, When, Subquery, OuterRef, Sum, IntegerField, Prefetch
+from django.db.models.functions import Coalesce
 from django.db import models
 
 from documents.models import Document
@@ -62,33 +63,47 @@ def staff(request):
             filter=Q(sender__sender_status=False),
             distinct=True)
     )
-    # num_characters=Subquery(
-    #     Character.objects.filter(
-    #         campaign=OuterRef('pk')
-    #     ).order_by().values('campaign').annotate(count=Count('campaign')).values('count'))
+   
     
-
-    # all_staff = all_staff.annotate(
-    #     number_of_patients=
-    #         Count(
-    #             'sender',
-    #             distinct=True
-    #         ))
+    # all_staff = all_staff \
+    # .annotate(docs_sent = Subquery(Document.objects.filter(sender=OuterRef('id')).count())) \
+    # .annotate(docs_found = Subquery(Document.objects.filter(founder=OuterRef('id')).count())) \
+    # .annotate(difference = Subquery(Document.objects.filter(sender=OuterRef('id'), founder=OuterRef('id')).count()))
+    # #.annotate(result=F('docs_found') + F('docs_sent') - F('difference'))
     
-    
-
-    sender_docs = all_staff.values('sender').annotate(sender_count=Count('sender'))
-    founder_docs = all_staff.values('founder').annotate(founder_count=Count('founder'))
 
     all_staff = all_staff.annotate(
-        number_of_patients=Count(
-        'sender',
-        distinct=True
-    ))
-
-
-    print('!', all_staff[4])
-    
+        count_sender=Subquery(
+            Document.objects
+                .filter(sender=OuterRef('id'))
+                .exclude(founder=OuterRef('id'))
+                .values('sender')
+                .order_by('sender')
+                .annotate(count=Count('sender'))
+                .values('count')[:1],
+                output_field=IntegerField()
+            ),
+        count_founder=Subquery(
+            Document.objects
+                .filter(founder=OuterRef('id'))
+                .exclude(sender=OuterRef('id'))
+                .values('founder')
+                .order_by('founder')
+                .annotate(count=Count('founder'))
+                .values('count')[:1],
+                output_field=models.IntegerField()
+            ),
+        count_both=Subquery(
+            Document.objects
+                .filter(founder=OuterRef('id'), sender=OuterRef('id'))
+                .values('founder')
+                .order_by('founder')
+                .annotate(count=Count('founder'))
+                .values('count')[:1],
+                output_field=models.IntegerField()
+            ),
+        )
+   
     staff = search_users(request, all_staff)
 
     staff = paginate_list(request, staff, 20)
