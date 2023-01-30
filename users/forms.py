@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
+from django.core.exceptions import ValidationError
 
 from .models import CustomUser, Profile, MedCard
 
@@ -10,6 +11,13 @@ class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm):
         model = CustomUser
         fields = ('email', 'pasport_series', 'pasport_number', 'first_name', 'last_name', 'patronymic', 'phone', 'date_of_birthday')
+
+        widgets = {
+                'date_of_birthday': forms.DateInput(attrs={"class":"form-control", "placeholder":"hey", "type": "date", "required":True}),
+            }
+        print('!', widgets)
+
+
 
     def clean(self):
         phone = self.cleaned_data['phone']
@@ -25,16 +33,25 @@ class CustomUserChangeForm(UserChangeForm):
 class LoginForm(AuthenticationForm):
     username = forms.CharField(label='Электронная почта', widget=forms.EmailInput(attrs={'class': 'form-control'}))
     password = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+
+    def confirm_login_allowed(self, user):
+        if not user.is_active:
+            raise ValidationError(
+                "This account is inactive.",
+                code='inactive',
+            )
+        if user.ban:
+            raise ValidationError(
+                "Вы не можете войти, обратитесь к администратору",
+                code='fired',
+            )
+
     class Meta:
         model = CustomUser
         fields = ['email', 'username', 'password']
 
 
-class ProfileRegisterForm(forms.ModelForm):
-    class Meta:
-        model = Profile
-        fields = '__all__'
-
+    
 
 class UserUpdateForm(forms.ModelForm):
     email = forms.EmailField(label='Электронная почта', required=True, widget=forms.EmailInput(attrs={'class': 'form-control'}))

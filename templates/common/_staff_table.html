@@ -11,9 +11,10 @@
               <th id="th-type" class="sortable-table-header" onclick="filterByField('type')">Роль</th>
               <th id="th-signed_docs" class='sortable-table-header' onclick="filterByField('signed_docs')">Подписанных<br> док-тов</th>
               <th id="th-not_signed_docs" class='sortable-table-header' onclick="filterByField('not_signed_docs')">Неподписанных<br> док-тов</th>
-              <th id="th-number_of_patients" class='sortable-table-header' onclick="filterByField('number_of_patients')">Кол-во пациентов</th>
+              <th id="th-number_of_patients" class='sortable-table-header' onclick="filterByField('number_of_patients')">Кол-во<br> пациентов</th>
 
               <th id="th-date_joined" class='sortable-table-header' onclick="filterByField('date_joined')">Регистрация</th>
+              <th id="th-ban_date" class='sortable-table-header' onclick="filterByField('ban_date')">Увольнение</th>
 
               <th id="th-ecp" class='sortable-table-header' onclick="filterByField('ecp')">ЭЦП</th>
               <th id="th-ban" class='sortable-table-header' onclick="filterByField('ban')">Статус</th>
@@ -44,6 +45,11 @@
                     <td>
                         <div>{{ user.date_joined }}</div>
                     </td>
+                    <td>
+                      {% if user.ban %}
+                        <div>{{ user.ban_date|date }}</div>
+                      {% endif  %}
+                  </td>
                     <td>
                         <div>{% if user.ecp %}Да{% else %} Нет {% endif %}</div>
                     </td>

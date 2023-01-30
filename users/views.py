@@ -47,10 +47,7 @@ class AppLogoutView(LogoutView):
 @login_required
 def staff(request):
     all_staff = CustomUser.objects.filter(Q(type='DO') | Q(type='AD'))
-    # all_doctors = annotate_users_with_number_of_signed_docs(
-    #                                         all_doctors, 
-    #                                         'sender',
-    #                                         'sender__sender_status')
+
     all_staff = all_staff.annotate(
         signed_docs=Count(
             'sender',

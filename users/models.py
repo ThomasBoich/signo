@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, Permission, Group
 from django.contrib.auth.models import PermissionsMixin
@@ -25,8 +26,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     phone = models.CharField(max_length=24, blank=True, null=True, verbose_name='Телефон')
     uniq_id = models.CharField(max_length=12, blank=True, null=True, verbose_name='Уникальный ID')
     photo = models.ImageField(upload_to='midia/users/%Y/%m/%d/', blank=True, default='media/users/use.png', verbose_name='Аватар')
-    # role = models.ForeignKey('Role', on_delete=models.CASCADE, blank=True, null=True, default=3)
-    ## document = models.ForeignKey('Documents', on_delete=models.CASCADE, blank=True, null=True)
+
     is_active = models.BooleanField(default=True, verbose_name='Активирован')
     is_admin = models.BooleanField(default=False, verbose_name='Администратор')
     is_staff = models.BooleanField(_('staff status'), default=False)
@@ -35,7 +35,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     last_login = models.DateTimeField(u'last login', blank=True, null=True)
     groups = models.ManyToManyField(Group, blank=True, null=True, verbose_name='Группы', related_name='groups')
     user_permissions = models.ManyToManyField(Permission, blank=True, null=True, verbose_name='Разрешения', related_name='user_permissions')
-    outside = models.DateTimeField(verbose_name='дата увольнения', blank=True, null=True)
     date_of_birthday = models.DateField(blank=True, null=True, verbose_name='Дата Рождения')
     
     ADMINISTRATOR = 'AD'
@@ -52,17 +51,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     type = models.CharField(max_length=6, choices=TYPE_ROLE, default=CLIENT, verbose_name='Тип пользователя')
     ban = models.BooleanField(default=False, verbose_name='Уволен')
+    ban_date = models.DateTimeField(verbose_name='дата увольнения', blank=True, null=True)
+
     ecp = models.BooleanField(default=False, verbose_name='Наличие ЭЦП')
-    # logs = models.BooleanField(default=True, blank=True, verbose_name='Доступ к вкладке логи')
-    # delete = models.BooleanField(default=True, blank=True, verbose_name='Доступ к удалению документов')
-    # downloads = models.BooleanField(default=True, blank=True, verbose_name='Доступ к скачиванию документов')
-    # views = models.BooleanField(default=True, blank=True, verbose_name='Доступ к просмотру документов')
-    # phones = models.BooleanField(default=True, blank=True, verbose_name='Доступ к просмотру телефонов')
-    # pasports = models.BooleanField(default=True, blank=True, verbose_name='Доступ к паспортным данным')
-    # documents = models.BooleanField(default='True', blank=True, verbose_name='Доступ к вкладке документы')
-    # settings = models.BooleanField(default='True', blank=True, verbose_name='Доступ к вкладке настройка пользователей')
-    # all_info = models.BooleanField(default='True', blank=True, verbose_name='Доступ к информации о всех пациентах')
-    # my_info = models.BooleanField(default='True', blank=True, verbose_name='Доступ к информации о своих пациентах')
    
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -78,6 +69,13 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def get_absolute_url(self):
         return reverse('user', kwargs={'pk': self.pk})
+
+    def save(self, *args, **kwargs):
+        if self.ban and self.ban_date is None:
+            self.ban_date = datetime.now()
+        elif not self.ban and self.ban_date is not None:
+            self.ban_date = None
+        super().save(*args, **kwargs)
 
 
 # ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ С ДОПОЛНИТЕЛЬНОЙ ИНФОРМАЦИЕЙ #
@@ -124,10 +122,10 @@ def create_user_profile(sender, instance, created, **kwargs):
         MedCard.objects.create(user=instance)
 
 
-@receiver(post_save, sender=CustomUser)
-def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
-    instance.medcard.save()
+# @receiver(post_save, sender=CustomUser)
+# def save_user_profile(sender, instance, **kwargs):
+#     instance.profile.save()
+#     instance.medcard.save()
 
 
 class Vizit(models.Model):
