@@ -106,7 +106,7 @@ def staff(request):
     staff = paginate_list(request, staff, 20)
 
     context = {
-        'title': 'Сотрудники', 
+        'title': f'Сотрудники - {all_staff.count()}',
         'users': staff,
         }
 
@@ -250,6 +250,7 @@ class LogsView(View):
         actions = paginate_list(request, actions, 50)
 
         context = {
+            'title': f'Всего - {Action.objects.all().count()}',
             'actions': actions,
         }
         return render(request, 'users/logs.html', context=context)
