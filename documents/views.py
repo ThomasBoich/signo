@@ -135,11 +135,14 @@ def sign_document(request):
         logger.debug(f'sign_documents: got document by pk')
 
         create_signature(request, document)
-  
-        logger.debug('sign_document:', 'signature_created')
+        logger.debug(f'sign_document: signature_created')
+        
         media_root = settings.MEDIA_ROOT
-
+        logger.debug(f'sign_document: media_root folder {media_root}')
+        
         watermark = media_root + "/signature.pdf"
+        logger.debug(f'sign_document: watermark file: {watermark}')
+        
         doc_file = document.document.path
         with open(doc_file, "rb") as input_file, open(watermark, "rb") as watermark_file:
             input_pdf = PdfReader(input_file)
