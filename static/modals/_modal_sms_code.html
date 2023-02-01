@@ -1,0 +1,102 @@
+{% load static %}
+
+<div class="modal fade" id="sms-code-modal" tabindex="-1" aria-hidden="true">
+        
+    <div class="modal-dialog">
+      <div class="modal-content">
+        
+        <div class="modal-header1" style="background-color:white; padding:20px; display:flex; justify-content:center; align-items:center">
+          <div><p style="font-size:2rem; margin:auto">Подтвердите подписание</p></div>
+
+        </div>
+
+        <div class="modal-body" >
+          <!-- <div style="display:flex; flex-direction: column; gap:20px;"> -->
+          <div id="input-phone-block" style="display:flex; flex-direction:column;gap:15px ;">
+            <div style="display:flex; flex-direction:column">
+              <!-- <form>
+                <label for="modal-phone-input">Введите свой номер (+7 999 123-45-67)</label>
+                <input id='modal-phone-input' type="text" class="form-control" placeholder="+7 999 123-45-67">
+              </form> -->
+              <div>Код будет отправлен на номер {{request.user.phone}}</div>
+              <div>Поменять номер можно в <a href="{% url 'profile' %}">профиле</a></div>
+            </div>
+              <button onclick='send_code()' id='input-get-code-btn' class="btn btn-outline-primary btn-sm" style="width:100%; height:40px; border-radius:5px">Получить код</button>
+          </div>
+
+            <div id="input-code-block" hidden=true style="display:flex; flex-direction:column;gap:15px ;">
+              <div style="align-self:center; color:red">Мы отправили вам СМС с кодом подтверждения</div>
+              <div style="display:flex; flex-direction:column">
+                <label for="modal-code-input">Введите код (4 цифры)</label>
+                <input id='modal-code-input' type="text" class="form-control">
+              </div>
+                <button onclick='sign_document()' id='input-submit-code-btn' class="btn btn-outline-primary btn-sm" style="width:100%; height:40px; border-radius:5px" data-bs-toggle="modal" data-bs-target="#project-delete-modal">Подписать документ</button>
+            </div>
+            <!-- <button class="btn btn-outline-primary btn-sm" style="width:150px; height:40px; border-radius:100px" data-bs-toggle="modal" data-bs-target="#project-delete-modal">Cancel</button> -->
+          </div>
+
+          <div class="modal-footer" style="justify-content:flex-start">
+            <!-- <div id='get-new-code-link' hidden=true style="color:#206bc4; text-decoration:underline;">Получить новый код</div> -->
+          </div>
+
+        </div>
+
+</div>
+</div>
+<script>
+
+
+  function sign_document() {
+    code = document.getElementById('modal-code-input').value
+    pk = document_pk
+    $.ajax({
+      data: {
+        'code': code,
+        'pk': pk,
+      },
+      url: "{% url 'sign_document' %}",
+      success: function(json){
+        if (json['reload'] == 'y'){
+          window.location.reload()
+        }
+      }
+    })
+  }
+
+
+
+</script>
+
+<script>
+
+    function show_code_block() {
+    document.getElementById('input-phone-block').hidden = true
+    document.getElementById('input-code-block').hidden = false
+    // document.getElementById('get-new-code-link').hidden = false
+    document.getElementById('modal-code-input').value = ''
+  }
+
+  // sending code
+  function send_code(){
+    show_code_block()
+    $.ajax({
+      data: {},
+      url: "{% url 'send_code' %}"
+    })
+  }
+</script>
+
+<script>
+  $(document).on('DOMContentLoaded', function(){
+    $('#modal-phone-input').mask('+7 999 999-99-99')
+  })
+</script>
+
+<script>
+  $(document).on("hidden.bs.modal", "#sms-code-modal", function () {
+    document.getElementById('input-phone-block').hidden = false
+    document.getElementById('input-code-block').hidden = true
+    // document.getElementById('get-new-code-link').hidden = true
+    document.getElementById('modal-code-input').value = ''
+  });
+</script>

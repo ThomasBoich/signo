@@ -1,0 +1,210 @@
+{%include 'header.html'%}
+{% block content %}
+            <div class="row row-deck row-cards">
+              {%if request.user.is_superuser == True%}
+              <div class="col-lg-6">
+                <div class="row row-cards">
+                   <div class="col-sm-4">
+                    <div class="card">
+                      <div class="card-body p-2 text-center">
+                        <div class="text-end text-green">
+                          <span class="text-green d-inline-flex align-items-center lh-1">
+                            6% <!-- Download SVG icon from http://tabler-icons.io/i/trending-up -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon ms-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><polyline points="3 17 9 11 13 15 21 7"></polyline><polyline points="14 7 21 7 21 14"></polyline></svg>
+                          </span>
+                        </div>
+                        <div class="h1 m-0">{{all_users}}</div>
+                        <div class="text-muted mb-3">Пользователи</div>
+                      </div>
+                    </div>
+                  </div>
+              <div class="col-sm-4">
+                    <div class="card">
+                      <div class="card-body p-2 text-center">
+                        <div class="text-end text-red">
+                          <span class="text-red d-inline-flex align-items-center lh-1">
+                            -2% <!-- Download SVG icon from http://tabler-icons.io/i/trending-down -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon ms-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><polyline points="3 7 9 13 13 9 21 17"></polyline><polyline points="21 10 21 17 14 17"></polyline></svg>
+                          </span>
+                        </div>
+                        <div class="h1 m-0">{{all_doctors}}</div>
+                        <div class="text-muted mb-3">Врачи</div>
+                      </div>
+                    </div>
+                  </div>
+              <div class="col-sm-4">
+                    <div class="card">
+                      <div class="card-body p-2 text-center">
+                        <div class="text-end text-green">
+                          <span class="text-green d-inline-flex align-items-center lh-1">
+                            9% <!-- Download SVG icon from http://tabler-icons.io/i/trending-up -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon ms-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><polyline points="3 17 9 11 13 15 21 7"></polyline><polyline points="14 7 21 7 21 14"></polyline></svg>
+                          </span>
+                        </div>
+                        <div class="h1 m-0">{{all_clients}}</div>
+                        <div class="text-muted mb-3">Пациенты</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-6 col-lg-3">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="d-flex align-items-center">
+                      <div class="subheader">New clients</div>
+                      <div class="ms-auto lh-1">
+                        <div class="dropdown">
+                          <a class="dropdown-toggle text-muted" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Last 7 days</a>
+                          <div class="dropdown-menu dropdown-menu-end">
+                            <a class="dropdown-item active" href="#">Last 7 days</a>
+                            <a class="dropdown-item" href="#">Last 30 days</a>
+                            <a class="dropdown-item" href="#">Last 3 months</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="d-flex align-items-baseline">
+                      <div class="h1 mb-3 me-2">6,782</div>
+                      <div class="me-auto">
+                        <span class="text-yellow d-inline-flex align-items-center lh-1">
+                          0% <!-- Download SVG icon from http://tabler-icons.io/i/minus -->
+                          <svg xmlns="http://www.w3.org/2000/svg" class="icon ms-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                        </span>
+                      </div>
+                    </div>
+                    <div id="chart-new-clients" class="chart-sm"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-lg-3">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="d-flex align-items-center">
+                      <div class="subheader">Active users</div>
+                      <div class="ms-auto lh-1">
+                        <div class="dropdown">
+                          <a class="dropdown-toggle text-muted" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Last 7 days</a>
+                          <div class="dropdown-menu dropdown-menu-end">
+                            <a class="dropdown-item active" href="#">Last 7 days</a>
+                            <a class="dropdown-item" href="#">Last 30 days</a>
+                            <a class="dropdown-item" href="#">Last 3 months</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="d-flex align-items-baseline">
+                      <div class="h1 mb-3 me-2">2,986</div>
+                      <div class="me-auto">
+                        <span class="text-green d-inline-flex align-items-center lh-1">
+                          4% <!-- Download SVG icon from http://tabler-icons.io/i/trending-up -->
+                          <svg xmlns="http://www.w3.org/2000/svg" class="icon ms-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="3 17 9 11 13 15 21 7" /><polyline points="14 7 21 7 21 14" /></svg>
+                        </span>
+                      </div>
+                    </div>
+                    <div id="chart-active-users" class="chart-sm"></div>
+                  </div>
+                </div>
+              </div>
+              {%elif request.user.profile.role.title == 'Врач'%}
+              {%else%}
+              {%endif%}
+              
+              <div class="col-md-12 col-lg-12">
+                <div class="card">
+                  <div class="card-header">
+                    <h3 class="card-title">Аналитика документов в системе - {{all_documents_type}}</h3>
+                  </div>
+                  <table class="table card-table table-vcenter">
+                    <thead>
+                      <tr>
+                        <th>Название документов</th>
+                        <th colspan="2">Количество</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Instagram</td>
+                        <td>3,550</td>
+                        <td class="w-50">
+                          <div class="progress progress-xs">
+                            <div class="progress-bar bg-primary" style="width: 71.0%"></div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Twitter</td>
+                        <td>1,798</td>
+                        <td class="w-50">
+                          <div class="progress progress-xs">
+                            <div class="progress-bar bg-primary" style="width: 35.96%"></div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Facebook</td>
+                        <td>1,245</td>
+                        <td class="w-50">
+                          <div class="progress progress-xs">
+                            <div class="progress-bar bg-primary" style="width: 24.9%"></div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>TikTok</td>
+                        <td>986</td>
+                        <td class="w-50">
+                          <div class="progress progress-xs">
+                            <div class="progress-bar bg-primary" style="width: 19.72%"></div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Pinterest</td>
+                        <td>854</td>
+                        <td class="w-50">
+                          <div class="progress progress-xs">
+                            <div class="progress-bar bg-primary" style="width: 17.08%"></div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>VK</td>
+                        <td>650</td>
+                        <td class="w-50">
+                          <div class="progress progress-xs">
+                            <div class="progress-bar bg-primary" style="width: 13.0%"></div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Pinterest</td>
+                        <td>420</td>
+                        <td class="w-50">
+                          <div class="progress progress-xs">
+                            <div class="progress-bar bg-primary" style="width: 8.4%"></div>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-header">
+                    <h2 style="margin-bottom: inherit;">Активные документы</h2>
+                  </div>
+                  <div class="card-body border-bottom py-3">
+                    <div class="d-flex">
+                    </div>
+                  </div>
+                  {% include 'common/_documents_table.html' %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+{% endblock %}
+{% include 'footer.html' %}

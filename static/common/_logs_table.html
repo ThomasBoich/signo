@@ -1,0 +1,39 @@
+{% load static %}
+{% load extra_tags %}
+
+<div class="card" >
+  <div class="card-header">
+    
+      <h2><a class="nav-link" href="{%url 'logs'%}" >Логи</a></h2>
+  </div>
+  <div class="table-responsive">
+      <table class="table card-table table-vcenter text-nowrap datatable bg-white">
+        <thead>
+          <tr>
+            <th id="th-date" style='min-width:150px;'>Дата</th>
+            <th id="th-time" style='min-width:150px;'>Время</th>
+            <th id="th-action">Действие</th>
+          </tr>
+        </thead>
+        <tbody class="lazy-loading-logs">
+        {% for action in actions %}
+          <tr class="lazy-row-logs">
+            <td>{{action.pub_date|date:"d M Y" }}</td>
+            <td>{{action.pub_date|date:'H:i' }}</td>
+            <td>{{action.action }}</td>
+          </tr>
+        {%endfor%}
+        </tbody>
+      </table>
+    </div>
+</div>
+
+  {% if actions.has_next %}
+    <a hidden class='pagination__next' href="{% update_query_params page=actions.next_page_number %}">next</a>  
+    <script type="text/javascript" src="{% static '/js/infinite-scroll/infi-scroll.js' %}"></script>
+    <script>
+      infi_scroll('.lazy-loading-logs', '.lazy-row-logs')
+    </script>
+  {% endif %}
+  
+  <script type="text/javascript" src="{% static '/js/log_filter.js' %}"></script>
