@@ -29,7 +29,6 @@ def _update_query_params(url_before: str, **kwargs) -> str:
 
 @register.filter(name='number_of_patients')
 def number_of_patients(user):
-    print('!here')
     return sum([(user.count_sender or 0),
                 (user.count_founder or 0), 
                 (user.count_both or 0)])

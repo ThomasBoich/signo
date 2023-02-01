@@ -1,4 +1,6 @@
 import random
+import logging
+
 from PyPDF2 import PdfReader, PdfWriter
 
 from django.contrib.auth.decorators import login_required
@@ -14,6 +16,11 @@ from users.models import CustomUser, Action
 from .services import *
 from .send_sms import *
 from utils.services import paginate_list
+from .logger import setup_logger
+
+
+logger = logging.getLogger(__name__)
+setup_logger()
 
 @login_required
 def show_documents(request):
@@ -73,7 +80,6 @@ def show_category(request, pk):
 
 @login_required
 def mydocuments(request):
-    
     all_documents = Document.objects. \
         filter(deleted=False). \
         filter(Q(recipient=request.user) | Q(sender=request.user))
@@ -126,27 +132,11 @@ def sign_document(request):
     pk = request.GET.get('pk')
     if code_entered != code_sent:
         document = Document.objects.get(pk=pk)
-        if request.user.type == 'CL':
-            document.recipient_status = True
-            document.save()
-            Action.objects.create(
-                action=f'{request.user.first_name} {request.user.last_name} \
-                    подписал {document.type.get_type_document_display()} с {document.sender.first_name} \
-                    {document.sender.last_name}'
-                )
-        else:
-            document.sender_status = True
-            document.save()
-            Action.objects.create(
-                action=f'{request.user.first_name} {request.user.last_name} \
-                    подписал {document.type.get_type_document_display()} с {document.recipient.first_name} \
-                    {document.recipient.last_name}'
-                )
+        logger.debug(f'sign_documents: got document by pk')
 
+        create_signature(request, document)
   
-        create_signature(document)
-  
-        
+        logger.debug('sign_document:', 'signature_created')
         media_root = settings.MEDIA_ROOT
 
         watermark = media_root + "/signature.pdf"
@@ -166,9 +156,31 @@ def sign_document(request):
             with open(doc_file, "wb") as merged_file:
                 output.write(merged_file)
 
+            if request.user.type == 'CL':
+                document.recipient_status = True
+                document.save()
+                Action.objects.create(
+                    action=f'{request.user.first_name} {request.user.last_name} \
+                        подписал {document.type.get_type_document_display()} с {document.sender.first_name} \
+                        {document.sender.last_name}'
+                    )
+            else:
+                document.sender_status = True
+                document.save()
+                Action.objects.create(
+                    action=f'{request.user.first_name} {request.user.last_name} \
+                        подписал {document.type.get_type_document_display()} с {document.recipient.first_name} \
+                        {document.recipient.last_name}'
+                    )
+
         result = {'reload': 'y'} # used on the front as a sign to reload page
         return JsonResponse(result)
+    
+    
+    
+    
     result = {'code': ''}
+
     return JsonResponse(result)
 
 

@@ -133,11 +133,14 @@ def filter_actions(request, actions):
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 
-def create_signature(document):
+def create_signature(request, document):
     p = canvas.Canvas(settings.MEDIA_ROOT + '/signature.pdf')
     pdfmetrics.registerFont(TTFont('Arial', 'Arial.ttf'))
     p.setFont('Arial', 14)
-    signature = f'{document.sender.last_name} {document.sender.first_name} {document.sender.patronymic} - подписал документ'
+    if request.user.type in ['AD', 'DO']:
+        signature = f'{document.sender.last_name} {document.sender.first_name} {document.sender.patronymic} - подписал документ'
+    elif request.user.type == 'CL':
+        signature = f'{document.recipient.last_name} {document.recipient.first_name} {document.recipient.patronymic} - подписал документ'
     p.setFillColorRGB(0,0,1)
     p.drawString(40, 15, signature)
     

@@ -15,7 +15,6 @@ class CustomUserCreationForm(UserCreationForm):
         widgets = {
                 'date_of_birthday': forms.DateInput(attrs={"class":"form-control", "placeholder":"hey", "type": "date", "required":True}),
             }
-        print('!', widgets)
 
 
 
