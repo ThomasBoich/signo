@@ -129,23 +129,35 @@ def filter_actions(request, actions):
 
 
 
-
+import logging
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
+from .logger import setup_logger
+
+
+logger = logging.getLogger(__name__)
+setup_logger()
 
 def create_signature(request, document):
     p = canvas.Canvas(settings.MEDIA_ROOT + '/signature.pdf')
+    logger.debug(f'create_signature: media_root = {settings.MEDIA_ROOT + "/signature.pdf"}')
+    logger.debug(f'create_signature: signature (p) = {p}')
+
     pdfmetrics.registerFont(TTFont('Arial', 'Arial.ttf'))
     p.setFont('Arial', 14)
     if request.user.type in ['AD', 'DO']:
         signature = f'{document.sender.last_name} {document.sender.first_name} {document.sender.patronymic} - подписал документ'
+        logger.debug(f'create_signature: p = {request.user.type}')
+
     elif request.user.type == 'CL':
         signature = f'{document.recipient.last_name} {document.recipient.first_name} {document.recipient.patronymic} - подписал документ'
+        logger.debug(f'create_signature: p = {request.user.type}')
     p.setFillColorRGB(0,0,1)
     p.drawString(40, 15, signature)
     
     p.showPage()
     p.save()
+    logger.debug(f'create_signature: signature saved')
     
 
 
