@@ -144,12 +144,20 @@ def create_signature(request, document):
     logger.debug(f'create_signature: signature (p) = {p}')
 
     pdfmetrics.registerFont(TTFont('Arial', 'Arial.ttf'))
+    logger.debug(f'create_signature: font registered')
+
     p.setFont('Arial', 14)
+    logger.debug(f'create_signature: font set')
+
     if request.user.type in ['AD', 'DO']:
+        logger.debug(f'create_signature: request.user.type = {request.user.type}')
+
         signature = f'{document.sender.last_name} {document.sender.first_name} {document.sender.patronymic} - подписал документ'
         logger.debug(f'create_signature: p = {request.user.type}')
 
     elif request.user.type == 'CL':
+        logger.debug(f'create_signature: request.user.type = {request.user.type}')
+
         signature = f'{document.recipient.last_name} {document.recipient.first_name} {document.recipient.patronymic} - подписал документ'
         logger.debug(f'create_signature: p = {request.user.type}')
     p.setFillColorRGB(0,0,1)
