@@ -10,10 +10,10 @@ class CustomUserCreationForm(UserCreationForm):
 
     class Meta(UserCreationForm):
         model = CustomUser
-        fields = ('email', 'pasport_series', 'pasport_number', 'first_name', 'last_name', 'patronymic', 'phone', 'date_of_birthday')
+        fields = ('email', 'pasport_series', 'pasport_number', 'last_name', 'first_name', 'patronymic', 'phone', 'date_of_birthday')
 
         widgets = {
-                'date_of_birthday': forms.DateInput(attrs={"class":"form-control", "placeholder":"hey", "type": "date", "required":True}),
+                'date_of_birthday': forms.DateInput(attrs={"class":"form-control", "type": "date", "required":True}),
             }
 
 

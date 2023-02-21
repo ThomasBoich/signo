@@ -9,16 +9,16 @@ class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
     model = CustomUser
-    list_display = ('email', 'last_name', 'first_name', 'patronymic', 'uniq_id', 'pasport_series', 'pasport_number', 'phone', 'date_of_birthday', 'is_staff', 'is_active',)
+    list_display = ('email', 'last_name', 'first_name', 'patronymic', 'pasport_series', 'pasport_number', 'phone', 'date_of_birthday', 'is_staff', 'is_active',)
     list_filter = ('email', 'is_staff', 'is_active',)
     fieldsets = (
-        (None, {'fields': ('email', 'password', 'last_name', 'first_name', 'patronymic', 'pasport_series', 'pasport_number', 'phone', 'date_of_birthday', 'addres', 'photo',)}),
+        (None, {'fields': ('email', 'password', 'uniq_id',  'last_name', 'first_name', 'patronymic', 'pasport_series', 'pasport_number', 'phone', 'date_of_birthday', 'addres', 'photo',)}),
         ('Permissions', {'fields': ('is_superuser', 'ban', 'ban_date', 'type', 'is_staff', 'is_active', 'groups','user_permissions')}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2', 'is_staff', 'is_active', 'is_superuser', 'ban','type', 'first_name', 'last_name', 'patronymic', 'pasport_series', 'pasport_number', 'phone', 'addres')}
+            'fields': ('email', 'password1', 'password2', 'is_staff', 'is_active', 'is_superuser', 'ban','type', 'last_name', 'first_name', 'patronymic', 'pasport_series', 'pasport_number', 'phone', 'addres')}
         ),
     )
     search_fields = ('email',)

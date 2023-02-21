@@ -25,7 +25,7 @@ def search_users(request, all_users):
             Q(last_name__icontains=search_name)) |
             Q(phone__iregex=phone_number) |
             Q(email__icontains=search_name) |
-            Q(id=search_name)
+            Q(uniq_id=search_name)
             )
     elif search_name and len(search_name.split(' ')) == 2:
         name1 = search_name.split(' ')[0]

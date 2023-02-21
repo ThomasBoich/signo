@@ -17,7 +17,7 @@
                   <div><a href="{%url 'profile'%}">ФИО: {{request.user.first_name}} {{request.user.patronymic}} {{request.user.last_name}}</a></div>
                   <div><a href="{%url 'profile'%}">Паспорт: {{request.user.passport}}</a></div>
                   <div><a href="{%url 'profile'%}">Телефон: {{request.user.phone}}</a></div>
-                  <div>ID: {{request.user.id}}</div>
+                  <div>ID: {{request.user.uniq_id}}</div>
                 </div>
               </div>
               

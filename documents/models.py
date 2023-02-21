@@ -88,10 +88,10 @@ class DocumentType(models.Model):
 # so logs for these actions are created in views. 
 # Same is true for signing documents.
 
-@receiver(post_save, sender=Document)    
-def create_document_created_action(sender, instance, created, **kwargs):
-    if created:
-        document = instance
-        Action.objects.create(
-            action=f'{document.founder.first_name} {document.founder.last_name} ({document.founder.type}) отправил {document.type.get_type_document_display()}. Получатель {document.recipient.first_name} {document.recipient.last_name}'
-            )
+# @receiver(post_save, sender=Document)    
+# def create_document_created_action(sender, instance, created, **kwargs):
+#     if created:
+#         document = instance
+#         Action.objects.create(
+#             action=f'{document.founder.first_name} {document.founder.last_name} ({document.founder.type}) отправил {document.type.get_type_document_display()}. Получатель {document.recipient.first_name} {document.recipient.last_name}'
+#             )
