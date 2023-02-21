@@ -29,8 +29,16 @@ def get_dates(period, all_documents):
         start_date = all_documents.last().send_date
         end_date = today
     elif '+' in period:
-        start_date = datetime(year=int(period[0:4]), month=int(period[5:7]), day=int(period[8:10]))
-        end_date = datetime(year=int(period[11:15]), month=int(period[16:18]), day=int(period[19:21]))
+        start_date = datetime(year=int(period[0:4]), 
+                                month=int(period[5:7]), 
+                                day=int(period[8:10]))
+        end_date = datetime(year=int(period[11:15]), 
+                                month=int(period[16:18]), 
+                                day=int(period[19:21]), 
+                                hour=23, 
+                                minute=59, 
+                                second=59,
+                                microsecond=999999)
 
     if start_date.tzinfo is None or \
         start_date.tzinfo.utcoffset(start_date) is None:

@@ -1,7 +1,0 @@
-#, python-format
-msgid ""
-"Please enter a correct %(username)s and password. Note that both fields may "
-"be case-sensitive."
-msgstr ""
-"Пожалуйста, введите правильную почту и пароль. Оба поля могут быть "
-"чувствительны к регистру."

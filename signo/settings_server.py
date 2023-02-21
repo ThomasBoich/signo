@@ -13,7 +13,7 @@ STATIC_ROOT = '/opt/django/static_files'
 
 
 
-CSRF_TRUSTED_ORIGINS = ['http://194.67.106.188', 'http://sign-o.ru', 'https://sign-o']
+CSRF_TRUSTED_ORIGINS = ['http://194.67.106.188', 'http://sign-o.ru', 'https://sign-o.ru']
 
 DATABASES = {
     'default':{

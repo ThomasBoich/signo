@@ -37,7 +37,11 @@
           <td><span class="text-muted"><a href="{{document.document.url}}#" target=”_blank”>{{document.id}}</a></span></td>
           <td><span class="text-muted">{{document.type}}</span></td>
           {% if request.user.type != 'CL' %}
-            <td><a href="{%url 'user' document.recipient.pk %}">{{document.recipient.first_name}} {{document.recipient.last_name}}</a></td>
+            {% if request.user.type == 'DO' %}
+              <td>{{document.recipient.first_name}} {{document.recipient.last_name}}</td>
+            {% else %}
+              <td><a href="{%url 'user' document.recipient.pk %}">{{document.recipient.first_name}} {{document.recipient.last_name}}</a></td>
+            {% endif %}
           {% endif %}
           <td>{{document.send_date}}</td>
           {% if request.user.type != 'CL' %}
@@ -92,7 +96,7 @@
                 <a class="dropdown-item" href="{{document.document.url}}#">
                   Просмотреть документ
                 </a>
-                {% if request.user.type != 'CL' %}
+                {% if request.user.type != 'CL' and request.user.type != 'DO' %}
                   <a id='document-delete-{{document.id}}' class="dropdown-item dropdown-document-action-button" href="{{document.document.url}}#" data-bs-toggle="modal" data-bs-target="#modal-delete-document">
                     Удалить документ
                   </a>

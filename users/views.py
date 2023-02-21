@@ -207,11 +207,13 @@ class AppRegistration(CreateView):
 
 
 def user(request, pk):
-    user = CustomUser.objects.get(pk=pk)
-    context = {
-        'user': user,
-    }
-    return render(request, 'users/user.html', context)
+    if request.user.type not in ['DO', 'CL']:
+        user = CustomUser.objects.get(pk=pk)
+        context = {
+            'user': user,
+        }
+        return render(request, 'users/user.html', context)
+    return redirect('index')
 
 def user_profile(request):
     user = CustomUser.objects.get(pk=request.user.id)

@@ -10,23 +10,32 @@ from documents.services import *
 from utils.services import paginate_list
 
 
-
 @login_required
 def index(request):
     ''' ГЛАВНАЯ СТРАНИЦА С ИНФОГРАФИКОЙ '''
     
     if request.user.is_authenticated == False:
         return redirect('login')
-    # else:
-        # all_documents_type = DocumentType.objects.all().count()
-        
+
+
     all_documents = Document.objects.filter(deleted=False)
 
     types = DocumentType.objects.all() \
             .annotate(
                 signed_by_patient=Count(Case(
                     When(
-                        document__recipient_status=True, 
+                        document__recipient_status=True,
+                        document__deleted=False, 
+                        then=1
+                        ),
+                    output_field=models.IntegerField(), 
+                    distinct=True
+            ))) \
+            .annotate(
+                not_signed_by_patient=Count(Case(
+                    When(
+                        document__recipient_status=False,
+                        document__deleted=False, 
                         then=1
                         ),
                     output_field=models.IntegerField(), 
@@ -36,6 +45,15 @@ def index(request):
                 signed_by_us=Count(Case(
                     When(
                         document__sender_status=True, 
+                        document__deleted=False, 
+                        then=1
+                        ),
+                    output_field=models.IntegerField(),
+                    distinct=True
+            ))).annotate(
+                not_signed_by_us=Count(Case(
+                    When(
+                        document__sender_status=False, 
                         document__deleted=False, 
                         then=1
                         ),
@@ -98,7 +116,18 @@ def index(request):
     if request.user.is_authenticated and (request.user.type == 'AD' or request.user.type == 'DI'):
 
         # annotated above
-        types_for_di = types.exclude(type_document='OTKAZ')
+        types_for_di = types. \
+                        exclude(type_document='OTKAZ'). \
+                        annotate(
+                            number_of_deleted=Count(
+                                'document', 
+                                filter=Q(document__deleted=True))). \
+                        annotate(
+                            number_of_not_deleted=Count(
+                                'document',
+                                filter=Q(document__deleted=False)
+                            )
+                        )
         types_for_ad = types_for_do
 
         # показываем все последние документы в системе если это руководитель
@@ -119,10 +148,12 @@ def index(request):
                                     sender__type='AD',
                                     sender_status=True
                                     ).count()
+        
         docs_not_signed_by_admins = signed_docs.filter(
                                     sender__type='AD', 
                                     sender_status=False
                                     ).count()
+        
         docs_signed_by_doctors = signed_docs.filter(
                                     sender__type='DO', 
                                     sender_status=True

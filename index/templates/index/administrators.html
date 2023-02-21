@@ -17,7 +17,9 @@
                         <tr>
                           <td>
                             <div class="d-flex py-1 align-items-center">
-                              <span class="avatar me-2" style="background-image: url(./static/avatars/006m.jpg);background-image:url('{{user.profile.photo.url}}');"></span>
+                              {% if user.photo %}
+                                <img width=40px height=40px src="{{user.photo.url}}" style="margin-right:5px">
+                              {% endif %}                              
                               <div class="flex-fill">
                                 <div class="font-weight-medium">{{user.first_name}} {{user.last_name}}
 <!--                                  LorryMion-->
