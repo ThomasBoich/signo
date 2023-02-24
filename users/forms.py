@@ -33,10 +33,17 @@ class LoginForm(AuthenticationForm):
     username = forms.CharField(label='Электронная почта', widget=forms.EmailInput(attrs={'class': 'form-control'}))
     password = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
 
+
+    error_messages = {
+        "invalid_login": 
+            'НЕВЕРНЫЙ ЛОГИН И/ИЛИ ПАРОЛЬ. Попробуйте снова. Оба поля могут быть чувствительны к регистру.'
+        ,
+        "inactive": "This account is inactive.",
+    }
     def confirm_login_allowed(self, user):
         if not user.is_active:
             raise ValidationError(
-                "This account is inactive.",
+                "Этот аккаунт не активен.",
                 code='inactive',
             )
         if user.ban:

@@ -1,127 +1,364 @@
 {% load static %}
 {% load extra_tags %}
+<script type='text/javascript' src="{% static 'js/crypto_pro/q.min.js' %}"></script>
+<script type='text/javascript' src="{% static 'js/crypto_pro/cadesplugin.min.js' %}"></script>
+<script type='text/javascript' src="{% static 'js/crypto_pro/cryptography.js' %}"></script>
 
 <div class="table-responsive">
-    <table class="table card-table table-vcenter text-nowrap datatable bg-white" style="">
-      <thead>
-        <tr>
-          
-          <th id="th-id" class='sortable-table-header' onclick="filterByField('id')">ID документа</th>
-          <th id="th-type" class='sortable-table-header' onclick="filterByField('type')">название документа</th>
-          {% if request.user.type != 'CL' %}
-            <th id="th-recipient" class='sortable-table-header' onclick="filterByField('recipient')">фио пациента</th>
-          {% endif %}
-          <th id="th-send_date" class='sortable-table-header' onclick="filterByField('send_date')">дата создания</th>
-          {% if request.user.type != 'CL' %}
-            <th id="th-founder" class='sortable-table-header' onclick="filterByField('founder')">кто создал</th>
-          {% endif %}
-          {% if request.user.type != 'CL' %}
-            <th id="th-sender" class='sortable-table-header' onclick="filterByField('sender')">кто подписант</th>
-          {% else %}
-            <th id="th-sender" class='sortable-table-header' onclick="filterByField('sender')">ФИО сотрудника</th>
-          {% endif %}
-          {% if request.user.type != 'CL'%}
-            <th id="th-recipient_status" class='sortable-table-header' onclick="filterByField('recipient_status')">статус сотрудника</th>
-          {% endif %}
-          {%if request.user.type == 'CL'%}
-                    <th id="th-sender_status" class='sortable-table-header' onclick="filterByField('sender_status')">статус</th>
-          {%else%}
-                    <th id="th-sender_status" class='sortable-table-header' onclick="filterByField('sender_status')">статус пациента</th>
-          {%endif%}
+  <table class="table card-table table-vcenter text-nowrap datatable bg-white" style="">
+    <thead>
+      <tr>
 
-          <th>Действия</th>
+        <th id="th-id" class='sortable-table-header' onclick="filterByField('id')">ID документа</th>
+        <th id="th-type" class='sortable-table-header' onclick="filterByField('type')">название документа</th>
+        {% if request.user.type != 'CL' %}
+        <th id="th-recipient" class='sortable-table-header' onclick="filterByField('recipient')">фио пациента</th>
+        {% endif %}
+        <th id="th-send_date" class='sortable-table-header' onclick="filterByField('send_date')">дата создания</th>
+        {% if request.user.type != 'CL' %}
+        <th id="th-founder" class='sortable-table-header' onclick="filterByField('founder')">кто создал</th>
+        {% endif %}
+        {% if request.user.type != 'CL' %}
+        <th id="th-sender" class='sortable-table-header' onclick="filterByField('sender')">кто подписант</th>
+        {% else %}
+        <th id="th-sender" class='sortable-table-header' onclick="filterByField('sender')">ФИО сотрудника</th>
+        {% endif %}
+        {% if request.user.type != 'CL'%}
+        <th id="th-recipient_status" class='sortable-table-header' onclick="filterByField('recipient_status')">статус
+          сотрудника</th>
+        {% endif %}
+        {%if request.user.type == 'CL'%}
+        <th id="th-sender_status" class='sortable-table-header' onclick="filterByField('sender_status')">статус</th>
+        {%else%}
+        <th id="th-sender_status" class='sortable-table-header' onclick="filterByField('sender_status')">статус пациента
+        </th>
+        {%endif%}
 
-        </tr>
-      </thead>
-      <tbody class="lazy-loading-docs">
+        <th>Действия</th>
+
+      </tr>
+    </thead>
+    <tbody class="lazy-loading-docs">
       {%for document in all_documents%}
-        <tr id="document-row-{{document.id}}" class="lazy-row-docs">
-          <td><span class="text-muted"><a href="{{document.document.url}}#" target=”_blank”>{{document.id}}</a></span></td>
-          <td><span class="text-muted">{{document.type}}</span></td>
-          {% if request.user.type != 'CL' %}
-            {% if request.user.type == 'DO' %}
-              <td>{{document.recipient.first_name}} {{document.recipient.last_name}}</td>
-            {% else %}
-              <td><a href="{%url 'user' document.recipient.pk %}">{{document.recipient.first_name}} {{document.recipient.last_name}}</a></td>
-            {% endif %}
-          {% endif %}
-          <td>{{document.send_date}}</td>
-          {% if request.user.type != 'CL' %}
-            <td><a href="{%url 'user' document.founder.pk%}" class="text-reset" tabindex="-1">{{document.founder.first_name}} {{document.founder.last_name}}</a></td>
-          {% endif %}
-          {%if request.user.type == 'CL'%}
-                    <td  class="text-reset" tabindex="-1"><a href="{%url 'user' document.sender.pk%}" class="text-reset" tabindex="-1"></a>{{document.sender.first_name}} {{document.sender.last_name}}</td>
+      <tr id="document-row-{{document.id}}" class="lazy-row-docs">
+        <td><span class="text-muted"><a href="{{document.document.url}}#" target=”_blank”>{{document.id}}</a></span>
+        </td>
+        <td><span class="text-muted">{{document.type}}</span></td>
+        {% if request.user.type != 'CL' %}
+        {% if request.user.type == 'DO' %}
+        <td>{{document.recipient.first_name}} {{document.recipient.last_name}}</td>
+        {% else %}
+        <td><a href="{%url 'user' document.recipient.pk %}">{{document.recipient.first_name}}
+            {{document.recipient.last_name}}</a></td>
+        {% endif %}
+        {% endif %}
+        <td>{{document.send_date}}</td>
+        {% if request.user.type != 'CL' %}
+        <td><a href="{%url 'user' document.founder.pk%}" class="text-reset"
+            tabindex="-1">{{document.founder.first_name}} {{document.founder.last_name}}</a></td>
+        {% endif %}
+        {%if request.user.type == 'CL'%}
+        <td class="text-reset" tabindex="-1"><a href="{%url 'user' document.sender.pk%}" class="text-reset"
+            tabindex="-1"></a>{{document.sender.first_name}} {{document.sender.last_name}}</td>
+        {%else%}
+        <td><a href="{%url 'user' document.sender.pk%}" class="text-reset" tabindex="-1">{{document.sender.first_name}}
+            {{document.sender.last_name}}</a></td>
+        {%endif%}
+
+        {% if request.user.type != 'CL' %}
+        <td>
+          {%if document.sender_status%}
+          <span class="badge bg-success me-1"></span>
+          Подписан
           {%else%}
-                    <td><a href="{%url 'user' document.sender.pk%}" class="text-reset" tabindex="-1">{{document.sender.first_name}} {{document.sender.last_name}}</a></td>
+          <span class="badge bg-danger me-1"></span>
+          Не Подписан
+          {%endif%}
+        </td>
+        {% endif %}
+        <td>
+          {%if document.recipient_status%}
+          <span class="badge bg-success me-1"></span>
+          Подписан
+          {%else%}
+          <span class="badge bg-danger me-1"></span>
+          Не подписан
           {%endif%}
 
-          {% if request.user.type != 'CL' %}
-          <td>
-            {%if document.sender_status%}
-            <span class="badge bg-success me-1"></span>
-            Подписан
-            {%else%}
-            <span class="badge bg-danger me-1"></span>
-            Не Подписан
-            {%endif%}
-          </td>
-          {% endif %}
-          <td>
-            {%if document.recipient_status%}
-            <span class="badge bg-success me-1"></span>
-            Подписан
-            {%else%}
-            <span class="badge bg-danger me-1"></span>
-            Не подписан
-            {%endif%}
-
-          </td>
-          <td class="">
-             <span class="dropdown">
-              <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">
-                Действия
-              </button>
-              <div class="dropdown-menu dropdown-menu-end" style="z-index:100">
-                {%if document.sender_status == False and document.sender == request.user or document.recipient_status == False and document.recipient == request.user%}
-                  <!-- doctor cannot sign before a user does -->
-                  {% if document.sender == request.user and document.recipient_status == False %}
-                    <a id='document-sign-{{document.id}}' class="dropdown-item dropdown-document-action-button" data-bs-toggle="modal" data-bs-target="#cannot-sign-before-user-modal">
+        </td>
+        <td class="">
+          <span class="dropdown">
+            <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">
+              Действия
+            </button>
+            <div class="dropdown-menu dropdown-menu-end" style="z-index:100">
+              {%if document.sender_status == False and document.sender == request.user or document.recipient_status == False and document.recipient == request.user%}
+              <!-- doctor cannot sign before a user does -->
+              {% if document.sender == request.user and document.recipient_status == False %}
+              <a id='document-sign-{{document.id}}' class="dropdown-item dropdown-document-action-button"
+                data-bs-toggle="modal" data-bs-target="#cannot-sign-before-user-modal">
+                {% else %}
+                {% if request.user.type == 'CL' %}
+                <a id='document-sign-{{document.id}}' class="dropdown-item dropdown-document-action-button"
+                  data-bs-toggle="modal" data-bs-target="#sms-code-modal">
                   {% else %}
-                    <a id='document-sign-{{document.id}}' class="dropdown-item dropdown-document-action-button" data-bs-toggle="modal" data-bs-target="#sms-code-modal">
-                  {% endif %}
+                  <a id='document-sign-{{document.id}}' class="dropdown-item dropdown-document-action-button"
+                    onclick="sign_doc('{{document.id}}', 'http://127.0.0.1:8000/media/sample.pdf')">
+                    {% endif %}
+                    {% endif %}
                     Подписать
                   </a>
-                {% endif %}
-                <a class="dropdown-item" href="{{document.document.url}}#" download>
-                  Скачать документ
-                </a>
-                <a class="dropdown-item" href="{{document.document.url}}#">
-                  Просмотреть документ
-                </a>
-                {% if request.user.type != 'CL' and request.user.type != 'DO' %}
-                  <a id='document-delete-{{document.id}}' class="dropdown-item dropdown-document-action-button" href="{{document.document.url}}#" data-bs-toggle="modal" data-bs-target="#modal-delete-document">
+                  {% endif %}
+                  <a class="dropdown-item" href="{{document.document.url}}#" download>
+                    Скачать документ
+                  </a>
+                  <a class="dropdown-item" href="{{document.document.url}}#">
+                    Просмотреть документ
+                  </a>
+                  {% if request.user.type != 'CL' and request.user.type != 'DO' %}
+                  <a id='document-delete-{{document.id}}' class="dropdown-item dropdown-document-action-button"
+                    href="{{document.document.url}}#" data-bs-toggle="modal" data-bs-target="#modal-delete-document">
                     Удалить документ
                   </a>
-                {% endif %}
-              </div>
-            </span>
+                  {% endif %}
+            </div>
+          </span>
 
-          </td>
-        </tr>
+        </td>
+      </tr>
       {%endfor%}
-      </tbody>
-    </table>
-  </div>
+    </tbody>
+  </table>
+
+</div>
+
+<div class="modal fade" id="selectCertModal" tabindex="-1" role="dialog" aria-labelledby="selectCertModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="selectCertModalLabel">Выбор сертификата</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center" id="loadingCert">
+                        <div class="spinner-border" role="status">
+                        </div>
+                        <h6>Ожидание подключения ЭЦП модуля</h6>
+                    </div>
+                    <div class="list-group d-none" id="certList">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                    <button onclick="sign_with_crypto_pro()" type="button" class="btn btn-primary" id="signBtn" disabled>
+                        Подписать
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% if all_documents.has_next %}
+<a hidden class='pagination__next' href="{% update_query_params page=all_documents.next_page_number %}">next</a>
+<script type="text/javascript" src="{% static '/js/infinite-scroll/infi-scroll.js' %}"></script>
+<script>
+  infi_scroll('.lazy-loading-docs', '.lazy-row-docs')
+</script>
+{% endif %}
+
+<script type="text/javascript" src="{% static '/js/document_filters.js' %}"></script>
 
 
-  {% if all_documents.has_next %}
-    <a hidden class='pagination__next' href="{% update_query_params page=all_documents.next_page_number %}">next</a>
-    <script type="text/javascript" src="{% static '/js/infinite-scroll/infi-scroll.js' %}"></script>
-    <script>
-      infi_scroll('.lazy-loading-docs', '.lazy-row-docs')
-    </script>
-  {% endif %}
 
-  <script type="text/javascript" src="{% static '/js/document_filters.js' %}"></script>
+<script>
+  let activeCertIndex = null;
+  let certificateList = [];
+  var url
+  var doc_id
+
+  function isValidPluginVersion({ Major, Minor }) {
+    return !(Major < 3 || (Major === 3 && Minor < 6));
+  }
+
+  /**
+   * Инициализация подписания
+   * @param index
+   */
+  function initEcp(index) {
+    window.cryptography.getState(1000).then(state => {
+      const cryptography = state;
+      try {
+        if (cryptography.isInstalled && !cryptography.isLocked) {
+          if (cryptography.cryptoProvider) {
+            if (cryptography.cryptoProvider.version) {
+              const cspVersion = new window.System.SemVer(
+                cryptography.cryptoProvider.version,
+              );
+              if (!this.isValidPluginVersion(cspVersion)) {
+                console.warning('Устаревшая верия криптопровайдера', cspVersion)
+              }
+            }
+          }
+        }
+
+        if (!cryptography.isInstalled) {
+          alert('Не установлен плагин КриптоПро')
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    });
+  }
+
+  /**
+   * Подписать документ
+   * @param thumbprint
+   * @param base64
+   * @returns {*}
+   */
+  function sign(thumbprint, base64) {
+    return window.cryptography
+      .sign(thumbprint, base64, false)
+      .then(signature => {
+        if (signature) {
+          return Promise.resolve(signature);
+        }
+        return Promise.reject();
+      });
+  }
+
+  /**
+   * Получить список сертификатов пользователя
+   * @param onlyActive Только активные
+   * @returns {*}
+   */
+  function getCertificates(onlyActive = true) {
+    return window.cryptography
+      .getCertificates()
+      .then(certificates => {
+        if (certificates) {
+          if (onlyActive) {
+            return Promise.resolve(certificates.filter(cert => isActiveCertificate(cert)));
+          }
+          return Promise.resolve(certificates);
+        }
+        return Promise.resolve([]);
+      })
+  }
+
+  /**
+   * Проверяет, активный ли сертификат
+   *
+   * @param certificate
+   * @returns boolean
+   */
+  function isActiveCertificate(certificate) {
+    const currentDate = new Date().getTime();
+    let thumbprintDate = certificate.expiration.split('.');
+    thumbprintDate[2] = thumbprintDate[2].replace(/[^0-9]/gi, '');
+    thumbprintDate[1] = thumbprintDate[1].replace(/[^0-9]/gi, '');
+    thumbprintDate[0] = thumbprintDate[0].replace(/[^0-9]/gi, '');
+    thumbprintDate = new Date(thumbprintDate[2], thumbprintDate[1] - 1, thumbprintDate[0]).getTime();
+    return thumbprintDate > currentDate;
+  }
+</script>
+
+<!-- Скрипт для UI/UX -->
+<script>
+
+  function getBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+  }
 
 
+  function sign_doc(id, file_url) {
+    doc_id = id
+    url = file_url
+
+    initEcp();
+    document.querySelector("#certList").innerHTML = ''
+
+    $('#selectCertModal').modal('show')
+    getCertificates()
+      .then(certificates => {
+        let certList = ''
+        certificateList = certificates;
+        index = 0;
+        certificates.forEach(cert => {
+          certList += '<a href="#" onclick="selectCert(' + index + ')" class="list-group-item list-group-item-action flex-column align-items-start" id="cert' + index + '">' +
+            '<div class="d-flex w-100 justify-content-between">' +
+            '<h5 class="mb-1">' + cert.selectValue + '</h5>' +
+            '<small>' + cert.from + '</small>' +
+            '</div>' +
+            '<p class="mb-1">' + cert.subject + '</p>' +
+            '<small>' + cert.issuer + '</small>' +
+            '</a>';
+          index++;
+        })
+        document.querySelector("#certList").innerHTML = certList;
+        document.querySelector("#certList").classList.remove('d-none');
+        document.querySelector("#loadingCert").classList.add('d-none');
+      })
+    }
+
+  /**
+   * Выбор сертификата для подписания
+   */
+  function selectCert(index) {
+    if (activeCertIndex !== null) {
+      document.querySelector("#cert" + activeCertIndex).classList.remove('active');
+    }
+    document.querySelector("#cert" + index).classList.add('active');
+    document.querySelector("#signBtn").disabled = false;
+    activeCertIndex = index;
+  }
+
+  function sign_with_crypto_pro() {
+    if (activeCertIndex === null) {
+      alert('Необходимо выбрать сертификат для подписания')
+    }
+    console.log(url)
+    fetch(url)
+      .then(res => res.blob())
+      .then(blob => {
+        console.log(getBase64(blob))
+      }).then(base64 => {
+        sign(certificateList[activeCertIndex].thumbprint, base64)
+          .then(signature => {
+            console.log('signature = ', signature)
+
+            $.ajax({
+              type: 'POST',
+              url: "{% url 'save-sig' %}",
+              data: {
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                action: 'POST',
+                sig: signature,
+                doc_id: doc_id,
+              },
+            })
+          })
+      })
+  }
+
+
+  function getBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+  }
+
+
+
+</script>

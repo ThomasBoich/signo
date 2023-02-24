@@ -21,6 +21,7 @@ class Document(DateTimeMixin, HiddenDeletedMixin, models.Model):
     recipient_status = models.BooleanField(default=False, blank=True, null=True)
     files = models.ForeignKey('DocumentsFiles', on_delete=models.CASCADE, blank=True, null=True)
     type = models.ForeignKey('DocumentType', on_delete=models.CASCADE, blank=True, null=True, related_name='document')
+    sig = models.FileField(upload_to='documents/%Y/%m/%d/', blank=True, null=True)
 
    
     class Meta:

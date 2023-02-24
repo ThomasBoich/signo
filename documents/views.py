@@ -1,8 +1,10 @@
 import random
 import logging
+import base64
 
 from PyPDF2 import PdfReader, PdfWriter
 
+from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render, redirect
@@ -197,3 +199,30 @@ def delete_document(request):
         Action.objects.create(
             action=f'{user.first_name} {user.last_name} удалил {document.type.get_type_document_display()} ({document})')
     return HttpResponse(status=204)
+
+
+
+def get_doc_to_frontend(request):
+    doc_id = request.GET.get('doc_id')
+    
+    doc = Document.objects.get(id=doc_id)
+    doc_file = doc.document.open('rb')
+    b_doc = base64.b64encode(doc_file.read())
+    
+
+    return JsonResponse({'file': b_doc})
+
+
+class SaveSigView(View):
+    def post(self, request):
+        doc_id = request.POST.get('doc_id')
+        doc = Document.objects.get(id=doc_id)
+        sig = request.POST.get('sig')
+        
+        file_name = doc_id + '.sig'
+        with open(file_name, 'w') as file:
+            file.write("data:application/octet-stream;base64," + sig)
+            doc.sig = file
+            doc.save()
+
+        
