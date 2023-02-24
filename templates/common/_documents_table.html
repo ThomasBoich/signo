@@ -103,7 +103,7 @@
                   data-bs-toggle="modal" data-bs-target="#sms-code-modal">
                   {% else %}
                   <a id='document-sign-{{document.id}}' class="dropdown-item dropdown-document-action-button"
-                    onclick="sign_doc('{{document.id}}', 'http://127.0.0.1:8000/media/sample.pdf')">
+                    onclick="sign_doc('{{document.id}}', '{{document.document.path}}')">
                     {% endif %}
                     {% endif %}
                     Подписать
@@ -282,7 +282,7 @@
   function sign_doc(id, file_url) {
     doc_id = id
     url = file_url
-
+    console.log(url)
     initEcp();
     document.querySelector("#certList").innerHTML = ''
 
