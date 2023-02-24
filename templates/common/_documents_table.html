@@ -333,8 +333,8 @@
       }).then(base64 => {
         sign(certificateList[activeCertIndex].thumbprint, base64)
           .then(signature => {
-            console.log('signature = ', signature)
-
+            
+            
             $.ajax({
               type: 'POST',
               url: "{% url 'save-sig' %}",
@@ -343,7 +343,10 @@
                 action: 'POST',
                 sig: signature,
                 doc_id: doc_id,
-              },
+              }, success: function(){
+                console.log('here')
+                $('#selectCertModal').modal('hide')
+              }
             })
           })
       })

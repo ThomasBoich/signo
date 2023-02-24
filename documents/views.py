@@ -218,11 +218,13 @@ class SaveSigView(View):
         doc_id = request.POST.get('doc_id')
         doc = Document.objects.get(id=doc_id)
         sig = request.POST.get('sig')
-        
+        doc.sender_status = True
+        doc.save()
+        print('!here')
         file_name = doc_id + '.sig'
         with open(file_name, 'w') as file:
             file.write("data:application/octet-stream;base64," + sig)
-            doc.sig = file
-            doc.save()
+
+        return HttpResponse('')
 
         
