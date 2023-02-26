@@ -27,7 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost','127.0.0.1', 'sign-o.ru']
 
-
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 # Application definition
 
 INSTALLED_APPS = [
@@ -39,6 +40,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     
     'rest_framework',
+    'rest_framework.authtoken',
+    'djoser',
 
     'users',
     'index',
@@ -110,7 +113,18 @@ else:
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
 
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+        ],
 
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ]
+    
+}
 
 LOCALE_PATHS = (
     os.path.join(BASE_DIR, 'locale_extra'), 

@@ -13,20 +13,24 @@ class FileSerializer(serializers.ModelSerializer):
         id_pattern = re.compile(r"[№]\d+")
         fio_pattern = re.compile(r"(Пациент Ф.И.О.)\n*\w*\s\w*\s\w*")
         id = id_pattern.findall(text)[0].split('№')[-1]
-        fio = fio_pattern.finditer(text).__next__().group(0).split('\n')[-1]
-        print(id, fio)
-        user = CustomUser.objects.get_or_create(
-            uniq_id=id, 
-            defaults={
-                'email': id+'@mailll.ru', 
-                'last_name': fio.split(' ')[0],
-                'first_name': fio.split(' ')[1],
-                'patronymic': fio.split(' ')[2],
-                })
-        if user[1]:
-            user[0].set_password(f'pass{id}')
-            user[0].save()
-        validated_data['recipient'] = user[0]
+        try:
+            fio = fio_pattern.finditer(text).__next__().group(0).split('\n')[-1]
+            print(id, fio)
+            user = CustomUser.objects.get_or_create(
+                uniq_id=id, 
+                defaults={
+                    'email': id+'@mailll.ru', 
+                    'last_name': fio.split(' ')[0],
+                    'first_name': fio.split(' ')[1],
+                    'patronymic': fio.split(' ')[2],
+                    })
+            if user[1]:
+                user[0].set_password(f'pass{id}')
+                user[0].save()
+            validated_data['recipient'] = user[0]
+        except:
+            pass
+        
         return Document.objects.create(**validated_data)
 
     class Meta():
