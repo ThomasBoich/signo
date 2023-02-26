@@ -54,7 +54,6 @@ def filter_all_documents(request, all_documents):
     
     search_name = request.GET.get('search')
     period = request.GET.get('period')
-    
     # getting doc_type
     try:
         doc_type = request.GET.get('doc_type').upper()
@@ -91,7 +90,6 @@ def filter_all_documents(request, all_documents):
     sort_filter = request.GET.get('sort')
     if sort_filter:
         all_documents = all_documents.order_by(sort_filter)
-
     return all_documents
 
 

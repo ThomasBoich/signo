@@ -1,18 +1,17 @@
 {% extends 'index.html' %}
 {%block content%}
 
+        {% include 'common/_docs_main.html' %}
         {% include 'common/_index_docs_agg_table.html' %}
-        {% include 'common/_index_stats.html' %}
+        {% include 'common/_full_stats.html' %}
+        {% include 'common/_my_stats.html' %}
 
-        <div class="col-12 mb-5">
+        <div class="col-12 mt-5">
           <div class="card">
             <div class="card-header">
               <h2 style="margin-bottom: inherit;">Мои документы</h2>
             </div>
-            <div class="card-body border-bottom py-3">
-              <div class="d-flex">
-              </div>
-            </div>
+            
             {% include 'common/_documents_table.html' %}
           </div>
         </div>

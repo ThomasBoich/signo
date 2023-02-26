@@ -1,0 +1,27 @@
+<div class="col-md-12 col-lg-12 mt-5 mb-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Аналитика документов в системе</h3>
+        </div>
+        <table class="table card-table table-vcenter">
+            <thead>
+                <tr>
+                    <th>Название документов</th>
+                    <th>Всего документов / удаленных</th>
+                    <th>Подписано / не подписано<br> пациентами</th>
+                    <th>Подписано / не подписано<br> сотрудниками</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for type in types %}
+                <tr>
+                    <td><a href="{%url 'documents' %}?doc_type={{type.type_document.lower}}">{{type.title}}</a></td>
+                    <td>{{type.number_of_not_deleted}} / {{type.number_of_deleted}}</td>
+                    <td>{{type.signed_by_patient}} / {{type.not_signed_by_patient}}</td>
+                    <td>{{type.signed_by_us}} / {{type.not_signed_by_us}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

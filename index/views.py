@@ -19,6 +19,7 @@ def index(request):
 
 
     all_documents = Document.objects.filter(deleted=False)
+    
 
     types = DocumentType.objects.all() \
             .annotate(
@@ -133,13 +134,15 @@ def index(request):
         # показываем все последние документы в системе если это руководитель
         if request.user.type == 'DI':
             all_documents = all_documents
+            all_documents = filter_all_documents(request, all_documents)
         else:
             all_documents = all_documents.filter(
                     Q(sender=request.user) | Q(recipient=request.user) &
                     (Q(sender_status=False) | Q(recipient_status=False))
                     )
+
             all_documents = filter_all_documents(request, all_documents)
-        
+
         # добавляем поля "подписано доктором" и "подписано пациентом"
         
 
@@ -197,7 +200,7 @@ def index(request):
             'clients_with_unsigned_docs': clients_with_unsigned_docs,
             'clients_with_all_docs_signed': clients_with_all_docs_signed,
 
-            'types' : types_for_di if request.user.type == 'DI' else types_for_ad,
+            'types' : types_for_di,
             'actions': actions,
         }
 
@@ -214,6 +217,8 @@ def index(request):
             sender=request.user, 
             sender_status=False
             )
+        all_documents = filter_all_documents(request, all_documents)
+
 
         # my_clients = CustomUser.objects.filter(
         #     Q(recipient__sender=request.user) | Q(recipient__founder=request.user))

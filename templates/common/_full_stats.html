@@ -1,0 +1,74 @@
+<div class="index-statistics mb-5 mt-5">
+    <div class="row">
+      <div class="col-sm-12 mb-3">
+        <div class="top-info-line text-muted" style="justify-content:center; font-size:1.7rem;padding:10px">Общая статистика</div>
+      </div>
+    </div>
+    <div class="row mb-5">
+
+      <div class="col-sm-4" style="display:flex; flex-direction:column; gap: 10px">
+        <div class="top-info-line">
+          <span class="text-muted">
+            <a href="{% url 'staff' %}?user_type=AD">Aдминов в системе</a>
+          </span>
+          <span class='top-info-line-value'>{{all_admins}}</span>
+        </div>
+        <div class="top-info-line">
+          <span class="text-muted">
+            <a href="{% url 'documents' %}?signed=ad-true">Количество документов, <br>подписанных админами</a>
+          </span>
+          <span class='top-info-line-value'>{{docs_signed_by_admins}}</span>
+        </div>
+        <div class="top-info-line">
+          <span class="text-muted">
+            <a href="{% url 'documents' %}?signed=ad-false">Количество документов, <br>не подписанных админами</a> 
+          </span>
+          <span class='top-info-line-value'>{{docs_not_signed_by_admins}}</span>
+        </div>
+      </div>
+      
+      
+      <div class="col-sm-4" style="display:flex; flex-direction:column; gap: 10px">
+        <div class="top-info-line">
+          <span class="text-muted">
+            <a href="{% url 'staff' %}?user_type=DO">Врачей в системе:</a>
+          </span>
+          <span class='top-info-line-value'>{{all_doctors}}</span>
+        </div>
+        <div class="top-info-line">
+          <span class="text-muted">
+            <a href="{% url 'documents' %}?signed=do-true">Количество документов, <br>подписанных врачами</a>
+          </span>
+          <span class='top-info-line-value'>{{docs_signed_by_doctors}}</span>
+        </div>
+        <div class="top-info-line">
+          <span class="text-muted">
+            <a href="{% url 'documents' %}?signed=do-false">Количество документов, <br>не подписанных врачами</a>
+          </span>
+          <span class='top-info-line-value'>{{docs_not_signed_by_doctors}}</span>
+        </div>
+      </div>
+      
+
+
+      <div class="col-sm-4" style="display:flex; flex-direction:column; gap: 10px">
+        <div class="top-info-line">
+          <span class="text-muted">
+            <a href="{% url 'allclients' %}">Пациентов в системе:</a>
+          </span>
+          <span class='top-info-line-value'>{{all_clients}}</span>
+        </div>
+        <div class="top-info-line">
+          <span class="text-muted">
+            <a href="{% url 'documents' %}?signed=cl-true">Количество документов, <br>подписанных пациентами</a>
+          </span>
+          <span class='top-info-line-value'>{{docs_signed_by_clients}}</span>
+        </div>
+        <div class="top-info-line">
+          <span class="text-muted">
+            <a href="{% url 'documents' %}?signed=cl-false">Количество документов, <br>не подписанных пациентами</a>
+          </span>
+          <span class='top-info-line-value'>{{docs_not_signed_by_clients}}</span>
+        </div>
+      </div>
+    </div>

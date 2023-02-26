@@ -28,11 +28,9 @@ setup_logger()
 def show_documents(request):
     
     all_documents = Document.objects.filter(deleted=False)
-    
     if request.user.type == 'CL':
         return redirect('index')
-    else:    
-        
+    else:  
         all_documents = filter_all_documents(request, all_documents)
 
         form = SendDocumentForm(request.POST or None, request.FILES)
@@ -85,7 +83,6 @@ def mydocuments(request):
     all_documents = Document.objects. \
         filter(deleted=False). \
         filter(Q(recipient=request.user) | Q(sender=request.user))
-
     all_documents = filter_all_documents(request, all_documents)
     all_documents_count = all_documents.count()
     all_documents = paginate_list(request, all_documents, 20)
