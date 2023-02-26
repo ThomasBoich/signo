@@ -11,7 +11,7 @@
           <span class="text-muted" style="max-width:280px">
             <a href="{% url 'myclients' %}" >Количество моих пациентов в системе</a>
           </span>
-          <span class='top-info-line-value'>{{all_clients}}</span>
+          <span class='top-info-line-value'>{{all_my_clients}}</span>
         </div>
       </div>
       
@@ -21,7 +21,7 @@
           <span class="text-muted" style="max-width:280px">
             <a href="{% url 'mydocuments' %}?signed=cl-true">Мои пациенты со всеми подписанными документами</a>
           </span>
-          <span class='top-info-line-value'>{{clients_with_all_docs_signed}}</span>
+          <span class='top-info-line-value'>{{all_my_clients_signed}}</span>
         </div>
       </div>
 
@@ -31,7 +31,7 @@
           <span class="text-muted" style="max-width:280px">
             <a href="{% url 'mydocuments' %}?signed=cl-false">Мои пациенты с неподписанными документами</a>
           </span>
-          <span class='top-info-line-value'>{{clients_with_unsigned_docs}}</span>
+          <span class='top-info-line-value'>{{all_my_clients_not_signed}}</span>
         </div>
     </div>
 

@@ -43,7 +43,12 @@ def show_documents(request):
             form = SendDocumentForm()
 
         all_documents = paginate_list(request, all_documents, 20)
-
+        all_my_clients = Document.objects.filter(
+            Q(sender=request.user) | 
+            Q(founder=request.user)
+            )
+        all_my_clients_signed = all_my_clients.filter(recipient_status=True)
+        all_my_clients_not_signed = all_my_clients.filter(recipient_status=False)
         types = DocumentType.objects.all().exclude(type_document='OTKAZ')
         context = {
             'title': f'Все Документы - {Document.objects.all().filter(deleted=False).count()}',
@@ -52,6 +57,9 @@ def show_documents(request):
             'all_users': CustomUser.objects.all().count(),
             'all_doctors': CustomUser.objects.filter(type='DO').count(),
             'all_clients': CustomUser.objects.filter(type='CL').count(),
+            'all_my_clients': all_my_clients.count(),
+            'all_my_clients_signed': all_my_clients_signed.count(),
+            'all_my_clients_not_signed': all_my_clients_not_signed.count(),
             'all_documents': all_documents,
             'types': types,
             }
@@ -98,6 +106,13 @@ def mydocuments(request):
     else:
         form = SendDocumentForm()
 
+    all_my_clients = Document.objects.filter(
+        Q(sender=request.user) | 
+        Q(founder=request.user)
+        )
+    all_my_clients_signed = all_my_clients.filter(recipient_status=True)
+    all_my_clients_not_signed = all_my_clients.filter(recipient_status=False)
+
     context = {
         'title': f'Мои Документы - {all_documents_count}',
         'form': form,
@@ -105,6 +120,9 @@ def mydocuments(request):
         'all_users': CustomUser.objects.all().count(),
         'all_doctors': CustomUser.objects.filter(type='DO').count(),
         'all_clients': CustomUser.objects.filter(type='CL').count(),
+        'all_my_clients': all_my_clients.count(),
+        'all_my_clients_signed': all_my_clients_signed.count(),
+        'all_my_clients_not_signed': all_my_clients_not_signed.count(),
         'all_documents': all_documents,
         'types': types,
         }
