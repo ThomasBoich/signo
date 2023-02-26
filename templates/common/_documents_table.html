@@ -4,7 +4,9 @@
 <script type='text/javascript' src="{% static 'js/crypto_pro/cadesplugin.min.js' %}"></script>
 <script type='text/javascript' src="{% static 'js/crypto_pro/cryptography.js' %}"></script>
 
+
 <div class="table-responsive">
+
   <table class="table card-table table-vcenter text-nowrap datatable bg-white" style="">
     <thead>
       <tr>
@@ -103,7 +105,7 @@
                   data-bs-toggle="modal" data-bs-target="#sms-code-modal">
                   {% else %}
                   <a id='document-sign-{{document.id}}' class="dropdown-item dropdown-document-action-button"
-                    onclick="sign_doc('{{document.id}}', '{{document.document.path}}')">
+                    onclick="sign_doc('{{document.id}}', 'http://127.0.0.1:8000/media/sample.pdf')">
                     {% endif %}
                     {% endif %}
                     Подписать
@@ -112,6 +114,11 @@
                   <a class="dropdown-item" href="{{document.document.url}}#" download>
                     Скачать документ
                   </a>
+                  {% if document.sig %}
+                    <a class="dropdown-item" href="{{document.sig.url}}#" download>
+                      Скачать подпись
+                    </a>
+                  {% endif %}
                   <a class="dropdown-item" href="{{document.document.url}}#">
                     Просмотреть документ
                   </a>
@@ -160,6 +167,8 @@
             </div>
         </div>
     </div>
+
+ 
 
 {% if all_documents.has_next %}
 <a hidden class='pagination__next' href="{% update_query_params page=all_documents.next_page_number %}">next</a>
@@ -282,7 +291,7 @@
   function sign_doc(id, file_url) {
     doc_id = id
     url = file_url
-    console.log(url)
+
     initEcp();
     document.querySelector("#certList").innerHTML = ''
 
@@ -333,7 +342,6 @@
       }).then(base64 => {
         sign(certificateList[activeCertIndex].thumbprint, base64)
           .then(signature => {
-            
             
             $.ajax({
               type: 'POST',

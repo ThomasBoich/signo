@@ -36,7 +36,7 @@ class LoginForm(AuthenticationForm):
 
     error_messages = {
         "invalid_login": 
-            'НЕВЕРНЫЙ ЛОГИН И/ИЛИ ПАРОЛЬ. Попробуйте снова. Оба поля могут быть чувствительны к регистру.'
+            'НЕВЕРНЫЙ ЛОГИН И/ИЛИ ПАРОЛЬ. Попробуйте снова.'
         ,
         "inactive": "This account is inactive.",
     }

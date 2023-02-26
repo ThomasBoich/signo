@@ -212,18 +212,19 @@ def get_doc_to_frontend(request):
 
     return JsonResponse({'file': b_doc})
 
-
+from django.core.files.base import ContentFile
 class SaveSigView(View):
     def post(self, request):
         doc_id = request.POST.get('doc_id')
         doc = Document.objects.get(id=doc_id)
         sig = request.POST.get('sig')
+        
         doc.sender_status = True
         doc.save()
-        print('!here')
-        file_name = doc_id + '.sig'
-        with open(file_name, 'w') as file:
-            file.write("data:application/octet-stream;base64," + sig)
+        
+        file_name = doc_id + '.sig'   
+        my_file = ContentFile(sig)
+        doc.sig.save(file_name, my_file)
 
         return HttpResponse('')
 

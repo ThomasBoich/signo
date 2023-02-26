@@ -12,7 +12,9 @@
               </th>
               <th id="th-date_joined" class='sortable-table-header' onclick="filterByField('date_joined')">Регистрация</th>
               <th id="th-last_login" class='sortable-table-header' onclick="filterByField('last_login')">Последнее изменение</th>
-              <th>Телефон</th>
+              {% if request.user.type != 'DO' %}
+                <th>Телефон</th>
+              {% endif %}
               <th id="th-signed_docs" class='sortable-table-header' onclick="filterByField('signed_docs')">Подписанных<br> док-тов</th>
               <th id="th-not_signed_docs" class='sortable-table-header' onclick="filterByField('not_signed_docs')">Неподписанных<br> док-тов</th>
               <th class="w-1"></th>
@@ -37,7 +39,7 @@
                 </div>
               </td>
               <td>
-                <div>{{ user.id }}</div>
+                <div>{{ user.uniq_id }}</div>
               </td>
               <td>
                 <div>{{ user.date_joined }}</div>
@@ -45,9 +47,11 @@
               <td>
                 <div>{{ user.last_login }}</div>
               </td>
+              {% if request.user.type != 'DO' %}
               <td>
                 <div>{{ user.phone }}</div>
               </td>
+              {% endif %}
               <td>
                 <div>{{ user.signed_docs }}</div>
               </td>
