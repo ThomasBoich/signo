@@ -1,35 +1,19 @@
-from rest_framework import serializers
-from documents.models import Document
-from users.models import CustomUser
 import re
+
+from rest_framework import serializers
 from pdfminer.high_level import extract_pages, extract_text
 
+from documents.models import Document
+from users.models import CustomUser
+
+from .doc_parsers import doc_parser_main
 
 class FileSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
-        text = extract_text(validated_data['document'].file)
-
-        id_pattern = re.compile(r"[№]\d+")
-        fio_pattern = re.compile(r"(Пациент Ф.И.О.)\n*\w*\s\w*\s\w*")
-        id = id_pattern.findall(text)[0].split('№')[-1]
-        try:
-            fio = fio_pattern.finditer(text).__next__().group(0).split('\n')[-1]
-            print(id, fio)
-            user = CustomUser.objects.get_or_create(
-                uniq_id=id, 
-                defaults={
-                    'email': id+'@mailll.ru', 
-                    'last_name': fio.split(' ')[0],
-                    'first_name': fio.split(' ')[1],
-                    'patronymic': fio.split(' ')[2],
-                    })
-            if user[1]:
-                user[0].set_password(f'pass{id}')
-                user[0].save()
-            validated_data['recipient'] = user[0]
-        except:
-            pass
+        doc_uploader =  self.context['request'].user
+        doc_parser_main(doc_uploader, validated_data)
+        
         
         return Document.objects.create(**validated_data)
 

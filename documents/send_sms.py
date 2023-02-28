@@ -9,8 +9,8 @@ def send_code_to_phone(phone, code):
     # text = code; # текст сообщения
     sender = 'INFORM'; #  имя отправителя из списка https://smspilot.ru/my-sender.php
     # !!! Замените API-ключ на свой https://smspilot.ru/my-settings.php#api
-    apikey = 'NVX4N1UJWZ4B7H6QMC8RB6610L986U54OFW95CS6HOTJ71T5BUG81MFMN5H94SAJ';
-
+    # apikey = 'NVX4N1UJWZ4B7H6QMC8RB6610L986U54OFW95CS6HOTJ71T5BUG81MFMN5H94SAJ'; для тестов
+    apikey = 'A9K794593DOICS31L7S45P39263RL8P65J0P2DKU5V13OD9YNBHZ57USRV7CY5W6'
     url = "http://smspilot.ru/api.php?send=%s&to=%s&from=%s&apikey=%s&format=json" % (code, phone, sender, apikey )
 
     # j = json.loads(urllib.urlopen(url).read())

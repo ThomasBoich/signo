@@ -105,7 +105,7 @@
                   data-bs-toggle="modal" data-bs-target="#sms-code-modal">
                   {% else %}
                   <a id='document-sign-{{document.id}}' class="dropdown-item dropdown-document-action-button"
-                    onclick="sign_doc('{{document.id}}', '{{document.document.path}}')">
+                    onclick="sign_doc('{{document.id}}', 'http://127.0.0.1:8000/media/sample.pdf')">
                     {% endif %}
                     {% endif %}
                     Подписать
