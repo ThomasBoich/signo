@@ -101,7 +101,7 @@ def filter_by_name(all_documents, search_name):
             Q(sender__last_name__icontains=search_name)|
             Q(recipient__first_name__icontains=search_name)|
             Q(recipient__last_name__icontains=search_name)
-            ).order_by('-send_date')
+            )
     elif search_name and len(search_name.split(' ')) == 2:
         name1 = search_name.split(' ')[0]
         name2 = search_name.split(' ')[1]
@@ -111,10 +111,9 @@ def filter_by_name(all_documents, search_name):
             (Q(recipient__first_name__icontains=name1) & Q(recipient__last_name__icontains=name2)) |
             (Q(recipient__last_name__icontains=name2) & Q(recipient__last_name__icontains=name1))
         )
-    else:
-        all_documents = all_documents.order_by('-send_date')
+    
+    return all_documents.order_by('-send_date')
 
-    return all_documents
 
 
 
@@ -145,33 +144,26 @@ logger = logging.getLogger(__name__)
 setup_logger()
 
 def create_signature(request, document):
-    p = canvas.Canvas(settings.MEDIA_ROOT + '/signature.pdf')
-    logger.debug(f'create_signature: media_root = {settings.MEDIA_ROOT + "/signature.pdf"}')
-    logger.debug(f'create_signature: signature (p) = {p}')
-
+    p = canvas.Canvas(settings.MEDIA_ROOT + '/signature' + str(document.id) + '.pdf')
+    
     pdfmetrics.registerFont(TTFont('Arial', 'Arial.ttf'))
-    logger.debug(f'create_signature: font registered')
 
-    p.setFont('Arial', 14)
-    logger.debug(f'create_signature: font set')
+    p.setFont('Arial', 8)
 
     if request.user.type in ['AD', 'DO']:
-        logger.debug(f'create_signature: request.user.type = {request.user.type}')
 
         signature = f'{document.sender.last_name} {document.sender.first_name} {document.sender.patronymic} - подписал документ'
-        logger.debug(f'create_signature: p = {request.user.type}')
-
+        p.setFillColorRGB(1,0,0)
+        p.drawString(300, 15, signature)
     elif request.user.type == 'CL':
-        logger.debug(f'create_signature: request.user.type = {request.user.type}')
 
         signature = f'{document.recipient.last_name} {document.recipient.first_name} {document.recipient.patronymic} - подписал документ'
-        logger.debug(f'create_signature: p = {request.user.type}')
-    p.setFillColorRGB(0,0,1)
-    p.drawString(40, 15, signature)
+        # signature = f'Константин Константинович Константинопольский - подписал документ'
+        p.setFillColorRGB(0,0,1)
+        p.drawString(40, 15, signature)
     
     p.showPage()
     p.save()
-    logger.debug(f'create_signature: signature saved')
     
 
 

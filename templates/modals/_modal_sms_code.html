@@ -52,7 +52,7 @@
     $.ajax({
       data: {
         'code': code,
-        'pk': pk,
+        'doc_id': pk,
       },
       url: "{% url 'sign_document' %}",
       success: function(json){

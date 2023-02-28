@@ -1,6 +1,7 @@
 import random
 import logging
 import base64
+import os
 
 from PyPDF2 import PdfReader, PdfWriter
 
@@ -11,6 +12,8 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.conf import settings
+from django.core.files.base import ContentFile
+
 
 from documents.models import Document, DocumentType
 from forms import SendDocumentForm
@@ -126,10 +129,10 @@ def mydocuments(request):
         'all_documents': all_documents,
         'types': types,
         }
-    if request.user.type == 'CL':
+    if not request.user.type == 'CL':
         return render(request, 'documents/mydocuments.html', context=context)
     else:
-        return render(request, 'documents/mydocuments.html', context=context)
+        return redirect('/')
 
 
 
@@ -144,21 +147,20 @@ def send_code(request):
 
 
 def sign_document(request):
-    code_entered = int(request.GET.get('code'))
-    code_sent = request.session['code']
-    pk = request.GET.get('pk')
-    if code_entered != code_sent:
+    try:
+        code_entered = int(request.GET.get('code'))
+        code_sent = request.session['code']
+    except:
+        code_entered, code_sent = 0, 0
+    pk = request.POST.get('doc_id')
+    if (request.user.type == 'CL' and code_entered != code_sent) or request.user.type in ['DO', 'AD']:
         document = Document.objects.get(pk=pk)
-        logger.debug(f'sign_documents: got document by pk')
-
+        
         create_signature(request, document)
-        logger.debug(f'sign_document: signature_created')
         
         media_root = settings.MEDIA_ROOT
-        logger.debug(f'sign_document: media_root folder {media_root}')
         
-        watermark = media_root + "/signature.pdf"
-        logger.debug(f'sign_document: watermark file: {watermark}')
+        watermark = media_root + "/signature" + str(document.id) + ".pdf"
         
         doc_file = document.document.path
         with open(doc_file, "rb") as input_file, open(watermark, "rb") as watermark_file:
@@ -193,6 +195,9 @@ def sign_document(request):
                         {document.recipient.last_name}'
                     )
 
+        if os.path.exists(watermark):
+            os.remove(watermark)
+         
         result = {'reload': 'y'} # used on the front as a sign to reload page
         return JsonResponse(result)
     
@@ -217,17 +222,16 @@ def delete_document(request):
 
 
 
-def get_doc_to_frontend(request):
-    doc_id = request.GET.get('doc_id')
+# def get_doc_to_frontend(request):
+#     doc_id = request.GET.get('doc_id')
     
-    doc = Document.objects.get(id=doc_id)
-    doc_file = doc.document.open('rb')
-    b_doc = base64.b64encode(doc_file.read())
+#     doc = Document.objects.get(id=doc_id)
+#     doc_file = doc.document.open('rb')
+#     b_doc = base64.b64encode(doc_file.read())
     
+#     return JsonResponse({'file': b_doc})
 
-    return JsonResponse({'file': b_doc})
 
-from django.core.files.base import ContentFile
 class SaveSigView(View):
     def post(self, request):
         doc_id = request.POST.get('doc_id')
@@ -240,6 +244,8 @@ class SaveSigView(View):
         file_name = doc_id + '.sig'   
         my_file = ContentFile(sig)
         doc.sig.save(file_name, my_file)
+
+        sign_document(request)
 
         return HttpResponse('')
 

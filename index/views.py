@@ -245,6 +245,7 @@ def index(request):
     
     # СТРАНИЦА КЛИЕНТА
     if request.user.is_authenticated and request.user.type == 'CL':
+        all_documents = filter_all_documents(request, all_documents)
         all_documents = all_documents.filter(
             recipient=request.user, 
             )
