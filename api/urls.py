@@ -7,7 +7,6 @@ from django.views.generic import TemplateView
 router = DefaultRouter()
 router.register('file', UploadDocsAPIViewSet)
 # router.register('get_doc_to_frontend/<int:pk>', GetDocToFrontendAPIViewSet)
-print('!!', router.get_urls())
 
 urlpatterns = [
     path('', include(router.urls)),   

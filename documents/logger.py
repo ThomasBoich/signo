@@ -4,7 +4,6 @@ import logging.config
 from django.conf import settings
 
 ERROR_LOG_FILENAME = os.path.join(settings.BASE_DIR, 'documents.log')
-print('!!', ERROR_LOG_FILENAME)
 LOGGING_CONFIG = {
     "version": 1,
     "disable_existing_loggers": False,

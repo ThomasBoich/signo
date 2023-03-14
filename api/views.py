@@ -22,13 +22,16 @@ class UploadDocsAPIViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated, )
     # parser_classes = [FileUploadParser]
 
+
 class APILoginView(LoginView):
     
-    def get_success_url(self):
-        return reverse_lazy('api:file')
+    # def get_success_url(self):
+    #     return reverse_lazy('api:file')
     
     def form_valid(self, form):
         login(self.request, form.get_user())
         return HttpResponseRedirect(self.get_success_url())
+    def get(self,request):
+        return Response({'response': 'success'})
     
   
