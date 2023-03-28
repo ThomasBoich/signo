@@ -30,7 +30,7 @@ setup_logger()
 @login_required
 def show_documents(request):
     
-    all_documents = Document.objects.filter(deleted=False)
+    all_documents = Document.objects.filter(deleted=False, hidden=False)
     if request.user.type == 'CL':
         return redirect('index')
     else:  
@@ -54,7 +54,7 @@ def show_documents(request):
         all_my_clients_not_signed = all_my_clients.filter(recipient_status=False)
         types = DocumentType.objects.all().exclude(type_document='OTKAZ')
         context = {
-            'title': f'Все Документы - {Document.objects.all().filter(deleted=False).count()}',
+            'title': f'Все Документы - {Document.objects.all().filter(deleted=False, hidden=False).count()}',
             'form': form,
             'doc_title': 'Отправить на подпись',
             'all_users': CustomUser.objects.all().count(),
@@ -92,7 +92,7 @@ def show_category(request, pk):
 @login_required
 def mydocuments(request):
     all_documents = Document.objects. \
-        filter(deleted=False). \
+        filter(deleted=False, hidden=False). \
         filter(Q(recipient=request.user) | Q(sender=request.user))
     all_documents = filter_all_documents(request, all_documents)
     all_documents_count = all_documents.count()
@@ -142,7 +142,7 @@ def send_code(request):
     code = random.randrange(1000, 9999)
     request.session['code'] = code
     phone = request.user.phone.replace('+', '')
-    # send_code_to_phone(phone, code)
+    send_code_to_phone(phone, code)
     return JsonResponse({'':''})
 
 
@@ -153,7 +153,7 @@ def sign_document(request):
     except:
         code_entered, code_sent = 0, 0
     pk = request.POST.get('doc_id')
-    if (request.user.type == 'CL' and code_entered != code_sent) or request.user.type in ['DO', 'AD']:
+    if (request.user.type == 'CL' and code_entered == code_sent) or request.user.type in ['DO', 'AD']:
         document = Document.objects.get(pk=pk)
         
         create_signature(request, document)

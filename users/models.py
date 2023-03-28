@@ -167,6 +167,9 @@ class Action(DateTimeMixin, models.Model):
     # user = models.ForeignKey('users.CustomUser', on_delete=models.CASCADE) # what to do on delete?
     action = models.CharField(max_length=255)
 
+    class Meta:
+        ordering = ['-pub_date']
+
 
 
 

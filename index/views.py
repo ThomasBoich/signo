@@ -18,7 +18,7 @@ def index(request):
         return redirect('login')
 
 
-    all_documents = Document.objects.filter(deleted=False)
+    all_documents = Document.objects.filter(deleted=False, hidden=False)
     
 
     types = DocumentType.objects.all() \
@@ -27,6 +27,7 @@ def index(request):
                     When(
                         document__recipient_status=True,
                         document__deleted=False, 
+                        document__hidden=False,
                         then=1
                         ),
                     output_field=models.IntegerField(), 
@@ -36,7 +37,8 @@ def index(request):
                 not_signed_by_patient=Count(Case(
                     When(
                         document__recipient_status=False,
-                        document__deleted=False, 
+                        document__deleted=False,
+                        document__hidden=False, 
                         then=1
                         ),
                     output_field=models.IntegerField(), 
@@ -46,7 +48,8 @@ def index(request):
                 signed_by_us=Count(Case(
                     When(
                         document__sender_status=True, 
-                        document__deleted=False, 
+                        document__deleted=False,
+                        document__hidden=False, 
                         then=1
                         ),
                     output_field=models.IntegerField(),
@@ -55,7 +58,8 @@ def index(request):
                 not_signed_by_us=Count(Case(
                     When(
                         document__sender_status=False, 
-                        document__deleted=False, 
+                        document__deleted=False,
+                        document__hidden=False, 
                         then=1
                         ),
                     output_field=models.IntegerField(),
@@ -65,6 +69,7 @@ def index(request):
                         document__sender_status=True, 
                         document__sender=request.user, 
                         document__deleted=False, 
+                        document__hidden=False,
                         then=1
                         ),
                     output_field=models.IntegerField(),
@@ -73,6 +78,7 @@ def index(request):
                 When(
                     document__sender=request.user, 
                     document__deleted=False, 
+                    document__hidden=False,
                     then=1
                     ),
                 output_field=models.IntegerField(),
@@ -146,7 +152,7 @@ def index(request):
         # добавляем поля "подписано доктором" и "подписано пациентом"
         
 
-        signed_docs = Document.objects.filter(deleted=False)
+        signed_docs = Document.objects.filter(deleted=False, hidden=False)
         docs_signed_by_admins = signed_docs.filter(
                                     sender__type='AD',
                                     sender_status=True
@@ -219,13 +225,6 @@ def index(request):
             )
         all_documents = filter_all_documents(request, all_documents)
 
-
-        # my_clients = CustomUser.objects.filter(
-        #     Q(recipient__sender=request.user) | Q(recipient__founder=request.user))
-        #
-        # my_clients = annotate_users_with_number_of_signed_docs(
-        #     my_clients,
-        #     'recipient__recipient_status')
 
         my_clients = CustomUser.objects.filter(
             Q(recipient__sender=request.user) | Q(recipient__founder=request.user))

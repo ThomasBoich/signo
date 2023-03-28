@@ -116,10 +116,13 @@ def staff(request):
 @login_required
 def users(request):
     if request.user.type == 'ID':
-        list_of_clients = Document.objects.filter(deleted=False).values_list('recipient', flat=True)
+        list_of_clients = Document.objects.filter(
+            deleted=False,
+            hidden=False
+            ).values_list('recipient', flat=True)
     else:
         list_of_clients = list(Document.objects. \
-                                filter(deleted=False). \
+                                filter(deleted=False, hidden=False). \
                                 filter(Q(sender=request.user) | Q(founder=request.user)
                                 ).distinct()
                                 .values_list('recipient', flat=True))
@@ -233,7 +236,7 @@ def usermedcard(request, pk):
 
 def user_docs(request, pk):
 
-    all_documents = Document.objects.filter(deleted=False, recipient=pk)
+    all_documents = Document.objects.filter(deleted=False, hidden=False, recipient=pk)
     all_documents = filter_all_documents(request, all_documents)
     all_documents = paginate_list(request, all_documents, 20)
 
