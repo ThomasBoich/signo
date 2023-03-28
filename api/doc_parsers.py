@@ -10,11 +10,15 @@ def doc_parser_main(doc_uploader, validated_data):
     text = extract_text(validated_data['document'].file)
     id_pattern = re.compile(r"[№]\d+")
     uniq_id = id_pattern.findall(text)[0].split('№')[1]
-    client = CustomUser.objects.get(uniq_id=uniq_id, type='CL')
+    try:
+        client = CustomUser.objects.get(uniq_id=uniq_id, type='CL')
+    except Exception as e:
+        error = {'error': 'Сначала создайте клиента с номером ' + uniq_id}
+        return error
 
 
     if 'Договор от имени администратора' in doc_name:
-        return doc_parser_dogovor(text, uniq_id, validated_data)
+        return doc_parser_dogovor(text, client, validated_data)
     elif 'Амбулаторная карта' in doc_name:
         return doc_parser_adm_karta(text, client, doc_uploader, validated_data)
     elif 'ИДС' in doc_name or 'Отказ от гарантий' in doc_name:
@@ -73,37 +77,58 @@ def get_doctor_type_2(text):
         return {'error': 'доктор не существует или найдено несколько с одинаковыми инициалами'}
     
 
-def doc_parser_dogovor(text, uniq_id, validated_data):
-    print(text)
-    admin_name_pattern = re.compile(r'ЗАКАЗЧИК:\s*\w*\s+\w\.+\w\.+')
+def doc_parser_dogovor(text, client, validated_data):
+    admin_name_pattern = re.compile(r'М.П.\)\s*\w*\s+\w\.+\w\.+')
     admin_full_name = admin_name_pattern.findall(text)[0].split('\n')[-1].split(' ')
     admin_last_name = admin_full_name[0]
     admin_first_name = admin_full_name[1].split('.')[0]
     admin_patronymic = admin_full_name[1].split('.')[1]
+    print('!', admin_full_name, admin_last_name, admin_first_name, admin_patronymic)
+    
+    # в некоторых договорах по первому паттерну находит клиента,
+    # тут проверяем, кого нашли и если клиента, даем второй паттерн
+    try:
+        try_user = CustomUser.objects.get(
+                last_name=admin_last_name,
+                first_name__istartswith=admin_first_name,
+                patronymic__istartswith=admin_patronymic,
+                type='CL')
+    except:
+        try_user = None
+
+    if try_user:
+        admin_name_pattern = re.compile(r'ЗАКАЗЧИК:\s*\w*\s\w.\w.')
+        admin_full_name = admin_name_pattern.findall(text)[-1].split('\n')[-1].split(' ')
+        admin_last_name = admin_full_name[0]
+        admin_first_name = admin_full_name[1].split('.')[0]
+        admin_patronymic = admin_full_name[1].split('.')[1]
+        print('!!', admin_full_name, admin_last_name, admin_first_name, admin_patronymic)
+
     try:
         admin = CustomUser.objects.get(
             last_name=admin_last_name,
             first_name__istartswith=admin_first_name,
             patronymic__istartswith=admin_patronymic,
             type='AD'
-            )
-    except Exception as e:
+        )
+        
+    except:
         return {'error': 'админ не существует или найдено несколько с одинаковыми инициалами'}
 
-    
-    client_name_patter = re.compile(r'ЗАКАЗЧИК:\s\w*\s\w*\s\w*')
-    client_full_name = client_name_patter.findall(text)[0].split('\n')[1].split(' ')
-    client_last_name = client_full_name[0]
-    client_first_name = client_full_name[1]
-    client_patronymic = client_full_name[2]
-    client = CustomUser.objects.get(
-        last_name=client_last_name,
-        first_name=client_first_name,
-        patronymic=client_patronymic,
-        type='CL'
-    )
-    client.uniq_id = uniq_id
-    client.save()
+
+    # client_name_patter = re.compile(r'ЗАКАЗЧИК:\s\w*\s\w*\s\w*')
+    # client_full_name = client_name_patter.findall(text)[0].split('\n')[1].split(' ')
+    # client_last_name = client_full_name[0]
+    # client_first_name = client_full_name[1]
+    # client_patronymic = client_full_name[2]
+    # client = CustomUser.objects.get(
+    #     last_name=client_last_name,
+    #     first_name=client_first_name,
+    #     patronymic=client_patronymic,
+    #     type='CL'
+    # )
+    # client.uniq_id = uniq_id
+    # client.save()
 
     doc_type = DocumentType.objects.get(type_document='DOGOVOR')
     validated_data['recipient'] = client

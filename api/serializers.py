@@ -13,8 +13,12 @@ class FileSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         doc_uploader = self.context['request'].user
         resp = doc_parser_main(doc_uploader, validated_data)
+        if 'sender' in validated_data and 'founder' in validated_data and 'recipient' in validated_data:
+            doc = Document.objects.create(**validated_data)
         
-        return Document.objects.create(**validated_data)
+            return doc
+        raise serializers.ValidationError({**resp})     
+        
 
     class Meta():
         model = Document
