@@ -122,7 +122,7 @@
                   <a class="dropdown-item" href="{{document.document.url}}#">
                     Просмотреть документ
                   </a>
-                  {% if request.user.type != 'CL' and request.user.type != 'DO' %}
+                  {% if request.user.type != 'CL' and request.user.type != 'DO' and request.user != 'AD' %}
                   <a id='document-delete-{{document.id}}' class="dropdown-item dropdown-document-action-button"
                     href="{{document.document.url}}#" data-bs-toggle="modal" data-bs-target="#modal-delete-document">
                     Удалить документ
