@@ -10,9 +10,6 @@ router.register('file', UploadDocsAPIViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),   
-    # path('auth/', include(('rest_framework.urls', 'rest_framework'), namespace='rest_framework')),
-    # path('auth/login/', APILoginView.as_view(), name='api-login'),
-    # path('auth/logout/', TemplateView.as_view(), name='api-logout'),
     path('', include('djoser.urls')),
     path('', include('djoser.urls.authtoken')),
 
