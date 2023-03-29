@@ -44,6 +44,9 @@ def doc_parser_main(doc_uploader, validated_data):
         return doc_parser_spravka(text, client, doc_uploader, validated_data)
     elif 'Дневник' in doc_name:
         return doc_parser_dnevnik(text, client, doc_uploader, validated_data)
+    else:
+        error = {'error': 'Неверное название файла'}
+        return error
 
 
 def get_doctor(text):
