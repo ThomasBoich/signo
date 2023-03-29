@@ -1,7 +1,7 @@
 from documents.models import Document, DocumentType
 from users.models import CustomUser
 import re
-from pdfminer.high_level import extract_pages, extract_text
+from pdfminer.high_level import extract_text
 
 
 

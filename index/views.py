@@ -114,11 +114,11 @@ def index(request):
         ))).annotate(
             total_docs=Count('recipient')
         )
-    
+    print('!', all_clients[0].total_docs, all_clients[0].signed_by_patient)
     clients_with_all_docs_signed = all_clients.filter(total_docs=F('signed_by_patient')).count()
-
+    
     clients_with_unsigned_docs = all_clients.filter(~Q(total_docs=F('signed_by_patient'))).count()
-
+    
     # СТРАНИЦА СУПЕРАДМИНИСТРАТОРА И АДМИНИСТРАТОРА
     if request.user.is_authenticated and (request.user.type == 'AD' or request.user.type == 'DI'):
 
@@ -202,9 +202,9 @@ def index(request):
             'docs_not_signed_by_doctors': docs_not_signed_by_doctors,
             'docs_signed_by_clients': docs_signed_by_clients,
             'docs_not_signed_by_clients': docs_not_signed_by_clients,
-
-            'clients_with_unsigned_docs': clients_with_unsigned_docs,
-            'clients_with_all_docs_signed': clients_with_all_docs_signed,
+            'all_my_clients': my_clients,
+            'all_my_clients_signed': clients_with_all_docs_signed,
+            'all_my_clients_not_signed': clients_with_unsigned_docs,
 
             'types' : types_for_di,
             'actions': actions,
@@ -231,12 +231,12 @@ def index(request):
         my_clients = annotate_users_with_number_of_signed_docs(
             my_clients,
             'recipient__recipient_status').count()
-
+        
         context = {
             'types': types,
-            'all_clients': my_clients,
-            'clients_with_all_docs_signed': clients_with_all_docs_signed,
-            'clients_with_unsigned_docs': clients_with_unsigned_docs,
+            'all_my_clients': my_clients,
+            'all_my_clients_signed': clients_with_all_docs_signed,
+            'all_my_clients_not_signed': clients_with_unsigned_docs,
             'all_documents': all_documents,
             # 'my_clients': my_clients,
         }
