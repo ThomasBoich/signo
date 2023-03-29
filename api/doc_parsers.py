@@ -26,8 +26,10 @@ def doc_parser_main(doc_uploader, validated_data):
         return doc_parser_dogovor(text, uniq_id, doc_uploader, validated_data)
     elif 'Амбулаторная карта' in doc_name:
         return doc_parser_adm_karta(text, client, doc_uploader, validated_data)
-    elif 'ИДС' in doc_name or 'Отказ от гарантий' in doc_name:
+    elif 'ИДС' in doc_name:
         return doc_parser_ids(text, client, doc_uploader, validated_data)
+    elif 'Отказ от гарантий' in doc_name:
+        return doc_parser_bez_garantiy(text, client, doc_uploader, validated_data)
     elif 'Отказ от медицинского вмешательства' in doc_name:
         return doc_parser_otkaz(text, client, doc_uploader, validated_data)
     elif 'Согласие о лечении без гарантий' in doc_name:
@@ -127,6 +129,18 @@ def doc_parser_adm_karta(text, client, doc_uploader, validated_data):
 def doc_parser_ids(text, client, doc_uploader, validated_data):
     
     doc_type = DocumentType.objects.get(type_document='IDS')
+    doctor = get_doctor(text)
+
+    validated_data['recipient'] = client
+    validated_data['sender'] = doctor
+    validated_data['founder'] = doc_uploader
+    validated_data['type'] = doc_type
+    return validated_data
+
+
+def doc_parser_bez_garantiy(text, client, doc_uploader, validated_data):
+
+    doc_type = DocumentType.objects.get(type_document='BEZ_GARANTIY')
     doctor = get_doctor(text)
 
     validated_data['recipient'] = client

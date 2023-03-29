@@ -57,6 +57,7 @@ class DocumentType(models.Model):
     UVEDOMLENIE = 'UVEDOMLENIE'
     RECEPT = 'RECEPT'
     RECOMEND = 'RECOMEND'
+    BEZ_GARANTIY = 'BEZ_GARANTIY'
 
 
     TYPE_DOC = [
@@ -71,6 +72,7 @@ class DocumentType(models.Model):
         (UVEDOMLENIE, 'Уведомление'),
         (RECEPT, 'Рецепт'),
         (RECOMEND, 'Рекомендация стоматолога'),
+        (BEZ_GARANTIY, 'Отказ от гарантий'),
     ]
 
     type_document = models.CharField(choices=TYPE_DOC, max_length=240, blank=True, null=True)

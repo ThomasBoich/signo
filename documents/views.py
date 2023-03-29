@@ -47,8 +47,9 @@ def show_documents(request):
 
         all_documents = paginate_list(request, all_documents, 20)
         all_my_clients = Document.objects.filter(
-            Q(sender=request.user) | 
-            Q(founder=request.user)
+            (Q(sender=request.user) | 
+            Q(founder=request.user)) &
+            Q(doc_type='DOGOVOR')
             )
         all_my_clients_signed = all_my_clients.filter(recipient_status=True)
         all_my_clients_not_signed = all_my_clients.filter(recipient_status=False)
