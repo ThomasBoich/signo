@@ -58,19 +58,19 @@ def search_users(request, all_users):
 
 
 def annotate_users_with_number_of_signed_docs(all_users, user_type):
-    dict_true = {user_type:True}
-    dict_false = {user_type:False}
+    dict_true = {user_type:True, 'recipient__deleted': False}
+    dict_false = {user_type:False, 'recipient__deleted': False}
     all_users = all_users.annotate(
                 signed_docs=Count(Case(
                     When(**dict_true, then=1),
                     output_field=models.IntegerField(),
-                    distinct=True
+                    distinct=False
             ))) \
             .annotate(
                 not_signed_docs=Count(Case(
                     When(**dict_false, then=1),
                     output_field=models.IntegerField(),
-                    distinct=True
+                    distinct=False
             )))
 
     return all_users

@@ -281,7 +281,7 @@ def allclients(request):
                                             'recipient__recipient_status')
     
     users = search_users(request, all_users)
-    
+    print(users[0].not_signed_docs)
     context = {
         'title': f"Пациенты - {CustomUser.objects.filter(type='CL').count()}",
         'users': users
