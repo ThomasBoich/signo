@@ -53,11 +53,11 @@ class DocumentType(models.Model):
     RENT = 'RENT'
     PLAN = 'PLAN'
     DNEVNIK = 'DNEVNIK'
-    OTKAZ = 'OTKAZ'
+    OTKAZ_OT_MED = 'OTKAZ_OT_MED'
     UVEDOMLENIE = 'UVEDOMLENIE'
     RECEPT = 'RECEPT'
     RECOMEND = 'RECOMEND'
-    BEZ_GARANTIY = 'BEZ_GARANTIY'
+    LECHENIE_BEZ_GARANTIY = 'LECHENIE_BEZ_GARANTIY'
 
 
     TYPE_DOC = [
@@ -68,11 +68,12 @@ class DocumentType(models.Model):
         (RENT, 'Справка в налоговую'),
         (PLAN, 'План лечения'),
         (DNEVNIK, 'Дневник'),
-        (OTKAZ, 'Отказ от мед.вмешательства'),
+        (OTKAZ_OT_MED, 'Отказ от мед.вмешательства'),
         (UVEDOMLENIE, 'Уведомление'),
         (RECEPT, 'Рецепт'),
         (RECOMEND, 'Рекомендация стоматолога'),
-        (BEZ_GARANTIY, 'Отказ от гарантий'),
+        (LECHENIE_BEZ_GARANTIY, 'Согласие о лечении без гарантий')
+
     ]
 
     type_document = models.CharField(choices=TYPE_DOC, max_length=240, blank=True, null=True)

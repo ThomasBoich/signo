@@ -124,7 +124,7 @@ def index(request):
 
         # annotated above
         types_for_di = types. \
-                        exclude(type_document='OTKAZ'). \
+                        exclude(type_document='OTKAZ_OT_MED'). \
                         annotate(
                             number_of_deleted=Count(
                                 'document', 
