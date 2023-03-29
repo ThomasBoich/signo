@@ -42,7 +42,8 @@ def doc_parser_main(doc_uploader, validated_data):
         return doc_parser_plan(text, client, doc_uploader, validated_data)
     elif 'Справка' in doc_name:
         return doc_parser_spravka(text, client, doc_uploader, validated_data)
-
+    elif 'Дневник' in doc_name:
+        return doc_parser_dnevnik(text, client, doc_uploader, validated_data)
 
 
 def get_doctor(text):
@@ -245,5 +246,26 @@ def doc_parser_spravka(text, client, doc_uploader, validated_data):
     validated_data['recipient'] = client
     validated_data['sender'] = admin
     validated_data['founder'] = doc_uploader
+    validated_data['type'] = doc_type
+    return validated_data
+
+
+def doc_parser_dnevnik(text, client, doc_uploader, validated_data):
+    doc_type = DocumentType.objects.get(type_document='DNEVNIK')
+
+    doctor_name_pattern = re.compile(r'Врач Ф.И.О.\s*\w*\s\w.\w.')
+    doctor_full_name = doctor_name_pattern.findall(text)[0].strip().split(' ')[2:]
+    doctor_last_name = doctor_full_name[0]
+    doctor_first_name = doctor_full_name[1].split('.')[0]
+    doctor_patronymic = doctor_full_name[1].split('.')[1]
+    doctor = CustomUser.objects.get(
+        last_name=doctor_last_name, 
+        first_name__istartswith=doctor_first_name, 
+        patronymic__istartswith=doctor_patronymic,
+        type='DO',
+    )
+    validated_data['recipient'] = client
+    validated_data['sender'] = doctor
+    validated_data['founder'] = doctor
     validated_data['type'] = doc_type
     return validated_data
