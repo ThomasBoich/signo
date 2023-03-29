@@ -22,7 +22,7 @@ def doc_parser_main(doc_uploader, validated_data):
     except:
         pass
 
-    if 'Договор от имени администратора' in doc_name:
+    if 'Договор' in doc_name:
         return doc_parser_dogovor(text, uniq_id, doc_uploader, validated_data)
     elif 'Амбулаторная карта' in doc_name:
         return doc_parser_adm_karta(text, client, doc_uploader, validated_data)
