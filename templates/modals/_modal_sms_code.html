@@ -50,12 +50,15 @@
     code = document.getElementById('modal-code-input').value
     pk = document_pk
     $.ajax({
+      type: 'POST',
       data: {
         'code': code,
         'doc_id': pk,
+        csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
       },
       url: "{% url 'sign_document' %}",
       success: function(json){
+        console.log('!', json)
         if (json['reload'] == 'y'){
           window.location.reload()
         }

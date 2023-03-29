@@ -143,19 +143,19 @@ def send_code(request):
     request.session['code'] = code
     phone = request.user.phone.replace('+', '')
     send_code_to_phone(phone, code)
-    return JsonResponse({'':''})
+    return JsonResponse({'code':'sent'})
 
 
 def sign_document(request):
     try:
-        code_entered = int(request.GET.get('code'))
+        code_entered = int(request.POST.get('code'))
         code_sent = request.session['code']
     except:
         code_entered, code_sent = 0, 0
     pk = request.POST.get('doc_id')
+
     if (request.user.type == 'CL' and code_entered == code_sent) or request.user.type in ['DO', 'AD']:
         document = Document.objects.get(pk=pk)
-        
         create_signature(request, document)
         
         media_root = settings.MEDIA_ROOT
@@ -163,13 +163,13 @@ def sign_document(request):
         watermark = media_root + "/signature" + str(document.id) + ".pdf"
         
         doc_file = document.document.path
+
         with open(doc_file, "rb") as input_file, open(watermark, "rb") as watermark_file:
             input_pdf = PdfReader(input_file)
             watermark_pdf = PdfReader(watermark_file)
             watermark_page = watermark_pdf.pages[0]
 
             output = PdfWriter()
-
             for i in range(len(input_pdf.pages)):
                 pdf_page = input_pdf.pages[i]
                 pdf_page.merge_page(watermark_page)
@@ -200,9 +200,6 @@ def sign_document(request):
          
         result = {'reload': 'y'} # used on the front as a sign to reload page
         return JsonResponse(result)
-    
-    
-    
     
     result = {'code': ''}
 
