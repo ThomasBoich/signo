@@ -256,10 +256,16 @@ def index(request):
 
 # СТРАНИЦА МОИ КЛИЕНТЫ
 def myclients(request):
-
+    dogovor_type = DocumentType.objects.get(type_document='DOGOVOR')
+    # all_users = CustomUser.objects.filter(
+    #         (Q(recipient__sender=request.user) | 
+    #          Q(recipient__founder=request.user)) & 
+    #          Q(recipient__type=dogovor_type)
+    #          )
     all_users = CustomUser.objects.filter(
-            Q(recipient__sender=request.user) | Q(recipient__founder=request.user))
-
+        Q(recipient__sender=request.user) | 
+        Q(recipient__founder=request.user)
+        )
     all_users = annotate_users_with_number_of_signed_docs(
                                             all_users,
                                             'recipient__recipient_status')

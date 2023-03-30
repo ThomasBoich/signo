@@ -9,9 +9,8 @@ router.register('file', UploadDocsAPIViewSet)
 # router.register('get_doc_to_frontend/<int:pk>', GetDocToFrontendAPIViewSet)
 
 urlpatterns = [
-    path('', include(router.urls)),   
+    path('', include(router.urls)),  
+    # path('file/', UploadDocsAPIView.as_view(), name='file-upload'), 
     path('', include('djoser.urls')),
     path('', include('djoser.urls.authtoken')),
-
-
 ]

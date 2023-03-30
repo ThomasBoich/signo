@@ -49,10 +49,11 @@ def show_documents(request):
         all_my_clients = Document.objects.filter(
             Q(sender=request.user) | 
             Q(founder=request.user)
-            )
+            ).distinct('recipient')
+
         all_my_clients_signed = all_my_clients.filter(recipient_status=True)
         all_my_clients_not_signed = all_my_clients.filter(recipient_status=False)
-        types = DocumentType.objects.all().exclude(type_document='OTKAZ')
+        types = DocumentType.objects.all().exclude(type_document='OTKAZ_OT_MED')
         context = {
             'title': f'Все Документы - {Document.objects.all().filter(deleted=False, hidden=False).count()}',
             'form': form,
@@ -98,7 +99,7 @@ def mydocuments(request):
     all_documents_count = all_documents.count()
     all_documents = paginate_list(request, all_documents, 20)
 
-    types = DocumentType.objects.all().exclude(type_document='OTKAZ')
+    types = DocumentType.objects.all().exclude(type_document='OTKAZ_OT_MED')
 
     form = SendDocumentForm(request.POST or None, request.FILES)
     if request.method == 'POST':
@@ -112,7 +113,8 @@ def mydocuments(request):
     all_my_clients = Document.objects.filter(
         Q(sender=request.user) | 
         Q(founder=request.user)
-        )
+        ).distinct('recipient')
+    print('!', all_my_clients)
     
     all_my_clients_signed = all_my_clients.filter(recipient_status=True)
     all_my_clients_not_signed = all_my_clients.filter(recipient_status=False)

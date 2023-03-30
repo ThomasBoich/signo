@@ -20,18 +20,14 @@ class UploadDocsAPIViewSet(viewsets.ModelViewSet):
     queryset = Document.objects.all()
     serializer_class = FileSerializer
     permission_classes = (IsAuthenticated, )
-    # parser_classes = [FileUploadParser]
 
 
-# class APILoginView(LoginView):
+# class UploadDocsAPIView(APIView):
+#     def post(self, request):
+#         serializer = FileSerializer(data=request.data)
+#         print('!', serializer)
+#         if serializer.is_valid():
+#             print(serializer.data)
+#             print(serializer.validated_data)
+#         return Response({'food_data': 'data'}) 
     
-#     # def get_success_url(self):
-#     #     return reverse_lazy('api:file')
-    
-#     def form_valid(self, form):
-#         login(self.request, form.get_user())
-#         return HttpResponseRedirect(self.get_success_url())
-#     def get(self,request):
-#         return Response({'response': 'success'})
-    
-  
