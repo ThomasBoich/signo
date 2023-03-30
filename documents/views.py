@@ -49,7 +49,7 @@ def show_documents(request):
         all_my_clients = Document.objects.filter(
             Q(sender=request.user) | 
             Q(founder=request.user)
-            ).distinct()
+            ).distinct('recipient')
 
         all_my_clients_signed = all_my_clients.filter(recipient_status=True)
         all_my_clients_not_signed = all_my_clients.filter(recipient_status=False)
@@ -114,7 +114,7 @@ def mydocuments(request):
     all_my_clients = Document.objects.filter(
         Q(sender=request.user) | 
         Q(founder=request.user)
-        ).distinct()
+        ).distinct('recipient')
     print('!', all_my_clients)
     
     all_my_clients_signed = all_my_clients.filter(recipient_status=True)
