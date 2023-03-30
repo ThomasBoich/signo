@@ -86,7 +86,7 @@ def index(request):
 
 
     types_for_do = types.exclude(
-            type_document__in=['DOGOVOR', 'RENT', 'DNEVNIK']
+            type_document__in=['DOGOVOR', 'RENT']
             )
 
 
@@ -124,7 +124,6 @@ def index(request):
 
         # annotated above
         types_for_di = types. \
-                        exclude(type_document='OTKAZ_OT_MED'). \
                         annotate(
                             number_of_deleted=Count(
                                 'document', 
@@ -134,7 +133,7 @@ def index(request):
                                 'document',
                                 filter=Q(document__deleted=False)
                             )
-                        )
+                        ) #.exclude(type_document='OTKAZ_OT_MED'). \
         types_for_ad = types_for_do
 
         # показываем все последние документы в системе если это руководитель

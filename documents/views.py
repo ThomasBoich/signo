@@ -53,7 +53,8 @@ def show_documents(request):
 
         all_my_clients_signed = all_my_clients.filter(recipient_status=True)
         all_my_clients_not_signed = all_my_clients.filter(recipient_status=False)
-        types = DocumentType.objects.all().exclude(type_document='OTKAZ_OT_MED')
+        # types = DocumentType.objects.all().exclude(type_document='OTKAZ_OT_MED')
+        types = DocumentType.objects.all()
         context = {
             'title': f'Все Документы - {Document.objects.all().filter(deleted=False, hidden=False).count()}',
             'form': form,
